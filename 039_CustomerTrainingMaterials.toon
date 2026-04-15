@@ -1,0 +1,93 @@
+# DOC_CUSTOMER_ONBOARDING_v1.0.toon
+# CMMI Level 5 Compliant User Enablement & Time-to-Competency Framework
+
+IMPORT:ONBOARDING_BASE.toon|CMMI_L5_USER_SUCCESS_GOVERNANCE.toon
+
+ROLE:technical_writer|customer_success_manager|ux_researcher|support_lead
+TASK:generate_quantitatively_validated_training_assets_with_completion_predictability_and_knowledge_retention_tracking
+OUTPUT_FORMAT:Markdown_Guides_in_/customer-docs/ + Video_Links + Help_Center_Sync + PDF
+
+INPUT_CONTEXT{
+  onboarding_meta{
+    product_module:STR|required
+    target_user_role:ENUM:[admin,end_user,developer,analyst]
+    estimated_duration_hours:NUM|required
+    prerequisite_knowledge:ARR|optional
+  }
+  content_structure{
+    getting_started:ARR|format:[step,objective,action,screenshot_ref,expected_outcome]
+    video_tutorials:ARR|format:[title,duration,topic,loom_ref,interactive_quiz_link]
+    faqs_best_practices:ARR|format:[question,answer,context,link_to_deep_dive]
+    troubleshooting:ARR|format:[symptom,diagnostic_step,solution,escalation_path]
+  }
+  success_tracking{
+    completion_metrics:ARR|format:[milestone,pass_threshold,measurement_method,alert_on_dropout]
+    support_deflection_targets:STR|required|format:ticket_reduction_pct_post_training
+    feedback_loop:STR|format:post_module_survey_csat_knowledge_check
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_training_quality{
+    time_to_competency_index{
+      metric:median_days_from_signup_to_first_key_action_completion
+      target:≤7_days
+      control_limits:UCL:10|LCL:3|Cpk_target:≥1.5
+    }
+    knowledge_retention_rate{
+      metric:percentage_of_users_passing_post_training_validation_assessments
+      target:≥85%
+      measurement_method:interactive_quiz_scoring + 30_day_follow_up_survey
+    }
+    content_fatigue_drop_off{
+      metric:percentage_of_users_abandoning_mid_guide_or_video
+      target:≤15%
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[completion_rate_avg,support_ticket_deflection_pct,video_engagement_time,csat_post_onboarding]
+    predictive_model:dropout_probability_scoring_using_step_complexity+prior_experience_clustering
+  }
+  causal_analysis_triggers{
+    trigger:competency_variance > UCL OR retention < LCL OR drop_off_rate spikes > 2σ
+    car_method:learning_path_analysis + step_friction_mapping + video_retention_heatmap_analysis
+    preventive_action:chunk_long_guides_into_micro_learning|mandate_interactive_checkpoints|update_ui_tour_from_drop_off_data
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Onboarding Objectives & Role Alignment"
+    content:[target_audience,competency_goals,prerequisites,success_metrics]
+  }
+  section_2{
+    title:"Step-by-Step Guides & Video Integration"
+    content:[getting_started_matrix,tutorial_refs,interactive_elements,progression_tracking]
+    mermaid_diagrams:true|user_milestone_progression_flow
+  }
+  section_3{
+    title:"Best Practices, FAQs & Troubleshooting"
+    content:[knowledge_matrix,common_pitfalls,diagnostic_flowcharts,escalation_guidance]
+    tables:faq_index|troubleshooting_decision_tree
+  }
+  section_4{
+    title:"Completion Tracking & Support Deflection Validation"
+    content:[assessment_links,survey_templates,deflection_metrics,continuous_improvement_loop]
+    compliance_mapping:accessibility_wai_aria_validation|data_privacy_in_training_notes
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:tech_writer_authors|automated_link_validation+readability_scan|exit_criteria:all_modules_defined|assessments_linked
+  stage_2_cs_ux:customer_success+ux_review+competency_modeling|control_chart_for_ttc_variance
+  stage_3_compliance_legal:privacy_accessibility_check|content_approval_signoff|mandatory_signoff
+  stage_4_publish:help_center_sync+video_embedding+immutable_pdf_hash+onboarding_dashboard_activation
+  continuous_improvement:monthly_completion_retro|update_ppm_from_drop_off_data|refine_micro_learning_from_retention_patterns
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Video_Links + PDF
+  filename_pattern:onboarding_{module}_{role}_v{version}_{YYYYMMDD}.md
+  supplementary_outputs:interactive_quiz_config|progression_tracker_export|csat_survey_template
+  metadata_injection:cmmi_tags:VAL-1.3,OPM-2,VER-1.4|process_version:l5.0
+}

@@ -1,0 +1,79 @@
+# PDF_ENGINE_CONFIG.toon
+# Shared configuration for all CMMI L5 document PDF generation
+
+engine{
+  primary:weasyprint|pandoc|prince_xml|configurable_per_org
+  fallback:wkhtmltopdf
+  rendering_pipeline{
+    step_1:markdown_to_html_with_jinja2_templates
+    step_2:mermaid_diagrams_to_svg_via_cli_or_api
+    step_3:html_to_pdf_with_css_paged_media
+    step_4:pdf_post_processing_metadata_injection_digital_signature
+  }
+}
+
+templates{
+  base:enterprise_cmmi_l5_master_template.html
+  variants{
+    executive_summary:minimal_branding_focus_on_metrics
+    technical_spec:dense_layout_code_blocks_diagrams
+    compliance_doc:regulatory_header_footer_evidence_appendices
+  }
+  customization_hooks{
+    header_footer:inject_company_logo_classification_approval_status
+    styling:css_variables_for_brand_colors_fonts_spacing
+    content_blocks:jinja2_macros_for_requirements_tables_metrics_charts
+  }
+}
+
+pdf_compliance{
+  archival:PDF/A-3_with_embedded_fonts_color_profiles_xmp_metadata
+  accessibility:PDF/UA_with_tagged_structure_alt_text_for_images
+  security{
+    encryption:AES-256_optional_with_role_based_permission_matrix
+    digital_signature:PAdES_BES_or_LTVA_with_rfc3161_timestamp
+    watermarking:dynamic_injection_based_on_doc_status_and_classification
+  }
+  long_term_validation{
+    ltv_enabled:true_for_compliance_and_legal_documents
+    timestamp_authority:configurable_rfc3161_compliant_service
+    certificate_chain:embedded_in_pdf_for_offline_validation
+  }
+}
+
+metadata_schema{
+  standard_xmp{
+    dc:title,dc:creator,dc:subject,dc:description,dc:format
+    pdf:producer,pdf:keywords,pdf:trapped
+  }
+  custom_cmmi_extensions{
+    cmmi:process_area,OPP|QPM|CAR|OID
+    cmmi:process_version,semantic_version
+    cmmi:metrics_snapshot,json_encoded_key_metrics
+    cmmi:approval_hash,sha256_of_approval_events
+    cmmi:git_commit,commit_hash_of_source_markdown
+  }
+  compliance_mappings{
+    gdpr:articles_addressed_as_array
+    hipaa:sections_mapped_as_array
+    soc2:criteria_covered_as_array
+  }
+}
+
+output_delivery{
+  storage{
+    primary:versioned_s3_bucket_with_lifecycle_policies
+    secondary:confluence_attachment_or_sharepoint_library
+    archival:immutable_worm_storage_for_compliance_documents
+  }
+  access_control{
+    authentication:oauth2_saml_integration_with_org_idp
+    authorization:rbac_with_document_classification_levels
+    audit_logging:all_access_download_print_events_to_siem
+  }
+  notification{
+    generation_complete:email_with_secure_download_link
+    approval_required:workflow_task_in_jira_servicenow_or_similar
+    archival_confirmation:receipt_with_checksum_and_timestamp
+  }
+}

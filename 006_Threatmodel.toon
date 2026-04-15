@@ -1,0 +1,421 @@
+# DOC_THREAT_MODEL_v1.0.toon
+# CMMI Level 5 Compliant Threat Model Generator (STRIDE/LINDDUN/CVSS)
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:security_architect|risk_manager|devsecops_lead|compliance_officer|penetration_tester
+TASK:generate_cmmi_l5_compliant_threat_model_with_quantitative_risk_scoring_mitigation_tracking_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + JSON_risk_register + Jira/Linear_export + machine_readable_JSON
+
+INPUT_CONTEXT{
+  system{
+    id:STR|format:TM-###|auto_increment_from_repository
+    name:STR|required|system_or_product_name
+    version:SEMVER|required
+    system_owner:STR|required|role_or_individual
+    architecture_type:ENUM:[microservices,monolith,serverless,edge_iot,hybrid_cloud,active_active_multi_region]
+    data_classification:ENUM:[public,internal,confidential,restricted,pii,phi,pci,trade_secret]
+  }
+  system_context{
+    business_criticality:ENUM:[low,medium,high,critical]
+    data_flows:ARR|OPT|structure:{source:STR,destination:STR,protocol:STR,data_type:STR,encryption:BOOL}
+    trust_boundaries:ARR|OPT|structure:{boundary_name:STR,components_on_each_side:ARR,crossing_controls:ARR}
+    external_dependencies:ARR|OPT|structure:{dependency_name:STR,type:ENUM:[saas,api,third_party_library,cloud_service],criticality:ENUM,slas:STR}
+  }
+  threat_methodology{
+    frameworks:ARR|ENUM:[STRIDE,LINDDUN,MITRE_ATT&CK,OWASP_TOP_10,DREAD]
+    attack_surfaces:ARR|structure:{surface_name:STR,entry_points:ARR,exposed_assets:ARR,current_controls:ARR}
+    threat_catalogue:ARR|OPT|pre_known_threats_or_historical_incidents_to_include
+  }
+  threats_identified:ARR|min_items:5|structure:{
+    threat_id:STR|format:THR-###
+    category:ENUM:[Spoofing,Tampering,Repudiation,InformationDisclosure,DenialOfService,ElevationOfPrivilege,Linkability,Identifiability,Non_repudiation,Detectability,Unawareness,Non_compliance]
+    description:STR|required|clear_statement_of_threat_scenario
+    affected_asset:STR|component_data_flow_or_service
+    attack_vector:STR|how_threat_could_be_realized
+    existing_controls:ARR|OPT|current_mitigations_in_place
+    likelihood:ENUM:[VeryLow,Low,Medium,High,VeryHigh]|with_numerical_mapping:1_5
+    impact:ENUM:[VeryLow,Low,Medium,High,VeryHigh]|with_numerical_mapping:1_5
+    cvss_score:NUM|OPT|0.0_to_10.0_if_applicable
+    risk_rating:ENUM:[Critical,High,Medium,Low,Acceptable]|auto_calculated_from_likelihood_x_impact
+  }
+  risk_tolerance{
+    business_acceptance_threshold:ENUM|maximum_risk_level_business_will_accept_without_additional_controls
+    residual_risk_strategy:ENUM:[accept,transfer,migrate,mitigate]
+    compliance_drivers:ARR|OPT|regulations_that_force_mandatory_mitigation
+  }
+  controls_and_mitigations:ARR|OPT|structure:{
+    mitigation_id:STR|format:MIT-###
+    linked_threat_id:STR
+    control_type:ENUM:[preventive,detective,corrective,compensating]
+    control_description:STR|detailed_implementation_guidance
+    implementation_status:ENUM:[proposed,in_progress,implemented,verified,deferred]
+    owner:STR|role_or_team_responsible
+    verification_method:ENUM:[unit_test,integration_test,penetration_test,code_review,audit,automated_scan]
+    target_completion_date:DATE|optional
+  }
+  monitoring_and_response{
+    detection_mechanisms:ARR|OPT|structure:{mechanism:STR,coverage:STR,alert_threshold:STR,siem_integration:BOOL}
+    incident_response_playbooks:ARR|OPT|link_to_ir_playbooks_triggered_by_threat_realization
+    threat_intelligence_feeds:ARR|OPT|sources_used_to_update_threat_model_periodically
+    continuous_assessment:STR|how_threat_model_is_kept_current_during_development_cycles
+  }
+  compliance_mapping{
+    applicable_frameworks:ARR|OPT:[NIST_CSF,ISO_27001,SOC2,GDPR,HIPAA,PCI_DSS,CCPA]
+    control_objectives:ARR|OPT|structure:{framework:STR,control_id:STR,threat_model_alignment:STR,evidence_location:STR}
+    audit_requirements:ARR|OPT|documentation_or_testing_needed_to_satisfy_external_auditors
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_threat_management{
+    risk_scoring_metrics{
+      cvss_coverage_rate:percentage_of_threats_with_valid_cvss_v4.0_scores|target:≥90%
+      risk_distribution_balance:percentage_of_threats_in_acceptable_vs_critical_ranges|target:≤10%_critical_post_mitigation
+      mitigation_effectiveness_score:reduction_in_risk_rating_post_mitigation|target:≥2_levels_per_threat
+    }
+    process_performance_objectives{
+      threat_identification_cycle_time:days_from_architecture_change_to_updated_threat_model|target:≤5_business_days|UCL:8|LCL:2|Cpk:≥1.33
+      mitigation_closure_rate:percentage_of_high_critical_mitigations_completed_on_time|target:≥95%|p_chart_monitoring
+      residual_risk_trend:quarterly_aggregate_risk_exposure|target:≤15%_decrease_per_quarter|I_MR_chart
+      control_verification_success:percentage_of_mitigations_passing_first_verification|target:≥85%
+    }
+    statistical_process_control{
+      vulnerability_discovery_rate:number_of_new_threats_identified_per_sprint|c_chart_monitoring|target_stability
+      false_positive_alert_rate:percentage_of_detection_mechanisms_triggering_non_malicious_events|target:<5%
+      mean_time_to_mitigate:days_from_threat_acceptance_to_control_implementation|control_limits:[3,14]|Cpk_target:≥1.0
+    }
+  }
+  causal_analysis_and_resolution_integration{
+    trigger_conditions{
+      security_incident_with_root_cause_traced_to_unmodeled_threat
+      penetration_test_finding_with_risk_rating_above_acceptable_threshold
+      mitigation_implementation_failure_or_control_bypass_in_production
+      compliance_audit_finding_linking_to_missing_threat_coverage
+    }
+    analysis_methodology{
+      primary:attack_tree_analysis + 5_whys_root_cause
+      secondary:control_gap_analysis + data_flow_boundary_review
+      data_sources:[incident_reports,pen_test_results,siem_alerts,code_scans,threat_intel_feeds]
+    }
+    preventive_action_workflow{
+      action_tracking:Jira_security_workflow_with_car_specific_fields
+      effectiveness_validation:pre_post_control_effectiveness_testing_with_statistical_significance
+      knowledge_capture:threat_patterns_added_to_organizational_security_asset_library
+    }
+  }
+  organizational_innovation_and_deployment{
+    innovation_pipeline{
+      threat_intelligence_automation:nlp_parsing_of_cve_feeds_to_auto_suggest_model_updates|measure_accuracy
+      ai_assisted_attack_surface_mapping:ml_model_to_identify_new_entry_points_from_infrastructure_as_code|measure_coverage_improvement
+      automated_mitigation_validation:policy_as_code_tools_to_verify_control_implementation|measure_false_positive_reduction
+    }
+    deployment_metrics{
+      adoption_rate:percentage_of_teams_using_threat_model_as_definition_of_security_ready
+      time_to_detect_improvement:reduction_in_mean_time_to_detect_similar_threats_post_model_update
+      roi_actual_vs_projected:cost_avoided_from_prevented_incidents_vs_modeling_effort
+    }
+    feedback_loop{
+      post_incident_review:integrate_lessons_learned_directly_into_threat_catalogue
+      model_refresh_cycle:automated_trigger_when_architecture_changes_exceed_threshold
+      scaling_decision:data_driven_expansion_of_model_to_subsystems_based_on_risk_concentration
+    }
+  }
+  quantitative_requirements_for_threat_models{
+    methodology_standards{
+      stride_completeness:100%_of_threats_mapped_to_at_least_one_stride_category
+      linddun_privacy_coverage:100%_of_data_flows_assessed_for_linkability_identifiability_non_repudiation_detectability_unawareness_non_compliance
+      cvss_consistency:all_scores_validated_against_first_cvss_v4.0_vector_string_schema
+    }
+    documentation_quality_metrics{
+      scenario_clarity:peer_review_rating_for_threat_description_actionability|target:≥4.2/5.0
+      control_specificity:percentage_of_mitigations_with_implementation_steps_and_verification_methods|target:≥95%
+      traceability_index:bidirectional_links_between_threats_controls_tests_and_compliance_requirements|target:100%
+    }
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Threat Model Identification & Control"
+    content:[threat_model_id,system_name,version,owner,architecture_type,data_classification,last_review_date,next_review_date]
+    pdf_formatting:header_table_with_digital_signature_fields_for_security_architect_system_owner_and_compliance_officer
+    cmmi_traceability:link_to_security_governance_process_definition_and_risk_metrics_baseline
+    mermaid_diagram:system_context_with_trust_boundaries_and_data_flow_highlights
+  }
+  section_2{
+    title:"System Context & Asset Inventory"
+    content:[business_criticality,data_flows,trust_boundaries,external_dependencies]
+    asset_classification_table:table_with_asset_name,type,sensitivity,owner,protection_requirements
+    attack_surface_summary:table_with_surface_name,entry_points,exposure_level,current_posture
+    quantitative_context:baseline_risk_metrics_that_motivate_threat_modeling_effort
+  }
+  section_3{
+    title:"Threat Identification & Analysis (STRIDE/LINDDUN)"
+    content:iterate_over_input.threats_identified
+    format_per_threat{
+      header:"THR-###: {category} | {description}"
+      detailed_scenario:step_by_step_attack_path_with_prerequisites_and_conditions
+      affected_assets:data_flows_components_or_services_impacted
+      stride_linddun_mapping:explicit_category_assignment_with_rationale
+      likelihood_and_impact:scoring_basis_historical_data_or_expert_judgment
+      current_controls:what_is_already_in_place_and_how_it_affects_risk
+      residual_risk_calculation:how_existing_controls_modify_likely_impact
+    }
+    threat_summary_visualization:mermaid_pie_or_bar_chart_showing_distribution_by_category_and_severity
+    attack_tree_snippet:visual_or_textual_representation_of_primary_threat_realization_paths
+  }
+  section_4{
+    title:"Quantitative Risk Assessment & Scoring"
+    content:risk_calculation_methodology_and_aggregated_results
+    scoring_framework:cvss_v4.0_vectors_dread_adaptation_or_custom_quantitative_model
+    risk_matrix:likelihood_vs_impact_grid_with_risk_rating_thresholds
+    risk_register_summary:table_of_top_threats_by_risk_score_with_rationale_and_trend
+    business_impact_translation:how_technical_risk_maps_to_financial_operational_reputational_or_compliance_loss
+    risk_tolerance_alignment:comparison_of_current_exposure_vs_business_acceptance_threshold
+  }
+  section_5{
+    title:"Security Controls & Mitigation Strategies"
+    content:iterate_over_input.controls_and_mitigations
+    format_per_mitigation{
+      header:"MIT-###: {control_description}"
+      linked_threat:reference_to_thr_id_and_how_it_addresses_the_scenario
+      control_type:preventive_detective_corrective_or_compensating
+      implementation_guidance:technical_steps_configuration_changes_or_policy_updates
+      verification_method:how_success_will_be_tested_and_validated
+      target_completion:timeline_with_dependencies_and_responsible_owner
+      residual_risk_post_mitigation:expected_risk_rating_after_control_is_verified
+    }
+    control_effectiveness_matrix:table_mapping_controls_to_threats_with_effectiveness_scores_and_verification_status
+    defense_in_depth_summary:how_controls_layer_across_network_application_data_and_identity_tiers
+  }
+  section_6{
+    title:"Compliance & Regulatory Alignment"
+    content:iterate_over_input.compliance_mapping
+    format_per_framework{
+      framework_overview:brief_summary_of_security_and_privacy_control_objectives
+      control_mapping_table:threat_model_controls_linked_to_specific_framework_clauses
+      gap_analysis:areas_where_additional_evidence_or_controls_are_needed_for_audit_readiness
+      audit_coordination:point_of_contact_schedule_and_preparation_checklist
+    }
+    gdpr_privacy_by_design:how_linddun_categories_address_data_subject_rights_and_minimization
+    hipaa_security_rule:administrative_physical_and_technical_safeguards_covered
+    pci_dss_requirements:network_segmentation_encryption_and_logging_controls_mapped
+    evidence_package_specification:artifacts_needed_to_demonstrate_compliance_during_external_audit
+  }
+  section_7{
+    title:"Monitoring, Detection & Incident Response Integration"
+    content:iterate_over_input.monitoring_and_response
+    format_per_detection_area{
+      detection_mechanisms:table_with_mechanism,coverage,alert_threshold,siem_integration,owner
+      incident_response_mapping:which_playbooks_are_triggered_by_threat_realization
+      telemetry_requirements:logs_metrics_and_traces_needed_for_detection_and_forensics
+      continuous_assessment:how_threat_model_is_updated_during_sprints_or_releases
+    }
+    threat_intelligence_integration:feeds_used_frequency_of_review_and_automation_level
+    security_testing_strategy:pentest_schedule_red_team_exercises_and_automated_scanning_coverage
+  }
+  section_8{
+    title:"Quantitative Management & Statistical Control"
+    content:cmmi_l5_specific_quantitative_management_section
+    risk_management_baselines{
+      historical_data_summary:time_period_sample_size_and_stability_for_risk_metrics
+      baseline_values:table_with_metric_name,baseline_value,control_limits,capability_index
+      baseline_usage:how_baselines_guide_mitigation_prioritization_and_resource_allocation
+    }
+    spc_implementation_for_threat_modeling{
+      control_charts:which_metrics_use_which_chart_type_with_interpretation_guidelines
+      out_of_control_protocols:response_when_threat_discovery_or_mitigation_rates_breach_limits
+      recalibration_criteria:when_and_how_to_update_baselines_after_architecture_changes
+    }
+    quantitative_objectives_tracking{
+      target_vs_actual_dashboard:mockup_of_how_risk_and_mitigation_metrics_are_monitored
+      variance_analysis:process_for_investigating_and_resolving_metric_deviations
+      forecasting:how_historical_risk_trends_inform_security_budget_and_roadmap_decisions
+    }
+  }
+  section_9{
+    title:"Review, Approval & Change Management"
+    content:[review_schedule,approval_criteria,change_control_process,version_history]
+    threat_model_review_workflow{
+      review_checklist:required_validations_scenario_clarity_control_adequacy_compliance_mapping
+      stakeholder_signoff:who_must_approve_what_aspects_with_escalation_path
+      continuous_integration:how_model_is_updated_when_architecture_or_dependencies_change
+    }
+    change_control_for_security_controls{
+      change_classification:breaking_mitigation,new_control,documentation_only_with_different_approval_paths
+      impact_assessment:how_control_changes_are_evaluated_for_coverage_cost_and_operational_impact
+      communication_protocol:how_approved_changes_are_announced_deployed_and_verified
+    }
+    digital_signature_specification{
+      signature_fields:security_architect,system_owner,compliance_officer,cto_or_ciso
+      signature_standard:PAdES_BES_or_LTVA_with_rfc3161_timestamp_for_long_term_validation
+      audit_trail:immutable_log_of_all_signature_events_with_user_context_and_model_version
+    }
+  }
+  section_10{
+    title:"Compliance Evidence & Audit Readiness"
+    content:compliance_specific_documentation_for_audit_preparation
+    evidence_inventory{
+      threat_artifacts:stride_linddun_matrices,cvss_vectors,attack_trees,risk_register
+      control_artifacts:implementation_records,verification_reports,pen_test_results,scan_logs
+      operational_artifacts:detection_rule_configs,ir_playbook_execution_logs,siem_alert_samples
+    }
+    audit_coordination{
+      point_of_contact:role_and_individual_responsible_for_security_compliance_audits
+      evidence_collection_automation:which_artifacts_are_auto_collected_via_cicd_or_siem
+      pre_audit_checklist:activities_to_complete_before_security_audit_with_owners_and_deadlines
+    }
+    continuous_compliance_monitoring{
+      automated_controls:how_security_requirements_are_enforced_via_iac_policy_as_code_and_pipeline_gates
+      drift_detection:monitoring_for_configuration_changes_that_impact_threat_posture
+      remediation_workflow:process_for_addressing_control_gaps_with_tracking_validation_and_reporting
+    }
+  }
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  risk_assessment_metrics{
+    cvss_scoring_compliance:percentage_of_threats_with_valid_vector_strings_and_calculated_scores
+    risk_distribution_trend:quarterly_shift_in_critical_high_medium_low_risk_percentages
+    mitigation_effectiveness:average_risk_reduction_score_per_mitigation_verified
+    false_positive_rate:percentage_of_detection_alerts_not_correlating_to_realized_threats
+  }
+  process_performance_metrics{
+    threat_identification_cycle_time:business_days_from_design_change_to_model_update
+    mitigation_closure_rate:percentage_of_mitigations_completed_within_target_window
+    mean_time_to_mitigate:days_from_threat_acceptance_to_control_verification
+    control_verification_success_rate:percentage_of_controls_passing_first_validation_attempt
+  }
+  compliance_and_security_metrics{
+    framework_coverage:percentage_of_applicable_security_controls_mapped_to_threat_model
+    audit_finding_resolution:mean_time_to_close_security_gaps_identified_in_external_audits
+    vulnerability_remediation_time:mean_time_from_scan_finding_to_production_fix
+    threat_intel_update_latency:time_from_new_cve_publish_to_model_assessment_completion
+  }
+  operational_resilience_metrics{
+    detection_coverage:percentage_of_attack_vectors_with_active_monitoring_or_alerting
+    mean_time_to_detect:simulated_or_realized_time_from_threat_initiation_to_alert
+    mean_time_to_respond:time_from_detection_to_containment_or_mitigation_action
+    playbook_execution_success:percentage_of_incidents_resolved_within_sla_using_documented_procedures
+  }
+  metric_infrastructure{
+    collection_automation:percentage_of_metrics_with_automated_collection_via_siem_ci_cd_and_policy_as_code
+    data_quality_score:completeness_accuracy_and_timeliness_rating_for_risk_and_security_metrics
+    dashboard_adoption:percentage_of_security_and_engineering_teams_regularly_viewing_risk_dashboards
+    alert_effectiveness:percentage_of_risk_or_control_alerts_that_triggered_appropriate_response
+  }
+  storage_and_analysis{
+    repository:time_series_database_with_security_metrics_schema_and_api_for_querying
+    dashboards:real_time_risk_posture_views_with_drill_down_to_threat_control_and_asset_level
+    statistical_engine:automated_control_chart_generation_capibility_analysis_and_forecasting_for_security_metrics
+    alerting:integration_with_pagerduty_slack_or_email_for_risk_breaches_and_control_limit_violations
+  }
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:threat_model_enterprise_template_with_security_branding_cmmi_headers_and_compliance_footers
+  dynamic_content{
+    risk_matrix:auto_formatted_heat_map_with_color_coding_by_severity_and_mitigation_status
+    stride_linddun_tables:interactive_tables_with_filtering_by_category_asset_and_compliance_framework
+    mitigation_tracker:gantt_style_timeline_of_control_implementation_with_verification_milestones
+    attack_tree_visualization:mermaid_or_embedded_svg_rendered_to_vector_with_zoom_capability
+    compliance_evidence_index:hyperlinked_table_of_artifacts_with_locations_and_owners
+  }
+  navigation_and_interactivity{
+    pdf_bookmarks:hierarchical_structure_matching_threat_model_sections_with_quick_jump_to_threats_and_controls
+    hyperlinks:cross_references_to_incident_playbooks_compliance_frameworks_testing_strategies_and_architecture_docs
+    form_fields:approval_signature_blocks_with_validation_timestamp_role_and_digital_certificate
+    collapsible_sections:optional_expansion_for_detailed_cvss_vectors_or_control_specs_to_keep_main_body_concise
+  }
+  archival_and_compliance{
+    pdf_a3:true_with_embedded_fonts_color_profiles_and_long_term_validation_metadata
+    metaxmp_with_cmmi_process_tags_threat_model_id_compliance_mappings_risk_snapshot_model_version
+    accessibility:pdf_ua_compliant_with_tagged_structure_alt_text_for_matrices_and_screen_reader_navigation
+    digital_preservation:pdf_a3_conformance_verified_with_verapdf_or_similar_tool_pre_distribution
+  }
+  distribution_control{
+    access_permissions:role_based_viewing_for_security_teams_engineers_compliance_auditors_and_management
+    watermarking:dynamic_injection_of_confidential_draft_or_final_approved_based_on_approval_status
+    expiration:optional_time_limited_access_for_external_pen_testers_or_audit_firms
+    audit_logging:immutable_log_of_pdf_access_download_printing_with_user_and_system_context
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring{
+    author_actions:populate_threat_model_template_with_quantitative_risk_scores_mitigations_and_compliance_mappings
+    automated_validation:cvss_vector_syntax_check|stride_linddun_coverage_verification|mitigation_traceability_validation
+    quality_gates:scenario_clarity_threshold|control_verification_defined|compliance_mapping_validated
+    exit_criteria:complete_model_ready_for_security_review_board_with_risk_metrics_baseline_attached
+  }
+  stage_2_security_review{
+    reviewers:[security_architect,pen_tester,devsecops_lead,compliance_officer,system_architect]
+    review_method:structured_rubric_with_quantitative_scoring_for_threat_realism_control_adequacy_compliance_alignment
+    defect_classification:model_gaps_control_weaknesses_compliance_misses_detection_blind_spots
+    statistical_control:review_defect_density_and_consensus_score_monitored_via_spc_chart
+    exit_criteria:consensus_score_threshold_met|all_critical_defects_resolved|metrics_baseline_validated
+  }
+  stage_3_compliance_and_validation_review{
+    reviewer:compliance_officer_and_ciso_joint_review
+    focus_areas:regulatory_mapping_accuracy|control_adequacy_for_audited_frameworks|evidence_completeness
+    approval_gate:joint_signoff_required_before_final_approval_for_systems_handling_regulated_data
+    quantitative_check:100%_of_applicable_compliance_frameworks_assessed_with_evidence_plan_and_100%_of_high_critical_threats_with_verified_mitigations
+  }
+  stage_4_final_approval{
+    approvers:[ciso,system_owner,compliance_officer,cto_if_strategic_system]
+    digital_signature:PAdES_LTVA_compliant_for_long_term_archival_with_rfc3161_timestamp_authority
+    audit_trail:immutable_log_of_approval_events_with_system_context_risk_snapshot_and_model_version
+    version_control:pdf_filename_includes_threat_model_id_version_hash_approval_timestamp_and_classification
+  }
+  continuous_improvement_loop{
+    post_approval_analysis:quantitative_review_of_risk_metrics_mitigation_closure_detection_effectiveness
+    process_adjustments:auto_update_threat_model_template_or_review_checklist_based_on_data_driven_insights
+    knowledge_base_update:store_approved_threat_patterns_mitigation_controls_and_compliance_mappings_for_reuse
+    innovation_deployment:pilot_ai_assisted_attack_surface_mapping_or_automated_cvss_scoring_if_quality_metrics_improve
+    car_integration:if_security_incidents_or_audit_findings_occur_trigger_causal_analysis_with_quantitative_data
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_outputs{
+    pdf_report{
+      format:PDF/A-3_with_embedded_source_markdown_metadata_and_long_term_validation_support
+      filename:"{product_name}_ThreatModel-{threat_model_id}_v{version}_{YYYYMMDD}_CMMI_L5.pdf"
+      delivery:secure_download_link + security_repository_index + email_notification_to_stakeholders_and_auditors
+    }
+    machine_readable_risk_register{
+      format:JSON_schema_validated_against_security_risk_schema_with_cvss_and_stride_extensions
+      content:all_threats_mitigations_controls_metrics_and_compliance_mappings_in_structured_format
+      use_case:import_to_siem_risk_management_platform_automated_compliance_auditing
+    }
+    jira_linear_export{
+      format:CSV_or_JSON_mapped_to_issue_fields_summary_description_labels_priority_custom_fields
+      content:mitigations_formatted_as_trackable_tasks_with_security_workflow_status
+      use_case:bulk_import_to_security_backlog_for_sprint_planning_and_tracking
+    }
+  }
+  supplementary_outputs{
+    executive_risk_summary:one_page_pdf_for_leadership_with_top_risks_mitigation_status_and_compliance_posture
+    security_test_cases:auto_generated_test_scenarios_from_threat_descriptions_for_pentest_or_sast_dast
+    policy_as_code_snippets:rego_opa_or_terraform_policy_rules_to_enforce_high_priority_mitigations
+    compliance_evidence_snippet:section_of_pdf_with_regulatory_mappings_and_evidence_plan_for_audit_packages
+    detection_rule_configs:splunk_elastalert_or_sentinel_queries_aligned_to_threat_detection_requirements
+  }
+  metadata_and_audit{
+    pdf_properties:title_author_subject_keywords_with_cmmi_security_threat_compliance_and_risk_tags
+    custom_xmp_properties:model_version_risk_baseline_snapshot_approval_hash_git_commit_security_architect
+    audit_trail:immutable_log_of_pdf_generation_approval_access_and_export_events_with_full_context
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  export_to_jira_linear:"Convert mitigations to Jira/Linear CSV with security workflow labels and priority mapping"
+  generate_attack_trees:"Expand high-risk threats into detailed Mermaid.js attack trees with preconditions and success criteria"
+  create_security_test_cases:"Derive penetration test scenarios and automated SAST/DAST rules from threat descriptions"
+  schedule_risk_review:"Set quarterly threat model and risk metrics review per CMMI QPM with control chart analysis"
+  initiate_causal_analysis:"If security incidents or control failures occur, trigger CAR process with quantitative risk data"
+  generate_compliance_audit_package:"Bundle threat model sections with mapped regulatory requirements and evidence plan"
+  setup_siem_integration:"Generate Splunk/Elastic/Sentinel detection rules aligned to threat monitoring requirements"
+  enforce_policy_as_code:"Convert high-priority mitigations to OPA/Rego or Terraform policies for pipeline gates"
+}

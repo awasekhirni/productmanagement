@@ -1,0 +1,95 @@
+# DOC_SALES_ENABLEMENT_v1.0.toon
+# CMMI Level 5 Compliant Sales Enablement & Competitive Intelligence Framework
+
+IMPORT:SALES_ENABLEMENT_BASE.toon|CMMI_L5_MARKET_INTELLIGENCE_GOVERNANCE.toon
+
+ROLE:product_marketing_manager|solutions_engineer|competitive_intelligence_analyst|sales_ops
+TASK:generate_quantitatively_validated_enablement_assets_with_competitive_accuracy_tracking_and_win_rate_correlation
+OUTPUT_FORMAT:Slides_PPTX + PDF_Export_in_/sales-enablement/ + CRM_Sync_Config
+
+INPUT_CONTEXT{
+  enablement_meta{
+    product_or_solution:STR|required
+    target_buyer_persona:ENUM:[technical,business,executive,procurement]
+    sales_stage_focus:ENUM:[prospecting,discovery,demo,proposal,closing]
+    last_updated:DATE|required
+  }
+  content_framework{
+    value_proposition:STR|required|format:problem_solution_differentiator_statement
+    use_cases:ARR|format:[industry,pain_point,solution_fit,roi_estimate,case_study_link]
+    competitive_intel:ARR|format:[competitor,our_strength,their_weakness,neutralizing_tactic,evidence_source]
+    objection_handling:ARR|format:[objection,counter_argument,supporting_data,proof_point]
+    pricing_packaging:STR|required|format:tier_structure,add_ons,discount_policy,approval_workflow
+  }
+  compliance_certifications{
+    regulatory_certifications:ARR|OPT:[SOC2,HIPAA,ISO27001,PCI_DSS,GDPR]
+    security_questionnaires:STR|optional|format:sig_questionnaire_response_ref
+    legal_approval_status:ENUM:[pending,approved,expired]
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_enablement_quality{
+    win_rate_correlation_index{
+      metric:percentage_point_lift_in_deal_closure_when_materials_are_utilized
+      target:≥8_pp
+      control_limits:UCL:15|LCL:5|Cpk_target:≥1.5
+    }
+    competitive_accuracy_score{
+      metric:percentage_of competitive claims verified as current_and_evidenced
+      target:100%
+      measurement_method:automated_market_scraping + analyst_validation_audit
+    }
+    content_adoption_rate{
+      metric:percentage_of_active_sales_reps_accessing_materials_monthly
+      target:≥85%
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[deck_update_cycle_days,competitive_claim_staleness_days,sales_feedback_rating,enablement_training_completion_pct]
+    predictive_model:win_probability_scoring_based_on_material_usage_frequency+competitive_scenario_match
+  }
+  causal_analysis_triggers{
+    trigger:accuracy_decay > 30_days OR adoption < LCL OR win_rate_drop_post_material_release
+    car_method:market_claim_validation_audit + usage_telemetry_analysis + pareto_of_lost_deal_reasons
+    preventive_action:enforce_quarterly_refresh_gates|mandate_legal_security_signoff|auto_link_to_live_competitive_dashboard
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Value Proposition & Target Persona Alignment"
+    content:[core_message,buyer_mapping,stage_specific_guidance,compliance_certifications]
+    pdf_formatting:executive_deck_layout_with_badge_grid
+  }
+  section_2{
+    title:"Use Cases & ROI Evidence"
+    content:[industry_matrix,pain_solution_mapping,case_studies,calculator_links]
+    mermaid_diagrams:true|buyer_journey_to_value_realization_flow
+  }
+  section_3{
+    title:"Competitive Battle Cards & Objection Handling"
+    content:[competitor_comparison_table,neutralization_tactics,counter_arguments,legal_approved_proof_points]
+    tables:objection_response_matrix|competitive_landscape_grid
+  }
+  section_4{
+    title:"Pricing, Packaging & Compliance Evidence"
+    content:[tier_structure,security_certifications,legal_signoffs,refresh_cadence]
+    compliance_mapping:sig_questionnaire_refs|regulatory_claim_audit_trail
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:pmm_authors_assets|automated_claim_validation+certification_check|exit_criteria:all_sections_populated|legal_refs_linked
+  stage_2_sales_legal:competitive_intel+legal_review+accuracy_scoring|control_chart_for_staleness_rate
+  stage_3_executive_approval:sales_director+cfo_signoff|pricing_compliance_verification|mandatory_signoff
+  stage_4_publish:crm_cms_sync+immutable_pdf_hash+training_scheduling
+  continuous_improvement:quarterly_enablement_retro|update_ppm_from_adoption_telemetry|refresh_battle_cards_from_win_loss_analysis
+}
+
+OUTPUT_GENERATION{
+  primary_output:PPTX + PDF + CRM_Sync
+  filename_pattern:enablement_deck_{product}_v{version}_{YYYYMMDD}.pdf
+  supplementary_outputs:battle_cards_export|obj_handling_playbook|compliance_certification_pack
+  metadata_injection:cmmi_tags:OPM-1,RSKM-2.2,VER-1.2|process_version:l5.0
+}

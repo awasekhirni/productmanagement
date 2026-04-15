@@ -1,0 +1,219 @@
+# DOC_BUSINESS_CASE_v1.0.toon
+# CMMI Level 5 Compliant Business Case Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:senior_product_strategist|financial_analyst|compliance_architect
+TASK:generate_cmmi_l5_compliant_business_case_with_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report
+
+INPUT_CONTEXT{
+  product{
+    name:STR|required
+    domain:ENUM:[fintech,healthtech,saas,iot,geospatial,enterprise]
+    problem_statement:STR|required|min_length:50
+    proposed_solution:STR|required|min_length:100
+  }
+  market{
+    target_segments:ARR|min_items:2
+    tam_sam_som{
+      tam:NUM|currency:USD
+      sam:NUM|currency:USD
+      som:NUM|currency:USD
+    }
+    competitive_landscape:STR|required
+  }
+  financials{
+    development_cost:NUM|currency:USD|required
+    operational_cost_annual:NUM|currency:USD|required
+    revenue_projections_3yr:ARR|min_items:3|format:[{year:INT,revenue:NUM}]
+    roi_calculation_method:ENUM:[npv,irr,payback_period]
+    break_even_month:INT|optional
+  }
+  risks{
+    technical:ARR|EXAMPLE:[tech_debt_accumulation,scalability_limits]
+    market:ARR|EXAMPLE:[competitor_response,regulatory_change]
+    financial:ARR|EXAMPLE:[budget_overrun,lower_adoption]
+    mitigation_strategies:OBJECT|key:risk_id|value:mitigation_plan
+  }
+  compliance{
+    applicable_frameworks:ARR|OPT:[GDPR,HIPAA,SOC2,PCI_DSS,ISO27001]
+    data_protection_impact_assessment_required:BOOL|default:false
+    regulatory_approval_timeline:STR|optional
+  }
+  stakeholders{
+    sponsor:STR|required
+    key_approvers:ARR|min_items:3
+    affected_departments:ARR|min_items:2
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_objectives{
+    business_case_quality_score{
+      metric:weighted_score_of_completeness_accuracy_feasibility
+      target:≥4.2/5.0
+      measurement_method:peer_review_rubric_with_statistical_validation
+      control_limits:UCL:5.0|LCL:3.5|Cpk_target:≥1.33
+    }
+    approval_cycle_time{
+      metric:business_days_from_submission_to_final_approval
+      target:≤10_business_days
+      measurement_method:automated_workflow_tracking
+      control_limits:UCL:15|LCL:3|Cpk_target:≥1.0
+    }
+    risk_coverage_completeness{
+      metric:percentage_of_identified_risks_with_mitigation_plans
+      target:100%
+      measurement_method:automated_traceability_check
+      control_limits:UCL:100%|LCL:95%|Cpk_target:≥2.0
+    }
+  }
+  process_performance_baselines{
+    historical_data_source:organizational_process_repository
+    baseline_metrics:[avg_approval_time,avg_revision_count,approval_rate_pct]
+    update_frequency:quarterly_with_statistical_significance_testing
+  }
+  causal_analysis_triggers{
+    defect_threshold:business_case_rejected_or_major_revision_required
+    analysis_method:5_whys + fishbone_diagram + pareto_analysis
+    preventive_action:auto_update_template_or_review_checklist
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Executive Summary"
+    content:[problem_statement,solution_overview,key_financials,recommendation]
+    pdf_formatting:executive_summary_style_with_highlighted_metrics
+  }
+  section_2{
+    title:"Market Analysis"
+    content:[target_segments,tam_sam_som,competitive_analysis,market_trends]
+    visualizations:[market_size_chart,competitive_positioning_matrix]
+    mermaid_diagrams:true
+  }
+  section_3{
+    title:"Financial Projections"
+    content:[cost_breakdown,revenue_model,roi_analysis,sensitivity_analysis]
+    calculations:npv_irr_payback_with_assumptions_documented
+    tables:3_year_p_and_l_projection|cash_flow_forecast
+  }
+  section_4{
+    title:"Risk Assessment & Mitigation"
+    content:[risk_register_with_probability_impact_scores,mitigation_plans,contingency_budgets]
+    compliance_mapping:link_risks_to_regulatory_requirements_if_applicable
+    visualization:risk_heat_map_mermaid
+  }
+  section_5{
+    title:"Compliance & Regulatory Strategy"
+    content:[applicable_frameworks,compliance_timeline,resource_requirements]
+    gdpr_hipaa_specific:data_protection_measures|privacy_by_design_approach
+    evidence_requirements:documentation_needed_for_audit
+  }
+  section_6{
+    title:"Implementation Roadmap"
+    content:[phased_approach,milestones,dependencies,resource_plan]
+    timeline_visualization:gantt_chart_mermaid_or_embedded_image
+    success_criteria:quantitative_metrics_for_each_phase
+  }
+  section_7{
+    title:"Recommendation & Approval Request"
+    content:[summary_of_benefits,key_assumptions,approval_request]
+    signature_fields:[sponsor,finance_lead,compliance_officer,cto]
+  }
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  automated_metrics{
+    doc_completeness_score:auto_check_required_sections_present
+    financial_model_accuracy:variance_analysis_vs_historical_projections
+    risk_mitigation_coverage:percentage_of_high_risks_with_plans
+  }
+  manual_metrics{
+    stakeholder_clarity_rating:post_review_survey_1_to_5_scale
+    decision_confidence_level:approver_self_assessment
+  }
+  metric_storage:time_series_database_with_query_api
+  dashboard:real_time_process_performance_view_for_management
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:business_case_executive_template_with_company_branding
+  dynamic_content{
+    financial_charts:auto_generated_from_input_data_using_plotly_or_similar
+    risk_heat_map:mermaid_rendered_to_high_res_png_for_pdf
+    approval_workflow_status:visual_indicator_with_color_coding
+  }
+  interactive_elements{
+    pdf_bookmarks:section_navigation
+    hyperlinks:cross_references_to_appendices_and_external_resources
+    form_fields:digital_signature_blocks_with_validation
+  }
+  archival_compliance{
+    pdf_a3:true
+    embedded_fonts:true
+    color_profile:embedded_icc_profile
+    metadata:xmp_with_cmmi_l5_process_tags
+  }
+  distribution{
+    access_control:role_based_pdf_permissions
+    watermark:confidential_draft_or_final_approved
+    expiration:optional_time_limited_access_for_external_reviewers
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft{
+    author_actions:complete_template_with_quantitative_data
+    automated_checks:required_fields_present|financial_calculations_valid
+    exit_criteria:all_required_sections_populated|metrics_collected
+  }
+  stage_2_peer_review{
+    reviewers:[product_lead,finance_partner,tech_lead]
+    review_method:structured_rubric_with_quantitative_scoring
+    defect_tracking:Jira_integration_with_severity_classification
+    statistical_control:review_defect_density_monitored_via_control_chart
+  }
+  stage_3_compliance_review{
+    reviewer:compliance_officer_or_legal_counsel
+    focus_areas:regulatory_mapping_accuracy|risk_disclosure_completeness
+    approval_gate:compliance_signoff_required_before_final_approval
+  }
+  stage_4_final_approval{
+    approvers:[sponsor,cto,cfo]
+    digital_signature:PAdES_compliant_with_timestamp
+    audit_trail:immutable_log_of_approval_events
+    version_control:pdf_generated_with_version_hash_in_filename
+  }
+  continuous_improvement{
+    post_approval_retrospective:quantitative_analysis_of_cycle_time_defects
+    process_adjustments:auto_update_template_or_checklist_based_on_data
+    innovation_deployment:pilot_ai_assisted_financial_modeling_if_roi_positive
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_output{
+    format:PDF/A-3_with_embedded_source_markdown
+    filename_pattern:"{product_name}_BusinessCase_v{version}_{YYYYMMDD}.pdf"
+    delivery_method:secure_download_link + email_notification
+  }
+  supplementary_outputs{
+    executive_summary_slide:PDF_single_page_for_board_presentation
+    financial_model_excel:export_of_calculations_for_further_analysis
+    compliance_evidence_package:ZIP_with_mapped_requirements_and_artifacts
+  }
+  metadata_injection{
+    pdf_properties:title,author,subject,keywords_with_cmmi_tags
+    custom_properties:process_version,metrics_snapshot,approval_hash
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_compliance_matrix:"Output GDPR/HIPAA/SOC2 control mapping table for this business case"
+  create_financial_sensitivity_model:"Generate tornado chart showing impact of key assumption changes"
+  schedule_review_reminders:"Create calendar invites for quarterly business case review per CMMI OPP"
+  export_to_governance_tool:"Format output for ServiceNow GRC or similar platform import"
+  initiate_causal_analysis:"If business case was rejected, trigger CAR process with defect data"
+}

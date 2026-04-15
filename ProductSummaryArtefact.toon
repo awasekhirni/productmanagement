@@ -1,0 +1,125 @@
+ROLE:senior_product_strategist|principal_architect|security_lead
+AUDIENCE:[CTO,ProductDesigner,Stakeholder,DBDesigner,SoftwareArchitect]
+
+INPUT{
+  product_name:STR
+  problem_solution:STR
+  users_personas:ARR
+  features_mvp_phase2:ARR
+  business_goals_kpis:ARR
+  constraints{
+    tech_stack:STR
+    deployment:STR|DEFAULT:"active-active:us-east-1,eu-central-1:data_sovereignty"
+    timeline_budget:STR
+    compliance:ARR|OPT:[GDPR,HIPAA,SOC2,CCPA]
+    legacy_integration:STR
+    testing:STR|DEFAULT:"include_chaos_engineering:region_failover,data_consistency"
+  }
+  integrations:ARR
+  success_criteria:STR
+  version{
+    current:STR|DEFAULT:"v1.0"
+    prev_log:STR|OPT
+  }
+  security{
+    threat_scope:STR|DEFAULT:"STRIDE:auth,data_export"
+    data_residency:STR
+    pii_handling:STR
+    audit_logging:STR
+    integration_format:STR|DEFAULT:"jira_keys:PROJ-XXX,linear_states"
+  }
+}
+
+OUTPUT_STRUCTURE{
+  section_1{
+    title:"EXECUTIVE_BUSINESS_OVERVIEW"
+    audience:Stakeholder
+    content:[value_prop,kpis_roi,timeline,risk_mitigation,build_vs_buy]
+    hooks:[version_note,stakeholder_summary_hook]
+  }
+  section_2{
+    title:"UX_DESIGN_BLUEPRINT"
+    audience:ProductDesigner
+    content:[user_journeys,wcag_2_2_aa,localization,design_system,latency_considerations]
+    hooks:[version_note]
+  }
+  section_3{
+    title:"SYSTEM_ARCHITECTURE"
+    audience:SoftwareArchitect
+    content:[pattern,service_boundaries,api_strategy,multi_region,cicd,observability,tech_stack]
+    mermaid{
+      c4_container:{validate:"mermaid.live",desc:"services,data_stores,region_flows"}
+      knowledge_graph:{validate:"mermaid.live",desc:"entities,lineage,compliance"}
+    }
+    hooks:[version_note]
+  }
+  section_4{
+    title:"DATA_ARCHITECTURE"
+    audience:DBDesigner
+    content:[entities,erd,data_flow,storage_engines,indexing,governance,compliance_mapping]
+    data_dict_hook:"CSV_ready:Entity,Field,DataType,PII_Tag,Encryption,Retention,Residency,Owner|import:Collibra,Alation"
+    hooks:[version_note]
+  }
+  section_5{
+    title:"SECURITY_THREAT_MODEL"
+    audience:[SecurityEngineer,CTO]
+    stride_table{
+      columns:[ThreatCat,Scenario,Mitigation,Owner,JiraKey]
+      format:"jira_linear_export_ready"
+      categories:[Spoofing,Tampering,Repudiation,InfoDisclosure,DoS,Elevation]
+    }
+    zero_trust:[mTLS,secrets_mgmt,service_auth]
+    data_sovereignty:"technical_controls:cross_border_prevention"
+    chaos_tests{
+      scenarios:[
+        "region_failover:eu-central-1_outage,us-east-1_takeover:<5min",
+        "data_consistency:replication_lag,conflict_resolution_verify",
+        "network_partition:split_brain_prevention,recovery_procedures"
+      ]
+      format:"gherkin_ready:automated_validation"
+    }
+    incident_response:"region_isolated_alerting,cross_region_forensics"
+  }
+  section_6{
+    title:"TECH_LEADERSHIP_EXECUTION"
+    audience:CTO
+    content:[strategic_alignment,team_structure,skill_gaps,tech_debt,cost_opt,milestones]
+    hooks:[version_note]
+  }
+  section_7{
+    title:"CROSS_CUTTING_ALIGNMENT"
+    content:[security_privacy,scalability_perf,compliance_audit,change_mgmt]
+    raci_table{
+      format:"markdown"
+      roles:[CTO,ProductDesigner,Stakeholder,DBDesigner,SoftwareArchitect,SecurityOfficer]
+      concerns:[DataResidency,PIIHandling,AuditLogging,IncidentResponse,UXAccessibility]
+    }
+  }
+  section_8{
+    title:"ASSUMPTIONS_VERSION_LOG"
+    content:[assumptions_tagged:"ASSUMPTION-vX.X",critical_questions:3-5]
+    version_log{
+      current_version:STR
+      changed_assumptions:ARR
+      new_decisions:ARR
+      next_review_trigger:STR
+    }
+  }
+}
+
+FORMAT_RULES{
+  syntax:Markdown
+  compatibility:[Confluence,Notion,GitHub_Wiki]
+  section_word_limit:300|override:complexity
+  tags:[ACTION,RISK,ASSUMPTION-vX.X]
+  bold_compliance:[data_residency,PII_handling,audit_logging,cross_region_replication]
+  mermaid_validation:"https://mermaid.live"
+}
+
+FOLLOW_UP_COMMANDS{
+  validate_mermaid:"Check Section 3 diagrams syntax at mermaid.live|report_errors"
+  export_data_dict:"Output Section 4 as CSV-ready Markdown|columns:Entity,Field,DataType,PII_Tag,Encryption,Retention,Residency,Owner|import:Collibra,Alation"
+  export_threat_model:"Reformat Section 5 STRIDE|jira_keys:PROJ-XXX|linear_states:[Todo,In_Progress,Done]"
+  expand_chaos_tests:"Convert Section 5 scenarios to Gherkin|automated_validation_ready"
+  generate_stakeholder_summary:"1-page executive summary from Section 1+6|board_presentation|include:KPI_dashboard_mockup_desc"
+}

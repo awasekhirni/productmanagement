@@ -1,0 +1,503 @@
+# DOC_BPM_v1.0.toon
+# CMMI Level 5 Compliant Business Process Management Document Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:business_process_architect|operations_excellence_lead|compliance_specialist|continuous_improvement_manager
+TASK:generate_cmmi_l5_compliant_bpm_document_with_process_metrics_optimization_analysis_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + BPMN_2.0_XML_export + machine_readable_JSON
+
+INPUT_CONTEXT{
+  process{
+    id:STR|format:BPM-###|auto_increment_from_repository
+    name:STR|required|concise_process_name
+    version:SEMVER|required
+    process_owner:STR|required|role_or_individual
+    process_domain:ENUM:[product_development,incident_response,compliance_audit,data_governance,customer_onboarding,financial_reporting]
+  }
+  process_scope{
+    start_trigger:STR|required|event_or_condition_that_initiates_process
+    end_condition:STR|required|expected_outcome_or_deliverable
+    boundaries:STR|what_is_in_scope_vs_out_of_scope
+    stakeholders:ARR|structure:{role:STR,responsibility:STR,interaction_frequency:ENUM}
+  }
+  process_flow{
+    bpmn_reference:STR|optional|link_to_bpmn_2.0_file_or_diagram_tool
+    high_level_steps:ARR|min_items:5|structure:{
+      step_id:STR|format:STEP-###
+      name:STR|concise_action_description
+      actor:STR|role_or_system_responsible
+      input:ARR|data_or_artifacts_required
+      output:ARR|deliverables_or_data_produced
+      decision_points:ARR|OPT|conditions_that_branch_flow
+      slas:OBJECT|OPT|{max_duration:STR,accuracy_target:NUM,quality_threshold:NUM}
+    }
+    exception_paths:ARR|OPT|structure:{condition:STR,handling_procedure:STR,escalation_path:STR}
+  }
+  performance_metrics{
+    efficiency_metrics:ARR|structure:{metric_name:STR,formula:STR,target_value:NUM,unit:STR,measurement_frequency:ENUM}
+    effectiveness_metrics:ARR|structure:{metric_name:STR,formula:STR,target_value:NUM,unit:STR,measurement_frequency:ENUM}
+    quality_metrics:ARR|structure:{metric_name:STR,formula:STR,target_value:NUM,unit:STR,measurement_frequency:ENUM}
+    compliance_metrics:ARR|OPT|structure:{regulation:STR,control_id:STR,evidence_method:STR,review_frequency:ENUM}
+  }
+  controls_and_governance{
+    approval_gates:ARR|structure:{gate_name:STR,approver_role:STR,entry_criteria:ARR,exit_criteria:ARR}
+    quality_checks:ARR|structure:{check_point:STR,validation_method:STR,failure_action:STR}
+    audit_points:ARR|OPT|structure:{audit_activity:STR,frequency:ENUM,evidence_collected:STR}
+    risk_controls:ARR|structure:{risk_id:STR,control_description:STR,control_type:ENUM:[preventive,detective,corrective],effectiveness_score:NUM}
+  }
+  continuous_improvement{
+    improvement_mechanism:ENUM:[kaizen,six_sigma,lean,agile_retrospective,car_process]
+    feedback_sources:ARR|EXAMPLE:[process_metrics,stakeholder_surveys,audit_findings,incident_post_mortems]
+    improvement_backlog:STR|optional|link_to_jira_or_azure_devops_board
+    innovation_opportunities:ARR|OPT|potential_automation_or_optimization_ideas
+  }
+  compliance_mapping{
+    applicable_frameworks:ARR|OPT:[ISO_9001,ISO_27001,SOC2,GDPR,HIPAA,ITIL,CMMI]
+    control_objectives:ARR|OPT|structure:{framework:STR,control_id:STR,process_alignment:STR,evidence_location:STR}
+    regulatory_requirements:ARR|OPT|structure:{regulation:STR,article_section:STR,process_requirement:STR,verification_method:STR}
+  }
+  technology_enablement{
+    supporting_systems:ARR|OPT|structure:{system_name:STR,role_in_process:integration_type:ENUM:[manual,api,batch,real_time],owner:STR}
+    automation_opportunities:ARR|OPT|structure:{step_id:STR,automation_type:ENUM:[rpa,workflow_engine,ai_assisted],estimated_effort:STR,roi_projection:NUM}
+    monitoring_tools:ARR|OPT|structure:{tool_name:STR,metrics_captured:ARR,alerting_enabled:BOOL,dashboard_link:STR}
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_process_management{
+    process_performance_objectives{
+      cycle_time{
+        metric:end_to_end_process_duration_from_trigger_to_completion
+        target:≤[configured_value]_business_hours
+        measurement_method:automated_process_mining_or_workflow_logging
+        control_limits:UCL:[value]|LCL:[value]|Cpk_target:≥1.33
+        statistical_method:individual_moving_range_chart
+      }
+      first_pass_yield{
+        metric:percentage_of_process_instances_completed_without_rework_or_exceptions
+        target:≥95%
+        measurement_method:workflow_system_counters_with_exception_tracking
+        control_limits:UCL:100%|LCL:90%|Cpk_target:≥1.67
+        statistical_method:p_chart_for_proportion_data
+      }
+      process_capability_index{
+        metric:Cpk_calculated_from_cycle_time_distribution_vs_specification_limits
+        target:≥1.33_indicating_capable_process
+        measurement_method:statistical_analysis_of_historical_process_data
+        control_limits:UCL:2.0|LCL:1.0|Cpk_target:≥1.33
+        statistical_method:process_capability_analysis_with_normality_testing
+      }
+      compliance_adherence_rate{
+        metric:percentage_of_process_instances_with_all_required_controls_executed
+        target:100%
+        measurement_method:automated_control_execution_logging_with_audit_trail
+        control_limits:UCL:100%|LCL:98%|Cpk_target:≥2.0
+        statistical_method:attribute_control_chart_with_zero_defect_goal
+      }
+    }
+    process_performance_baselines{
+      baseline_source:organizational_process_repository_with_minimum_6_months_historical_data
+      baseline_metrics:[median_cycle_time,first_pass_yield_baseline,defect_rate_baseline,cost_per_instance]
+      baseline_validation:statistical_stability_confirmed_via_control_charts_before_use_as_baseline
+      update_frequency:quarterly_or_after_significant_process_change_with_re_validation
+    }
+    statistical_process_control_implementation{
+      control_chart_types:[I_MR_chart_for_cycle_time,p_chart_for_yield,u_chart_for_defects]
+      control_limit_calculation:based_on_process_variation_not_specification_limits
+      out_of_control_rules:western_electric_rules_or_nelson_rules_configured
+      response_protocol:automatic_alert_to_process_owner_when_special_cause_detected
+    }
+  }
+  causal_analysis_and_resolution_integration{
+    trigger_conditions{
+      process_metric_breaches_control_limits_for_3_consecutive_periods
+      first_pass_yield_drops_below_LCL_for_2_consecutive_measurements
+      compliance_adherence_rate_falls_below_98%
+      stakeholder_satisfaction_score_drops_below_3.5_on_5_point_scale
+    }
+    analysis_methodology{
+      primary:5_whys_root_cause_analysis_with_facilitated_session
+      secondary:fishbone_diagram_categorizing_causes_by_people_process_technology_environment
+      tertiary:pareto_analysis_to_prioritize_top_20%_causes_driving_80%_of_issues
+      data_sources:[process_logs,exception_reports,stakeholder_feedback,audit_findings]
+    }
+    preventive_action_workflow{
+      action_tracking:Jira_or_servicenow_integration_with_car_specific_workflow
+      effectiveness_validation:pre_post_implementation_metric_comparison_with_statistical_significance_testing
+      knowledge_capture:lessons_learned_added_to_organizational_process_asset_library
+    }
+  }
+  organizational_innovation_and_deployment{
+    innovation_pipeline{
+      idea_sources:[process_improvement_suggestions,automation_opportunities,technology_scanning,benchmarking_studies]
+      evaluation_criteria:[roi_estimate,implementation_effort,risk_level,strategic_alignment,compliance_impact]
+      pilot_protocol:controlled_experiment_with_hypothesis_success_metrics_and_rollout_criteria
+    }
+    deployment_metrics{
+      adoption_rate:percentage_of_target_users_or_process_instances_using_new_approach
+      time_to_value:days_from_deployment_to_achievement_of_projected_benefit
+      roi_actual_vs_projected:variance_analysis_with_root_cause_for_significant_deviations
+    }
+    feedback_loop{
+      post_deployment_review:scheduled_at_30_60_90_days_with_quantitative_outcome_analysis
+      scaling_decision:data_driven_go_no_go_based_on_pilot_metrics_vs_thresholds
+      knowledge_transfer:updated_process_documentation_training_materials_and_coaching_plan
+    }
+  }
+  quantitative_requirements_for_bpm{
+    process_modeling_standards{
+      notation:BPMN_2.0_compliant_with_custom_extensions_documented
+      granularity:level_3_process_decomposition_minimum_task_level_detail
+      reusability:sub_processes_defined_for_common_patterns_with_version_control
+    }
+    metric_definition_quality{
+      clarity_score:peer_review_rating_1_to_5_for_metric_understandability|target:≥4.0
+      measurability_index:percentage_of_metrics_with_automated_data_collection|target:≥90%
+      actionability_rating:stakeholder_assessment_of_metric_usefulness_for_decisions|target:≥4.2
+    }
+    traceability_completeness{
+      requirement_to_process_step:100%_of_compliance_requirements_mapped_to_specific_process_activities
+      process_step_to_control:all_quality_and_compliance_controls_linked_to_executing_steps
+      control_to_evidence:each_control_has_documented_evidence_collection_method_and_location
+    }
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Process Identification & Control"
+    content:[process_id,name,version,owner,domain,classification,last_review_date,next_review_date]
+    pdf_formatting:header_table_with_digital_signature_fields_for_process_owner_and_compliance_officer
+    cmmi_traceability:link_to_organizational_process_definition_repository_and_metrics_baseline
+    mermaid_diagram:process_hierarchy_showing_parent_child_relationships_with_other_bpm_docs
+  }
+  section_2{
+    title:"Process Purpose & Scope"
+    content:[business_objective,value_proposition,start_trigger,end_condition,in_scope_out_of_scope]
+    stakeholder_matrix:table_with_roles_responsibilities_interaction_frequency_and_communication_channels
+    value_stream_mapping:mermaid_diagram_showing_process_contribution_to_end_to_end_customer_value
+    quantitative_context:baseline_metrics_that_motivate_process_optimization_efforts
+  }
+  section_3{
+    title:"Process Flow Specification"
+    content:iterate_over_input.process_flow.high_level_steps
+    format_per_step{
+      header:"STEP-###: {step_name} | Actor: {actor}"
+      detailed_description:action_performed_with_decision_logic_and_business_rules
+      input_output_table:structured_list_of_artifacts_data_or_signals_exchanged
+      sla_specification:performance_targets_with_measurement_method_and_monitoring_approach
+      exception_handling:known_failure_modes_with_recovery_procedures_and_escalation_paths
+    }
+    bpmn_visualization{
+      primary_diagram:mermaid_flowchart_or_embedded_bpmn_2.0_svg_rendered_to_high_res
+      swimlanes:organized_by_actor_role_or_system_with_clear_handoffs
+      gateways:decision_points_with_conditions_documented_in_diagram_labels
+      events:start_intermediate_end_events_with_triggers_and_outcomes_labeled
+    }
+    exception_flow_documentation:separate_sub_section_for_all_exception_paths_with_handling_logic
+  }
+  section_4{
+    title:"Performance Metrics & Measurement Plan"
+    content:iterate_over_input.performance_metrics
+    format_per_metric_category{
+      efficiency_metrics:table_with_metric_name_formula_target_measurement_frequency_and_owner
+      effectiveness_metrics:same_structure_with_business_outcome_focus
+      quality_metrics:same_structure_with_defect_prevention_focus
+      compliance_metrics:same_structure_with_regulatory_control_focus_if_applicable
+    }
+    measurement_infrastructure{
+      data_sources:list_of_systems_logs_or_manual_collection_methods_for_each_metric
+      collection_frequency:real_time_hourly_daily_weekly_as_appropriate_per_metric
+      storage_location:metrics_repository_database_or_dashboard_with_access_controls
+      validation_approach:how_metric_accuracy_and_completeness_will_be_verified
+    }
+    statistical_analysis_plan{
+      control_chart_specification:which_metrics_use_which_chart_type_with_parameters
+      capability_analysis:which_metrics_will_have_cpk_calculated_with_specification_limits
+      trend_analysis:forecasting_method_for_metrics_with_seasonal_or_growth_patterns
+    }
+    dashboard_mockup:description_of_how_metrics_will_be_visualized_for_process_owner_and_stakeholders
+  }
+  section_5{
+    title:"Controls, Governance & Risk Management"
+    content:iterate_over_input.controls_and_governance
+    format_per_control_type{
+      approval_gates:table_with_gate_name_approver_entry_exit_criteria_and_escalation_path
+      quality_checks:table_with_check_point_validation_method_failure_action_and_owner
+      audit_points:table_with_audit_activity_frequency_evidence_collected_and_auditor_role
+      risk_controls:table_with_risk_id_control_description_type_effectiveness_score_and_review_schedule
+    }
+    risk_assessment_integration{
+      process_fmea:failure_mode_effects_analysis_with_severity_occurrence_detection_scores
+      risk_heat_map:mermaid_visualization_of_process_risks_by_probability_and_impact
+      mitigation_tracking:link_to_risk_register_with_status_and_owner_for_each_mitigation
+    }
+    compliance_control_mapping{
+      framework_alignment:table_linking_process_controls_to_iso_soc2_gdpr_hipaa_requirements
+      evidence_collection:specification_of_what_logs_artifacts_or_reports_prove_control_execution
+      audit_readiness:checklist_of_pre_audit_activities_and_responsible_parties
+    }
+  }
+  section_6{
+    title:"Technology Enablement & Automation Strategy"
+    content:iterate_over_input.technology_enablement
+    format_per_component{
+      supporting_systems:table_with_system_name_role_integration_type_owner_and_sla_dependencies
+      automation_opportunities:table_with_step_id_automation_type_effort_estimate_roi_and_priority
+      monitoring_tools:table_with_tool_name_metrics_captured_alerting_enabled_and_dashboard_link
+    }
+    automation_roadmap{
+      prioritization_matrix:effort_vs_impact_scoring_for_automation_candidates
+      implementation_phases:short_term_3_6_months_medium_term_6_12_months_long_term_12_plus_months
+      success_criteria:quantitative_targets_for_each_automation_initiative_with_measurement_approach
+    }
+    integration_architecture{
+      data_flow_diagram:mermaid_showing_system_interconnections_and_data_exchange_patterns
+      api_specifications:links_to_openapi_asyncapi_docs_for_programmatic_integrations
+      error_handling:cross_system_failure_scenarios_with_recovery_and_compensation_logic
+    }
+  }
+  section_7{
+    title:"Continuous Improvement & Innovation Framework"
+    content:iterate_over_input.continuous_improvement
+    format_per_element{
+      improvement_mechanism:detailed_description_of_kaizen_six_sigma_or_other_methodology_application
+      feedback_sources:table_with_source_type_collection_method_frequency_and_owner
+      improvement_backlog:link_to_tracking_system_with_prioritization_criteria_and_status
+      innovation_opportunities:table_with_idea_description_potential_impact_effort_and_experimental_approach
+    }
+    car_process_integration{
+      trigger_to_action_workflow:step_by_step_description_of_how_metric_breaches_initiate_root_cause_analysis
+      analysis_artifacts:templates_for_5_whys_fishbone_and_pareto_with_storage_location
+      preventive_action_tracking:how_improvements_are_logged_assigned_and_validated_for_effectiveness
+    }
+    oid_process_integration{
+      innovation_evaluation_protocol:criteria_and_process_for_selecting_ideas_for_pilot
+      pilot_execution_framework:hypothesis_success_metrics_timeline_and_rollout_decision_gates
+      scaling_protocol:criteria_and_process_for_enterprise_deployment_of_successful_pilots
+    }
+    knowledge_management{
+      lessons_learned_repository:location_and_structure_for_storing_process_improvement_insights
+      best_practice_sharing:mechanism_for_disseminating_successful_patterns_across_organization
+      training_integration:how_process_changes_are_communicated_and_reinforced_with_stakeholders
+    }
+  }
+  section_8{
+    title:"Compliance & Regulatory Alignment"
+    content:iterate_over_input.compliance_mapping
+    format_per_framework{
+      framework_overview:brief_summary_of_applicable_requirements_and_control_objectives
+      control_mapping_table:process_steps_controls_and_evidence_linked_to_specific_framework_clauses
+      gap_analysis:any_areas_where_process_does_not_fully_meet_requirements_with_remediation_plan
+      audit_coordination:point_of_contact_schedule_and_preparation_checklist_for_framework_audits
+    }
+    gdpr_specific_if_applicable{
+      data_flow_mapping:where_personal_data_is_collected_processed_stored_and_deleted_in_process
+      lawful_basis_documentation:legal_ground_for_each_data_processing_activity_in_process
+      data_subject_rights_workflow:how_access_rectification_erasure_requests_are_handled_within_process
+    }
+    hipaa_specific_if_applicable{
+      phi_handling_specification:where_protected_health_information_flows_and_how_it_is_secured
+      security_rule_implementation:administrative_physical_and_technical_safeguards_in_process
+      breach_response_integration:how_process_triggers_or_supports_incident_response_procedures
+    }
+    evidence_package_specification{
+      artifact_inventory:list_of_documents_logs_reports_that_demonstrate_compliance
+      collection_automation:which_evidence_items_are_auto_collected_vs_manually_assembled
+      retention_schedule:how_long_each_evidence_type_is_kept_and_where_it_is_stored
+    }
+  }
+  section_9{
+    title:"Process Performance Baselines & Statistical Control"
+    content:cmmi_l5_specific_quantitative_management_section
+    baseline_documentation{
+      historical_data_summary:time_period_sample_size_and_stability_assessment_for_baseline_metrics
+      baseline_values:table_with_metric_name_baseline_value_control_limits_and_capability_index
+      baseline_usage_guidance:how_baselines_are_used_for_planning_monitoring_and_improvement
+    }
+    spc_implementation{
+      control_chart_gallery:examples_of_each_chart_type_used_with_interpretation_guidelines
+      out_of_control_protocols:step_by_step_response_when_special_cause_variation_is_detected
+      recalibration_criteria:when_and_how_control_limits_are_updated_based_on_process_changes
+    }
+    capability_analysis{
+      specification_limits:where_targets_come_from_business_requirements_vs_customer_expectations
+      cpk_interpretation:guidance_for_what_different_capability_scores_mean_for_process_management
+      improvement_prioritization:how_to_use_capability_analysis_to_focus_improvement_efforts
+    }
+    quantitative_objectives_tracking{
+      target_vs_actual_dashboard:mockup_or_description_of_how_objectives_are_monitored
+      variance_analysis_protocol:process_for_investigating_and_resolving_significant_deviations
+      forecasting_approach:how_historical_performance_informs_future_planning_and_commitments
+    }
+  }
+  section_10{
+    title:"Review, Approval & Change Management"
+    content:[review_schedule,approval_criteria,change_control_process,version_history]
+    change_control_workflow{
+      change_request_template:required_fields_for_proposing_process_modifications
+      impact_assessment:how_changes_are_evaluated_for_metrics_compliance_stakeholders_and_systems
+      approval_gates:who_must_approve_what_types_of_changes_with_escalation_path
+      implementation_protocol:how_approved_changes_are_communicated_trained_and_deployed
+    }
+    digital_signature_specification{
+      signature_fields:process_owner_compliance_officer_quality_representative_cto_if_applicable
+      signature_standard:PAdES_BES_or_LTVA_with_rfc3161_timestamp_for_long_term_validation
+      audit_trail:immutable_log_of_all_signature_events_with_user_context_and_document_version
+    }
+    version_control_integration{
+      source_control:markdown_source_stored_in_git_with_branching_strategy_for_drafts_and_releases
+      pdf_generation_trigger:automated_pdf_created_on_merge_to_main_with_version_hash_in_filename
+      archival_policy:how_superseded_versions_are_retained_and_accessed_for_audit_or_reference
+    }
+  }
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  process_level_metrics{
+    cycle_time_distribution:mean_median_p95_p99_with_control_chart_monitoring
+    first_pass_yield:percentage_completed_without_rework_with_p_chart_tracking
+    defect_density:exceptions_or_errors_per_100_process_instances_with_u_chart_monitoring
+    cost_per_instance:fully_loaded_cost_including_labor_systems_and_overhead_allocation
+    stakeholder_satisfaction:survey_score_1_to_5_with_trend_analysis_and_driver_identification
+  }
+  control_effectiveness_metrics{
+    control_execution_rate:percentage_of_instances_where_required_controls_were_applied
+    control_detection_accuracy:percentage_of_defects_caught_by_controls_vs_escaping
+    false_positive_rate:percentage_of_control_alerts_that_did_not_indicate_actual_issues
+    mean_time_to_detect:average_time_from_issue_occurrence_to_control_alert
+    mean_time_to_respond:average_time_from_control_alert_to_corrective_action_initiation
+  }
+  compliance_metrics{
+    requirement_coverage:percentage_of_applicable_regulatory_clauses_addressed_by_process_controls
+    evidence_completeness:percentage_of_required_compliance_artifacts_collected_and_validated
+    audit_finding_resolution:mean_time_to_close_compliance_gaps_identified_in_audits
+    control_testing_success:percentage_of_controls_passing_periodic_effectiveness_testing
+  }
+  improvement_metrics{
+    improvement_implementation_rate:number_of_validated_improvements_deployed_per_quarter
+    benefit_realization:actual_vs_projected_impact_of_improvements_with_variance_analysis
+    knowledge_capture_completeness:percentage_of_lessons_learned_documented_and_shared
+    innovation_pipeline_velocity:time_from_idea_submission_to_pilot_decision_to_scale_decision
+  }
+  metric_infrastructure{
+    collection_automation:percentage_of_metrics_with_automated_vs_manual_data_collection
+    data_quality_score:completeness_accuracy_and_timeliness_rating_for_metric_data_sources
+    dashboard_adoption:percentage_of_target_users_regularly_viewing_process_performance_dashboards
+    alert_effectiveness:percentage_of_control_limit_breaches_that_triggered_appropriate_response
+  }
+  storage_and_analysis{
+    repository:time_series_database_with_metric_schema_and_api_for_querying
+    dashboards:real_time_process_performance_views_with_drill_down_to_instance_level
+    statistical_engine:automated_control_chart_generation_capability_analysis_and_forecasting
+    alerting:integration_with_pagerduty_slack_or_email_for_out_of_control_conditions
+  }
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:bpm_enterprise_template_with_process_branding_cmmi_headers_and_compliance_footers
+  dynamic_content{
+    process_flow_diagram:mermaid_or_bpmn_rendered_to_high_resolution_vector_with_zoom_capability
+    metrics_charts:control_charts_capability_histograms_and_trend_graphs_embedded_as_images
+    compliance_matrices:interactive_tables_with_filtering_and_hyperlinks_to_evidence_locations
+    risk_heat_map:color_coded_visualization_of_process_risks_by_probability_and_impact
+    automation_roadmap:gantt_chart_or_timeline_visualization_of_planned_improvements
+  }
+  navigation_and_interactivity{
+    pdf_bookmarks:hierarchical_structure_matching_bpm_sections_with_quick_jump
+    hyperlinks:cross_references_to_related_docs_requirements_tests_compliance_frameworks
+    form_fields:approval_signature_blocks_with_validation_timestamp_role_and_digital_certificate
+    collapsible_sections:optional_expansion_for_detailed_appendices_to_keep_main_body_concise
+  }
+  archival_and_compliance{
+    pdf_a3:true_with_embedded_fonts_color_profiles_and_long_term_validation_metadata
+    metadata:xmp_with_cmmi_process_tags_process_id_compliance_mappings_metrics_snapshot
+    accessibility:pdf_ua_compliant_with_tagged_structure_alt_text_for_diagrams_and_screen_reader_navigation
+    digital_preservation:pdf_a3_conformance_verified_with_verapdf_or_similar_tool_pre_distribution
+  }
+  distribution_control{
+    access_permissions:role_based_viewing_for_process_participants_auditors_and_management
+    watermarking:dynamic_injection_of_confidential_draft_or_final_approved_based_on_status
+    expiration:optional_time_limited_access_for_external_consultants_or_audit_firms
+    audit_logging:immutable_log_of_pdf_access_download_printing_with_user_and_system_context
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring{
+    author_actions:populate_bpm_template_with_quantitative_metrics_process_flow_and_controls
+    automated_validation:required_fields_present|metrics_defined|traceability_links_valid|bpmn_syntax_check
+    quality_gates:process_clarity_score_threshold|metric_measurability_minimum_met|compliance_coverage_verified
+    exit_criteria:complete_analysis_ready_for_process_review_board_with_metrics_baseline_attached
+  }
+  stage_2_process_review{
+    reviewers:[process_owner,operations_lead,quality_representative,compliance_officer,tech_architect]
+    review_method:structured_rubric_with_quantitative_scoring_for_flow_clarity_metric_quality_control_adequacy
+    defect_classification:process_gaps_metric_flaws_control_weaknesses_compliance_misses
+    statistical_control:review_defect_density_and_consensus_score_monitored_via_spc_chart
+    exit_criteria:consensus_score_threshold_met|all_critical_defects_resolved|metrics_baseline_validated
+  }
+  stage_3_compliance_validation{
+    reviewer:compliance_officer_or_internal_auditor
+    focus_areas:regulatory_mapping_accuracy|evidence_plan_completeness|control_testing_approach
+    approval_gate:compliance_signoff_required_before_final_approval_for_regulated_processes
+    quantitative_check:100%_of_applicable_compliance_frameworks_assessed_and_documented_with_evidence_plan
+  }
+  stage_4_final_approval{
+    approvers:[process_sponsor,quality_management_representative,compliance_officer,cto_if_technical_process]
+    digital_signature:PAdES_LTVA_compliant_for_long_term_archival_with_rfc3161_timestamp_authority
+    audit_trail:immutable_log_of_approval_events_with_process_context_metrics_snapshot_and_document_version
+    version_control:pdf_filename_includes_process_id_version_hash_approval_timestamp_and_classification
+  }
+  continuous_improvement_loop{
+    post_approval_analysis:quantitative_review_of_cycle_time_defect_patterns_stakeholder_feedback
+    process_adjustments:auto_update_bpm_template_or_review_checklist_based_on_data_driven_insights
+    knowledge_base_update:store_approved_bpm_patterns_metrics_baselines_and_improvement_outcomes_for_reuse
+    innovation_deployment:pilot_ai_assisted_process_mining_or_automation_if_quality_metrics_improve
+    car_integration:if_process_performance_misses_targets_trigger_causal_analysis_with_quantitative_data
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_outputs{
+    pdf_report{
+      format:PDF/A-3_with_embedded_source_markdown_metadata_and_long_term_validation_support
+      filename:"{product_name}_BPM-{process_id}_v{version}_{YYYYMMDD}_CMMI_L5.pdf"
+      delivery:secure_download_link + process_repository_index + email_notification_to_stakeholders
+    }
+    bpmn_2.0_export{
+      format:XML_conforming_to_bpmn_2.0_schema_with_custom_extensions_documented
+      content:full_process_flow_with_annotations_metrics_references_and_control_points
+      use_case:import_to_camunda_bonita_or_other_bpmn_engine_for_execution_or_simulation
+    }
+    machine_readable_metrics_export{
+      format:JSON_schema_validated_against_bpm_metrics_schema_with_cmmi_extensions
+      content:all_performance_metrics_baselines_control_limits_and_measurement_specifications
+      use_case:automated_dashboard_generation_compliance_auditing_process_mining_integration
+    }
+  }
+  supplementary_outputs{
+    executive_process_summary:one_page_pdf_for_leadership_with_key_metrics_risks_and_recommendations
+    implementation_checklist:CSV_export_of_process_deployment_tasks_for_import_to_jira_or_azure_devops
+    compliance_evidence_package:ZIP_with_mapped_requirements_control_evidence_and_audit_preparation_checklist
+    training_materials_outline:structure_for_process_training_based_on_flow_steps_roles_and_decision_points
+    automation_spec_snippets:technical_specifications_for_high_priority_automation_opportunities
+  }
+  metadata_and_audit{
+    pdf_properties:title_author_subject_keywords_with_cmmi_bpm_compliance_and_process_tags
+    custom_xmp_properties:process_version_metrics_baseline_snapshot_approval_hash_git_commit_process_owner
+    audit_trail:immutable_log_of_pdf_generation_approval_access_and_export_events_with_full_context
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_process_mining_config:"Output configuration for Celonis/UiPath Process Mining to monitor this BPM"
+  create_automation_specs:"Convert high-ROI automation opportunities to technical specification documents"
+  schedule_metrics_review:"Set quarterly process performance review per CMMI QPM with control chart analysis"
+  export_to_bpmn_engine:"Format BPMN 2.0 XML for import to Camunda/Activiti with deployment instructions"
+  initiate_causal_analysis:"If process metrics breach control limits, trigger CAR process with quantitative data"
+  generate_compliance_audit_package:"Bundle BPM sections with mapped regulatory requirements and evidence plan"
+  create_training_outline:"Develop role-based training materials from process flow and decision points"
+  setup_dashboard_integration:"Generate Grafana/Looker configuration for real-time process performance monitoring"
+}

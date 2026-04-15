@@ -1,0 +1,80 @@
+# DOC_USER_JOURNEY_MAP_v1.0.toon
+IMPORT:UX_RESEARCH_BASE_TEMPLATE.toon
+
+ROLE:senior_ux_researcher|service_designer|accessibility_specialist
+TASK:generate_comprehensive_user_journey_map_with_friction_and_accessibility_analysis
+OUTPUT_FORMAT:Markdown_source + Miro/Figma_Board_Config + PNG/PDF_export
+
+INPUT_CONTEXT{
+  user_persona{
+    name:STR|required
+    role_or_demographic:STR|required
+    primary_goal:STR|required
+    tech_literacy:ENUM:[novice,intermediate,expert]
+    accessibility_needs:ARR|OPT:[screen_reader,motor_impairment,color_blindness,cognitive_load]
+  }
+  journey_scope{
+    start_point:STR|required
+    end_point:STR|required
+    timeframe:ENUM:[single_session,multi_session,ongoing_relationship]
+    channels:ARR|OPT:[web,mobile,in_person,email,phone,third_party]
+  }
+  context_data{
+    qualitative_feedback:STR|optional
+    quantitative_metrics:OBJECT|optional
+    existing_pain_points:ARR|optional
+  }
+}
+
+JOURNEY_ANALYSIS_FRAMEWORK{
+  touchpoint_mapping{
+    sequence:ordered_list_of_user_actions
+    system_responses:corresponding_system_feedback_or_data_processing
+    emotional_trajectory:scale:1_to_5_sentiment_per_touchpoint
+    friction_detection:auto_flag_high_effort_or_dropout_risk_points
+  }
+  accessibility_validation{
+    checkpoints_per_touchpoint:wcag_2.1_aa_compliance_check
+    inclusive_design_opportunities:automated_suggestions_based_on_persona_needs
+  }
+  opportunity_identification{
+    gap_analysis:comparison_of_user_expectations_vs_actual_experience
+    innovation_sparks:STR|based_on_emotional_valleys_and_pain_points
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Executive Journey Overview"
+    content:[persona_summary,journey_scope,key_findings,recommendation]
+    pdf_formatting:high_level_infographic_style
+  }
+  section_2{
+    title:"Touchpoint Matrix & Emotional Arc"
+    content:[chronological_steps,system_interactions,user_emotions,channel_switches]
+    visualizations:[journey_map_chart,emotional_curve_graph]
+    mermaid_diagrams:true
+  }
+  section_3{
+    title:"Friction & Pain Point Analysis"
+    content:[identified_frictions,root_cause_hypotheses,drop_off_risk_scores,accessibility_barriers]
+    prioritization:impact_vs_effort_matrix_for_friction_resolution
+  }
+  section_4{
+    title:"Opportunity Mapping & Design Recommendations"
+    content:[quick_wins,strategic_initiatives,accessibility_improvements,validation_next_steps]
+    traceability:link_to_product_backlog_or_experiment_plan
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_output{
+    format:Markdown + Miro/Figma_JSON_export + PDF
+    filename_pattern:"{persona_name}_JourneyMap_v{version}_{YYYYMMDD}"
+    delivery_method:repo_commit + design_tool_sync
+  }
+  supplementary_outputs{
+    annotated_screenshots:linked_to_touchpoints_in_journey
+    stakeholder_summary_deck:PDF_slide_with_key_insights
+  }
+}

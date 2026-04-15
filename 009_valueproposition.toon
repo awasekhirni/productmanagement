@@ -1,0 +1,119 @@
+# DOC_VALUE_PROP_CANVAS_v1.0.toon
+# CMMI Level 5 Compliant Value Proposition Canvas Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:product_manager|product_marketer|growth_strategist|compliance_counsel
+TASK:generate_cmmi_l5_compliant_value_proposition_canvas_with_fit_validation_ccpa_transparency_mapping_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + Strategyzer_Canvas_JSON + machine_readable_JSON
+
+INPUT_CONTEXT{
+  canvas{
+    id:STR|format:VPC-###|auto_increment
+    product_name:STR|required
+    version:SEMVER|required
+    canvas_owner:STR|required
+    target_segment:STR|required
+    last_validated:DATE|optional
+  }
+  customer_profile{
+    customer_jobs:ARR|min_items:3|structure:{job_type:ENUM:[functional,social,emotional],description:STR,priority:ENUM[high,med,low],frequency:STR}
+    pains:ARR|min_items:3|structure:{pain_description:STR,severity:ENUM[1-5],frequency:STR,current_workarounds:STR}
+    gains:ARR|min_items:3|structure:{gain_description:STR,importance:ENUM[1-5],expectation_level:ENUM:[expected,desired,unexpected],measurement:STR}
+  }
+  value_map{
+    products_services:ARR|min_items:1|structure:{offering:STR,key_features:ARR,differentiators:ARR}
+    pain_relievers:ARR|min_items:2|structure:{pain_ref:STR,relief_mechanism:STR,evidence_of_effectiveness:STR}
+    gain_creators:ARR|min_items:2|structure:{gain_ref:STR,creation_mechanism:STR,delivery_channel:STR}
+  }
+  fit_analysis{
+    fit_score:NUM_0_10|calculated_based_on_pain_gain_alignment
+    validation_evidence:ARR|structure:{method:ENUM[interview,survey,ab_test,usability_test],sample_size:NUM,result_summary:STR}
+    mismatch_areas:ARR|OPT|structure:{mismatch:STR,root_cause:STR,remediation_plan:STR}
+  }
+  compliance_and_transparency{
+    data_usage_claims:ARR|OPT|structure:{claim:STR,data_types_involved:ARR,ccpa_compliance_status:ENUM:[compliant,review_required,not_applicable],user_disclosure_method:STR}
+    transparency_requirements:STR|ccpa_privacy_policy_alignment_for_value_proposition
+    consent_mechanisms:STR|how_users_grant_or_withhold_data_usage_for_personalization
+  }
+  stakeholder_alignment{
+    marketing_messaging:STR|how_vpc_translates_to_external_communications
+    sales_enablement:STR|battle_card_and_demo_alignment
+    product_roadmap_impact:STR|which_features_prioritized_based_on_canvas_fit
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_fit_management{
+    canvas_quality_metrics{
+      fit_validation_rate:percentage_of_pains_and_gains_with_empirical_validation|target:≥85%
+      ccpa_transparency_compliance:percentage_of_data_usage_claims_with_verified_privacy_disclosures|target:100%
+      stakeholder_clarity_score:post_review_survey_rating_on_value_proposition_actionability|target:≥4.3/5.0
+    }
+    process_performance_objectives{
+      canvas_validation_cycle_time:days_from_draft_to_validated_fit_score|UCL:14|LCL:5|Cpk:≥1.0
+      mismatch_resolution_rate:percentage_of_identified_mismatches_with_remediation_plan_within_30_days|target:≥90%
+      revenue_correlation_strength:statistical_correlation_between_fit_score_and_adoption_or_retention_metrics|target:≥0.7
+    }
+    statistical_process_control{
+      fit_score_trend:I_MR_chart_monitoring_quarterly_canvas_updates_with_control_limits
+      validation_sample_adequacy:p_chart_tracking_minimum_sample_size_met_per_segment|target:≥100%
+      compliance_audit_findings:c_chart_for_privacy_or_misleading_claim_issues|target:0_defects
+    }
+  }
+  causal_analysis_and_resolution{
+    trigger:fit_score_drops_below_LCL_or_compliance_finding_related_to_value_proposition_claims
+    analysis_method:5_whys + customer_feedback_synthesis + privacy_disclosure_audit
+    preventive_action:auto_update_canvas_template_with_validation_checkpoints_and_ccpa_claim_review_gate
+  }
+  innovation_deployment{
+    ai_assisted_pain_gain_clustering:nlp_parsing_of_support_and_survey_data_to_auto_suggest_canvas_updates|measure_accuracy_improvement
+    dynamic_vpc_tooling:interactive_canvas_with_real_time_fit_scoring_and_compliance_flagging|measure_adoption_rate
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{title:"Canvas Identification & Control", content:[id,product_name,version,owner,segment,classification], pdf_formatting:header_table_with_signatures}
+  section_2{title:"Customer Profile", content:iterate_over_customer_profile, format:jobs_table,pains_table_with_severity,gains_table_with_importance, visualizations:emotional_journey_map_mermaid}
+  section_3{title:"Value Map & Offering Alignment", content:iterate_over_value_map, format:products_services_table,pain_relief_mapping,gain_creation_mapping, validation:evidence_links_per_mechanism}
+  section_4{title:"Fit Analysis & Validation Evidence", content:fit_score_calculation,validation_evidence_table,mismatch_areas_table, statistical_summary:confidence_interval_for_fit_score}
+  section_5{title:"CCPA Compliance & Transparency Mapping", content:data_usage_claims_table,ccpa_compliance_status,disclosure_methods,consent_flows, audit_readiness:evidence_artifact_locations}
+  section_6{title:"Go-to-Market Alignment & Enablement", content:marketing_messaging,sales_battle_cards,product_prioritization_impact, communication_plan:cadence_and_channels}
+  section_7{title:"Quantitative Management & Statistical Control", content:cmmi_l5_baselines,spc_implementation,outcome_tracking, variance_analysis_protocol}
+  section_8{title:"Review, Approval & Evolution", content:review_checklist,approval_gates,digital_signature_spec,version_control_integration}
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  fit_and_validation:[fit_score_trend,validation_sample_coverage,mismatch_resolution_rate]
+  compliance_and_transparency:[ccpa_claim_accuracy,disclosure_completion_rate,consent_grant_rate]
+  business_impact:[conversion_rate_by_segment,retention_delta_post_vpc_update,revenue_correlation_coefficient]
+  infrastructure:automated_collection_via_survey_tools,crm,analytics|dashboards_with_spc|alerts_on_compliance_or_fit_breaches
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:value_prop_enterprise_template_with_marketing_branding_and_compliance_footers
+  dynamic_content:[canvas_visualization_mermaid,fit_score_gauge,ccpa_compliance_status_matrix]
+  archival:PDF/A-3,accessibility:PDF/UA,distribution_control:role_based_permissions_with_audit_logging
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring:[populate_canvas,ccpa_claim_verification,validation_evidence_attachment]
+  stage_2_marketing_product_review:[fit_clarity_scoring,messaging_alignment_check,statistical_control_monitoring]
+  stage_3_compliance_privacy_review:[ccpa_transparency_validation,disclosure_accuracy_check,100%_compliance_gate]
+  stage_4_final_approval:[cpo,cmo,compliance_officer_signatures,PAdES_LTVA_signatures,immutable_audit_trail]
+  continuous_improvement:[post_launch_fit_validation,auto_template_updates_from_customer_feedback,innovation_pilots]
+}
+
+OUTPUT_GENERATION{
+  primary:[PDF/A-3_report,Strategyzer_JSON_import,Machine_readable_JSON]
+  supplementary:[sales_enablement_one_pager,ccpa_privacy_disclosure_snippet,validation_dashboard_config]
+}
+
+FOLLOW_UP_COMMANDS{
+  export_to_strategyzer:"Generate Strategyzer-compatible JSON for canvas import and collaboration"
+  create_ccpa_disclosure_snippet:"Extract data usage claims into privacy policy-ready text with CCPA compliance tags"
+  setup_fit_monitoring:"Configure analytics dashboard to track correlation between fit score and retention/conversion"
+  generate_sales_battle_cards:"Convert Section 6 into competitive battle card format with objection handling"
+  initiate_causal_analysis:"If fit score drops or compliance findings occur, trigger CAR process with quantitative validation data"
+  schedule_canvas_refresh:"Set quarterly validation review per CMMI QPM with control chart analysis and segment reassessment"
+}

@@ -1,0 +1,85 @@
+# DOC_PRODUCT_ROADMAP_NNL_v1.0.toon
+IMPORT:STRATEGIC_ROADMAP_BASE_TEMPLATE.toon
+
+ROLE:product_manager|portfolio_manager|compliance_officer
+TASK:generate_now_next_later_roadmap_with_outcome_focus
+OUTPUT_FORMAT:Markdown_source + Interactive_Dashboard_Config + PDF_Export
+
+INPUT_CONTEXT{
+  roadmap_scope{
+    product_portfolio:ARR|min_items:1
+    strategic_themes:ARR|min_items:3
+    planning_horizon:ENUM:[6_months,12_months,18_months,rolling_quarters]
+    audience:ARR|OPT:[executives,engineering,sales,customers,investors]
+  }
+  initiatives{
+    theme:STR|required
+    outcome_focus:STR|required|format:"Measureable business or user outcome"
+    priority_bucket:ENUM:[now,next,later]
+    confidence_level:ENUM:[high,medium,low]
+    dependencies:ARR|optional|format:[internal_team,external_vendor,compliance_approval]
+    effort_estimate:ENUM:[xs,s,m,l,xl,xxl]
+  }
+  compliance_requirements{
+    gdpr_art30_processing_timeline:ARR|optional|format:[activity,data_category,retention,review_date]
+    regulatory_deadlines:ARR|optional|format:[regulation,required_feature,deadline]
+  }
+}
+
+ROADMAP_FRAMEWORK{
+  prioritization_logic{
+    scoring_model:ENUM:[weighted_shortest_job_first,wsjf|value_vs_risk,custom]
+    outcome_metrics:linked_kpis_for_each_theme
+    confidence_adjustment:auto_downgrade_if_data_is_insufficient
+  }
+  dynamic_planning{
+    rolling_update_frequency:monthly_or_quarterly
+    change_log:track_additions_removals_priority_shifts_with_rationale
+    feedback_loop:incorporate_customer_signals_and_performance_data
+  }
+  compliance_integration{
+    audit_readiness:map_initiatives_to_gdpr_art_30_processing_records
+    privacy_by_design:flag_initiatives_requiring_dpia_before_later_phase
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Strategic Vision & Roadmap Principles"
+    content:[vision_statement,outcome_over_metrics_philosophy,prioritization_framework]
+    pdf_formatting:executive_summary_style
+  }
+  section_2{
+    title:"Now-Next-Later Matrix"
+    content:[initiatives_by_time_horizon,outcome_focus,confidence_scores,dependencies]
+    visualization:nnl_board_layout_with_swimlanes
+    mermaid_diagrams:true
+  }
+  section_3{
+    title:"Dependency Mapping & Risk Adjustments"
+    content:[cross_team_dependencies,external_risks,confidence_rationale,mitigation_actions]
+    tables:dependency_matrix|risk_adjusted_timeline
+  }
+  section_4{
+    title:"Compliance & Audit Trail (GDPR Art. 30 Alignment)"
+    content:[data_processing_initiative_timeline,regulatory_milestones,dpia_schedule]
+    compliance_mapping:link_roadmap_items_to_privacy_requirements
+  }
+  section_5{
+    title:"Governance & Update Cadence"
+    content:[review_schedule,stakeholder_feedback_channels,version_history,decision_log_links]
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_output{
+    format:Markdown + Confluence/ProdPad_sync_JSON + PDF
+    filename_pattern:"{product}_Roadmap_NNL_v{version}_{YYYYMMDD}"
+    delivery_method:secure_repo + stakeholder_email + dashboard_sync
+  }
+  supplementary_outputs{
+    stakeholder_view:filtered_roadmap_pdf_per_audience_role
+    dependency_report:detailed_analysis_of_blocked_initiatives
+    compliance_register:export_of_gdpr_art_30_relevant_timeline
+  }
+}

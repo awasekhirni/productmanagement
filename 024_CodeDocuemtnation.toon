@@ -1,0 +1,95 @@
+# DOC_CODE_DOC_v1.0.toon
+# CMMI Level 5 Compliant Developer Documentation Generator
+
+IMPORT:CODE_DOC_BASE.toon|CMMI_L5_KNOWLEDGE_MANAGEMENT.toon
+
+ROLE:senior_developer|tech_writer|platform_engineer|onboarding_specialist
+TASK:generate_quantitatively_validated_inline_code_documentation_with_drift_detection_and_automated_parsing
+OUTPUT_FORMAT:Inline_Comments + TypeDoc/Sphinx/GoDoc_Parsed_HTML + Markdown_Reference + PDF
+
+INPUT_CONTEXT{
+  codebase{
+    language:ENUM:[javascript_typescript,python,golang,rust,java]
+    module_or_package:STR|required
+    version:STR|required|format:semver
+    parsing_tool:ENUM:[typedoc,sphinx,godoc,rustdoc,javadoc]
+  }
+  documentation_requirements{
+    signatures:STR|required|format:function_class_struct_signature
+    parameters:ARR|format:[name,type,description,constraints,optional_flag]
+    return_values:STR|required
+    examples:ARR|format:[use_case,code_snippet,expected_output]
+    complexity_notes:STR|optional|format:time_space_complexity_algorithmic_assumptions
+    deprecation_notes:STR|optional
+  }
+  compliance_audit{
+    knowledge_transfer_compliance:BOOL|required|default:true
+    change_management_alignment:ENUM:[agile,safe,itil]
+    audit_retention_days:INT|default:730
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_documentation_quality{
+    doc_coverage_index{
+      metric:percentage_of_public_api_surface_with_complete_docstrings
+      target:≥95%
+      control_limits:UCL:100%|LCL:90%|Cpk_target:≥1.5
+    }
+    doc_code_drift_rate{
+      metric:percentage_of_mismatched_signatures_or_behavior_vs_documented_spec
+      target:≤2%
+      measurement_method:automated_ast_parsing + signature_diff_engine + example_execution_runner
+    }
+    onboarding_efficiency_metric{
+      metric:reduction_in_time_to_first_commit_or_pr_approval_for_new_devs
+      target:≤5_business_days
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[doc_defect_density_per_kloc,parser_error_rate,example_failure_percentage]
+    predictive_model:regression_on_code_complexity_to_forecast_doc_maintenance_effort
+  }
+  causal_analysis_triggers{
+    trigger:doc_code_drift > LCL OR parser_error_rate spikes > 3σ
+    car_method:ast_traceback + signature_alignment_audit + pareto_of_misleading_examples
+    preventive_action:enforce_doc_linter_in_pr_gate|auto_sync_examples_to_test_suite|update_doc_template_on_api_changes
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Module Overview & API Surface"
+    content:[module_purpose,version,dependencies,public_vs_private_boundaries]
+    pdf_formatting:reference_manual_layout_with_version_badges
+  }
+  section_2{
+    title:"Function/Class/Struct Reference"
+    content:[signatures,parameter_tables,return_types,complexity_analysis,error_handling_patterns]
+    mermaid_diagrams:true|dependency_graphs_for_key_structures
+  }
+  section_3{
+    title:"Usage Examples & Execution Validation"
+    content:[scenario_matrix,code_snippets,expected_outputs,test_run_results]
+    tables:example_validation_report
+  }
+  section_4{
+    title:"Drift Detection & Maintenance Protocol"
+    content:[automated_parsing_pipeline,version_sync_rules,deprecation_workflow,retention_policy]
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:dev_authors_inline|automated_parser_execution|exit_criteria:≥95%_coverage|0_parser_errors
+  stage_2_peer_review:cross_team_doc_audit|example_execution_validation|control_chart_for_signature_drift
+  stage_3_compliance_audit:change_management_alignment_check|retention_policy_verification
+  stage_4_baseline:publish_to_internal_docs_site+immutable_snapshot+pr_merge_gate
+  continuous_improvement:monthly_doc_health_scan|retire_stale_patterns|update_parsing_rules_on_language_minor_releases
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Parsed_HTML + PDF
+  filename_pattern:{module}_code_docs_v{version}_{YYYYMMDD}.md
+  supplementary_outputs:example_test_suite|drift_detection_report|onboarding_quick_ref_pdf
+  metadata_injection:cmmi_tags:TS-2.5,VER-1.3,OPM-1|process_version:l5.0
+}

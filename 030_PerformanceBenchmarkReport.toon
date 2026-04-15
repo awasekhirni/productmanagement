@@ -1,0 +1,93 @@
+# DOC_PERF_BENCHMARK_v1.0.toon
+# CMMI Level 5 Compliant Performance Validation & Capacity Baseline
+
+IMPORT:PERF_BASE_TEMPLATE.toon|CMMI_L5_CAPACITY_GOVERNANCE.toon
+
+ROLE:performance_engineer|sre|backend_architect|product_manager
+TASK:generate_statistically_rigorous_performance_report_with_predictive_scaling_modeling
+OUTPUT_FORMAT:Markdown_Report + Grafana_Dashboard_Config + PDF_A-3
+
+INPUT_CONTEXT{
+  benchmark_meta{
+    system_or_service:STR|required
+    test_type:ENUM:[load,stress,spike,endurance,scale]
+    toolchain:ENUM:[k6,jmeter,locust,gatling]
+    baseline_date:DATE|required
+  }
+  test_parameters{
+    load_profiles:ARR|format:[profile_name,concurrent_users,ramp_up_duration,peak_duration,think_time]
+    endpoints_tested:ARR|min_items:1|format:[endpoint,http_method,payload_size,expected_sla]
+    infrastructure_snapshot:STR|required|format:cpu_ram_storage_network_config_at_test_time
+  }
+  results_analysis{
+    latency_percentiles:OBJECT|p50:FLOAT|p90:FLOAT|p95:FLOAT|p99:FLOAT
+    throughput_metrics:OBJECT|requests_per_sec:INT|errors_per_sec:FLOAT|success_rate_pct:FLOAT
+    bottleneck_findings:ARR|format:[component,metric_observed,threshold_exceeded,root_cause_hypothesis]
+    capacity_limits:STR|required|format:breaking_point_saturation_threshold
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_performance_quality{
+    sla_compliance_rate{
+      metric:percentage_of_endpoints_meeting_latency_and_error_thresholds_under_load
+      target:100%
+      control_limits:UCL:100%|LCL:95%|Cpk_target:≥2.0
+    }
+    capacity_forecast_accuracy{
+      metric:variance_between_predicted_and_actual_resource_utilization_at_peak
+      target:≤12%
+      measurement_method:time_series_regression + infra telemetry correlation
+    }
+    bottleneck_resolution_cycle_time{
+      metric:days_from_identification_to_implementation_of_fix
+      target:≤7
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[avg_p95_latency_per_release,throughput_degradation_rate_per_feature_add,error_budget_burn_rate]
+    predictive_model:auto-scaling_policy_calibration_based_on_load_profile_clustering
+  }
+  causal_analysis_triggers{
+    trigger:sla_breach > 0 OR capacity_variance > UCL OR error_budget_consumption > threshold
+    car_method:load_traceback + thread_dump_analysis + database_query_pareto
+    preventive_action:enforce_performance_regression_gate_in_ci|mandate_index_optimization_review|update_scaling_policies_from_telemetry
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Benchmark Scope & Infrastructure Context"
+    content:[test_objectives,environment_config,load_profiles,sla_definitions]
+  }
+  section_2{
+    title:"Performance Results & Percentile Analysis"
+    content:[latency_tables,throughput_graphs,error_rates,resource_utilization_heatmaps]
+    mermaid_diagrams:true|load_distribution_flow
+  }
+  section_3{
+    title:"Bottleneck Identification & Root Cause Analysis"
+    content:[finding_table,profiling_evidence,dependency_impact,optimization_recommendations]
+    tables:bottleneck_mitigation_matrix|performance_debt_backlog
+  }
+  section_4{
+    title:"Capacity Planning & Predictive Scaling Model"
+    content:[breaking_point_analysis,scaling_thresholds,cost_impact,grafana_dashboard_refs]
+    compliance_mapping:sla_commitment_audit_evidence|capacity_review_cadence
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:perf_engineer_runs_tests|automated_result_parsing|exit_criteria:all_endpoints_covered|sla_defined
+  stage_2_architecture_sre:cross_domain_review+capacity_modeling|control_chart_for_latency_variance
+  stage_3_product_compliance:sla_alignment_check|customer_commitment_verification|mandatory_signoff
+  stage_4_baseline:publish_to_perf_docs+grafana_sync+immutable_pdf_hash+ci_regression_gate_update
+  continuous_improvement:post_release_perf_review|update_ppm_from_error_budget_data|optimize_load_profiles_based_on_prod_traffic
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Grafana_Config + PDF
+  filename_pattern:{service}_perf_benchmark_v{version}_{YYYYMMDD}.md
+  supplementary_outputs:raw_load_test_artifacts|capacity_scaling_policy_yaml|sla_compliance_report
+  metadata_injection:cmmi_tags:VER-2.1,VAL-1.3,RSKM-2.4|process_version:l5.0
+}

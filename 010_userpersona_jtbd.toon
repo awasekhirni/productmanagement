@@ -1,0 +1,122 @@
+# DOC_PERSONAS_JTBD_v1.0.toon
+# CMMI Level 5 Compliant User Personas & Jobs-To-Be-Done Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:ux_researcher|product_strategist|accessibility_specialist|behavioral_analyst
+TASK:generate_cmmi_l5_compliant_personas_and_jtbd_profiles_with_quantitative_validation_accessibility_compliance_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + Figma_Sync_JSON + machine_readable_JSON
+
+INPUT_CONTEXT{
+  personas{
+    id:STR|format:PER-###|auto_increment
+    product_domain:STR|required
+    version:SEMVER|required
+    research_owner:STR|required
+    last_validated:DATE|optional
+  }
+  persona_specs:ARR|min_items:3|structure:{
+    persona_name:STR
+    role_or_title:STR
+    demographics:OBJECT|age_range:STR,location:STR,education:STR,tech_literacy:ENUM
+    behavioral_patterns:ARR|structure:{behavior:STR,frequency:STR,tools_used:ARR,decision_drivers:ARR}
+    goals_and_motivations:ARR|structure:{goal:STR,motivation:STR,success_indicator:STR}
+    frustrations_and_barriers:ARR|structure:{barrier:STR,impact:ENUM[low,med,high],current_workaround:STR}
+    accessibility_needs:ARR|OPT|structure:{need:ENUM:[visual,auditory,motor,cognitive],wcag_requirement:STR,adaptive_technology:STR}
+    validation_source:ARR|structure:{method:ENUM[interview,survey,analytics,diary_study],sample_size:NUM,confidence_level:ENUM}
+  }
+  jtbd_profiles:ARR|min_items:1_per_persona|structure:{
+    job_statement:STR|format:"When [situation], I want to [motivation], so I can [outcome]."
+    functional_dimensions:ARR|tasks_or_steps_required
+    emotional_dimensions:ARR|feelings_or_social_impacts_desired
+    current_solutions:ARR|how_job_is_currently_fulfilled
+    switching_triggers:ARR|events_that_prompt_search_for_new_solution
+    success_metrics:STR|how_user_will_know_job_is_well_done
+  }
+  research_methodology{
+    sampling_strategy:STR|recruitment_criteria_and_segment_representation
+    data_collection_tools:ARR|platforms_or_frameworks_used
+    bias_mitigation:STR|steps_taken_to_reduce_selection_or_confirmation_bias
+    ethical_considerations:STR|consent,privacy,anonymization_protocols
+  }
+  operationalization{
+    design_system_integration:STR|how_personas_inform_component_library_and_patterns
+    prioritization_framework:STR|how_jtbd_maps_to_feature_scoring_models
+    training_plan:STR|how_teams_will_internalize_and_reference_profiles
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_persona_management{
+    profile_quality_metrics{
+      research_validation_coverage:percentage_of_persona_attributes_backed_by_empirical_data|target:≥90%
+      jtbd_actionability_score:peer_review_rating_for_job_statement_clarity_and_testability|target:≥4.4/5.0
+      accessibility_compliance_rate:percentage_of_personas_with_documented_wcag_2_2_aa_needs|target:100%
+    }
+    process_performance_objectives{
+      persona_development_cycle_time:days_from_research_completion_to_approved_profiles|UCL:21|LCL:7|Cpk:≥1.0
+      usage_adoption_rate:percentage_of_product_decisions_explicitly_linked_to_persona_or_jtbd|target:≥80%
+      validation_recency:months_since_last_persona_refresh|control_limits:[6,18]|Cpk_target:≥1.0
+    }
+    statistical_process_control{
+      persona_stability_index:change_in_core_attributes_over_time|I_MR_chart_monitoring
+      jtbd_to_requirement_traceability:p_chart_tracking_percentage_of_jobs_mapped_to_epics|target:≥85%
+      research_bias_detection:c_chart_for_methodology_or_sampling_anomalies|target:0_critical_defects
+    }
+  }
+  causal_analysis_and_resolution{
+    trigger:persona_invalidated_by_post_launch_usage_data_or_jtbd_misalignment_detected
+    analysis_method:5_whys + behavioral data triangulation + research methodology audit
+    preventive_action:auto_enhance_research_checklist_and_validation_gate_for_persona_updates
+  }
+  innovation_deployment{
+    ai_assisted_behavior_clustering:ml_segmentation_of_analytics_and_survey_data_to_auto_refine_personas|measure_accuracy
+    dynamic_jtbd_mapper:interactive_tooling_to link jobs directly to backlog items with traceability|measure_adoption
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{title:"Profile Identification & Control", content:[id,product_domain,version,owner,last_validated], pdf_formatting:header_table_with_research_lead_signatures}
+  section_2{title:"Persona Specifications & Validation", content:iterate_over_persona_specs, format:demographics,behaviors,goals,frustrations,accessibility_needs,validation_sources, visualizations:persona_empathy_map_mermaid}
+  section_3{title:"Jobs-To-Be-Done Profiles", content:iterate_over_jtbd_profiles, format:job_statement,functional_emotional_dimensions,current_solutions,switching_triggers,success_metrics, mapping_table:job_to_persona_to_backlink}
+  section_4{title:"Research Methodology & Ethics", content:sampling_strategy,tools,bias_mitigation,ethical_considerations, artifact_links:interview_guides,surveys,raw_data_samples}
+  section_5{title:"Accessibility & Inclusive Design Integration", content:wcag_2_2_aa_mapping,persona_specific_needs,adaptive_technology_requirements,design_system_impact}
+  section_6{title:"Operationalization & Prioritization", content:design_integration,prioritization_framework,training_plan,adoption_tracking_mechanism}
+  section_7{title:"Quantitative Management & Statistical Control", content:cmmi_l5_baselines,spc_implementation,outcome_tracking,continuous_validation_protocol}
+  section_8{title:"Review, Approval & Evolution", content:review_checklist,approval_gates,digital_signature_spec,version_control}
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  profile_quality:[validation_coverage,jtbd_actionability,accessibility_compliance,clarity_score]
+  process_performance:[development_cycle_time,usage_adoption_rate,validation_recency,traceability_index]
+  infrastructure:automated_via_research_repos,analytics,backlink_tracking|dashboards_with_spc|alerts_on_stale_or_unvalidated_profiles
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:personas_jtbd_enterprise_template_with_research_branding_and_accessibility_footers
+  dynamic_content:[persona_profile_cards,jtbd_statement_matrix,accessibility_compliance_table,validation_evidence_charts]
+  archival:PDF/A-3,accessibility:PDF/UA_enhanced_with_screen_reader_tags_for_tables_and_diagrams,distribution_control:role_based_access_with_audit_logging
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring:[populate_specs,attach_validation_evidence,wcag_mapping,ethical_review]
+  stage_2_research_design_review:[data_adequacy,jtbd_clarity,accessibility_coverage,statistical_control]
+  stage_3_product_engineering_alignment:[backlink_traceability,prioritization_mapping,adoption_plan]
+  stage_4_final_approval:[head_of_ux,product_lead,accessibility_lead,PAdES_LTVA_signatures]
+  continuous_improvement:[post_launch_behavioral_validation,auto_refresh_triggers,ai_clustering_pilots]
+}
+
+OUTPUT_GENERATION{
+  primary:[PDF/A-3_report,Figma_Sync_JSON,Machine_readable_JSON]
+  supplementary:[design_token_mapping_file,jtbd_to_epic_traceability_CSV,accessibility_test_scenario_generator]
+}
+
+FOLLOW_UP_COMMANDS{
+  sync_to_figma:"Export persona attributes to Figma JSON for direct plugin import and component tagging"
+  generate_accessibility_test_scenarios:"Convert accessibility needs into automated axe-core and manual test checklists"
+  create_jtbd_traceability_matrix:"Output CSV mapping job statements to existing Jira epics with gap identification"
+  setup_validation_monitoring:"Configure analytics dashboard to track persona usage correlation with feature adoption"
+  schedule_persona_refresh:"Set 12-month validation review per CMMI QPM with sampling adequacy check"
+  initiate_causal_analysis:"If post-launch data misaligns with personas, trigger CAR process with behavioral gap analysis"
+  export_to_research_platform:"Format profiles and evidence for import to Dovetail, EnjoyHQ, or similar tools"
+}

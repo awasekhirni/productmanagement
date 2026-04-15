@@ -1,0 +1,137 @@
+# CMMI_LEVEL5_BASE_TEMPLATE.toon
+# Reusable foundation for all documentation prompts
+
+CMMI_L5_COMPLIANCE{
+  process_areas{
+    OPP:{ # Organizational Process Performance
+      enabled:true
+      baselines:[doc_creation_cycle_time,review_defect_density,compliance_coverage_pct]
+      statistical_controls:[SPC_charts,control_limits_UCL_LCL,process_capability_Cpk]
+    }
+    QPM:{ # Quantitative Process Management
+      enabled:true
+      metrics_collection:automated_via_git_hooks|ci_pipeline
+      quantitative_objectives{
+        doc_quality_score:TARGET:≥4.5/5.0|CONTROL_LIMITS:[3.8,5.0]
+        review_cycle_time:TARGET:≤3_business_days|CONTROL_LIMITS:[1,5]
+        compliance_traceability:TARGET:100%|CONTROL_LIMITS:[98%,100%]
+      }
+      statistical_methods:[regression_analysis,hypothesis_testing,control_charts]
+    }
+    CAR:{ # Causal Analysis and Resolution
+      enabled:true
+      defect_root_cause_analysis:5_whys|fishbone|pareto
+      preventive_actions:auto_trigger_on_defect_threshold_exceeded
+      improvement_backlog:Jira_integration_with_priority_scoring
+    }
+    OID:{ # Organizational Innovation and Deployment
+      enabled:true
+      innovation_pipeline:[AI_doc_generation,auto_compliance_mapping,pdf_template_engine]
+      deployment_metrics:[adoption_rate,time_to_value,roi_calculation]
+      feedback_loop:quarterly_retrospective_with_quantitative_outcomes
+    }
+  }
+  quantitative_management{
+    data_collection_points:[doc_creation,peer_review,compliance_check,pdf_generation,audit]
+    measurement_repository:immutable_S3_bucket_with_versioning
+    analysis_frequency:real_time_dashboards + weekly_statistical_reviews
+  }
+  continuous_improvement{
+    feedback_mechanisms:[post_generation_survey,defect_tracking,usage_analytics]
+    improvement_cycles:plan_do_check_act_with_quantitative_gates
+    innovation_triggers:[new_regulation,tech_stack_change,defect_pattern_detection]
+  }
+}
+
+PDF_REPORT_GENERATION{
+  engine:weasyprint|pandoc|prince_xml|configurable
+  template_system:Jinja2_with_CMMI_L5_headers_footers
+  formatting{
+    page_setup:A4|letter|configurable
+    margins:25mm_all_sides
+    fonts:primary:Inter|secondary:Source_Code_Pro_for_code_blocks
+    color_profile:CMYK_for_print|RGB_for_digital
+  }
+  headers{
+    left:"{product_name} | {doc_type} | v{version}"
+    center:"CMMI Level 5 Compliant | Confidential"
+    right:"Generated:{YYYY-MM-DD} | Page {page_num}/{total_pages}"
+  }
+  footers{
+    left:"Owner:{doc_owner} | Review_Due:{review_date}"
+    center:"Approval_Status:{pending|approved|rejected} | Digital_Sig:{hash}"
+    right:"Classification:{public|internal|confidential|restricted}"
+  }
+  sections{
+    title_page:true
+    revision_history_table:true
+    executive_summary:true
+    table_of_contents:auto_generated_with_hyperlinks
+    main_content:markdown_to_pdf_with_mermaid_rendering
+    appendices:traceability_matrices|compliance_mappings|metric_charts
+    approval_page:digital_signature_fields_with_audit_trail
+  }
+  metadata{
+    pdf_version:1.7
+    xmp_metadata:include_CMMI_L5_process_tags
+    encryption:AES-256_optional_with_role_based_access
+    digital_signature:PKI_based_with_timestamp_authority
+  }
+  output_options{
+    formats:[PDF/A-3_for_archival,PDF_for_distribution,HTML_for_web]
+    compression:optimized_for_web|lossless_for_archival
+    accessibility:PDF/UA_compliant_with_tagged_structure
+  }
+}
+
+COMPLIANCE_FRAMEWORKS{
+  gdpr:{
+    articles:[5,13,17,25,30,32,33,35]
+    doc_mapping:auto_link_doc_sections_to_article_requirements
+    evidence_collection:automated_via_compliance_agent
+  }
+  hipaa:{
+    sections:[164_308,164_312,164_316,164_410]
+    doc_mapping:security_rules_to_prd_sections|audit_logs_to_compliance_repo
+  }
+  soc2:{
+    criteria:[CC1_1,CC3_2,CC6_1,CC7_2,CC7_4]
+    doc_mapping:control_objectives_to_documentation_artifacts
+  }
+  iso27001:{
+    annexes:[A.5,A.8,A.12,A.15,A.18]
+    doc_mapping:policy_requirements_to_operational_procedures
+  }
+}
+
+TRACEABILITY_MATRIX{
+  format:bidirectional_links_in_markdown + csv_export
+  link_types:[doc_to_requirement,doc_to_test,doc_to_compliance_control,doc_to_risk]
+  visualization:mermaid_graph + interactive_html_table
+  validation:auto_check_for_orphaned_requirements_pre_pdf_generation
+}
+
+REVIEW_APPROVAL_WORKFLOW{
+  stages:[draft,peer_review,compliance_review,legal_review,final_approval]
+  role_based_permissions{
+    author:create_edit_submit_for_review
+    reviewer:comment_approve_request_changes
+    compliance_officer:validate_regulatory_mapping|block_if_gaps
+    legal:approve_liability_language|redact_sensitive_content
+    approver:final_signoff_with_digital_signature
+  }
+  digital_signature{
+    standard:PAdES_BES|LTVA_for_long_term_validation
+    timestamp_authority:RFC3161_compliant
+    audit_trail:immutable_log_of_all_signature_events
+  }
+  escalation_rules:timeout_after_48h -> auto_notify_manager
+}
+
+AUDIT_TRAIL{
+  events_logged:[doc_created,edited,reviewed,approved,pdf_generated,accessed,exported]
+  log_format:JSON_with_schema_validation
+  storage:immutable_WORM_storage_with_retention_policy
+  query_interface:SQL_like_search_with_role_based_filters
+  export_formats:CSV_for_analysis|PDF_for_audit_presentation
+}

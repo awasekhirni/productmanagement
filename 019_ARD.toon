@@ -1,0 +1,104 @@
+# DOC_ADR_v1.0.toon
+# CMMI Level 5 Compliant Architecture Decision Record
+
+IMPORT:ADR_BASE_TEMPLATE.toon|CMMI_L5_DECISION_GOVERNANCE.toon
+
+ROLE:software_architect|tech_lead|compliance_officer|engineering_manager
+TASK:capture_quantitatively_validated_architectural_decisions_with_impact_prediction
+OUTPUT_FORMAT:Markdown_in_/docs/adr/ + Sequential_Index + PDF_Archival
+
+INPUT_CONTEXT{
+  decision_meta{
+    id:INT|required|auto_increment
+    title:STR|required
+    status:ENUM:[proposed,accepted,deprecated,superseded]
+    date:DATE|required|format:ISO8601
+    decision_makers:ARR|min_items:2
+    related_prd_epic:STR|optional|format:jira_epic_key
+  }
+  context{
+    problem_description:STR|required|min_length:50
+    architectural_constraints:ARR|format:[constraint_type,detail,impact_on_solution]
+    business_drivers:ARR|min_items:1
+    compliance_requirements:ARR|format:[framework,article,technical_implication]
+  }
+  alternatives{
+    options:ARR|min_items:2|format:[name,pros,cons,cost_impact,technical_debt_score]
+    evaluation_criteria:OBJECT|performance:FLOAT|maintainability:FLOAT|security:FLOAT|compliance:FLOAT|total_weighted_score:FLOAT
+  }
+  outcome{
+    chosen_option:STR|required
+    rationale:STR|required|min_length:100
+    consequences:OBJECT|positive:STR|negative:STR|mitigation_for_negatives:STR
+    review_date:DATE|optional|default:+365_days
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_decision_quality{
+    decision_stability_rate{
+      metric:percentage_of_decisions_unchanged_post_implementation
+      target:≥90%
+      control_limits:UCL:98%|LCL:85%|Cpk_target:≥1.33
+    }
+    technical_debt_accumulation_index{
+      metric:weighted_score_of_known_debt_per_decision
+      target:≤0.3_per_decision
+      measurement_method:static_analysis_baseline + architectural_fitness_function
+    }
+    rework_avoidance_rate{
+      metric:decisions_preventing_major_refactors
+      target:100%
+    }
+  }
+  process_performance_baselines{
+    ppb_metrics:[decision_cycle_time,option_count_avg,post_implementation_change_rate]
+    update_frequency:quarterly_with_statistical_significance_testing
+  }
+  causal_analysis_triggers{
+    trigger:decision_status_changed_to_deprecated_within_180_days OR implementation_variance > 15%
+    car_method:root_cause_analysis_via_fishbone + monte_carlo_impact_simulation
+    preventive_action:update_evaluation_rubric|mandate_proof_of_concept_threshold
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"ADR Header & Metadata"
+    content:[id,title,status,date,owners,links]
+    format:yaml_frontmatter_with_badges
+  }
+  section_2{
+    title:"Context & Constraints"
+    content:[problem_statement,architectural_drivers,business_impact,compliance_alignment]
+  }
+  section_3{
+    title:"Options Analysis & Quantitative Evaluation"
+    content:[alternatives_table,weighted_scoring_matrix,trade_off_analysis]
+    mermaid_diagrams:true|architecture_comparison_graphs
+  }
+  section_4{
+    title:"Decision & Rationale"
+    content:[chosen_option,detailed_justification,accepted_risks,consequence_mapping]
+    compliance_impact:regulatory_or_security_implications_explicitly_documented
+  }
+  section_5{
+    title:"Implementation, Monitoring & Review"
+    content:[action_items,validation_metrics,next_review_date,deprecation_criteria]
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:architect_authors|automated_weighted_score_calculation|exit_criteria:options≥2|criteria_defined
+  stage_2_architecture_review_board:cross_domain_review|quantitative_scoring|control_chart_for_evaluation_variance
+  stage_3_compliance_security:privacy_data_flow_impact_check|signoff_required_if_gdpr_hipaa_touches_data
+  stage_4_final_approval:cto+architect_digital_signoff|version_hash|index_update
+  continuous_improvement:annual_adr_portfolio_analysis|retire_low_value_patterns|update_decision_frameworks
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Sequential_Index_JSON + PDF
+  filename_pattern:adr-{id}-{kebab_title}.md
+  supplementary_outputs:decision_register_export_csv|compliance_impact_matrix|dependency_graph_mermaid
+  metadata_injection:cmmi_tags:RSKM-3.1,TS-3.2,OPM-1|process_version:l5.0
+}

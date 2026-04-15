@@ -1,0 +1,123 @@
+# DOC_MRD_v1.0.toon
+# CMMI Level 5 Compliant Market Requirements Document Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:product_manager|market_research_analyst|regulatory_counsel|engineering_lead
+TASK:generate_cmmi_l5_compliant_mrd_with_market_sizing_feature_prioritization_regulatory_constraint_mapping_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + Jira_Epic_Export + machine_readable_JSON
+
+INPUT_CONTEXT{
+  mrd{
+    id:STR|format:MRD-###|auto_increment
+    product_line:STR|required
+    version:SEMVER|required
+    owner:STR|required
+    market_release_target:DATE|optional
+  }
+  market_analysis{
+    target_segments:ARR|min_items:2|structure:{segment:STR,size:NUM,growth_rate:NUM,unmet_needs:ARR}
+    total_addressable_market:NUM|currency:USD|with_methodology_notes
+    buyer_personas:ARR|structure:{role:STR,purchasing_criteria:ARR,budget_authority:ENUM,decision_timeline:STR}
+  }
+  requirement_catalog:ARR|min_items:5|structure:{
+    req_id:STR|format:MKT-###
+    requirement_description:STR|required
+    source:STR|customer_feedback,competitive_gap,regulatory_mandate,market_trend
+    priority_score:NUM|1_to_10_based_on_value_vs_market_demand
+    complexity_estimate:ENUM:[S,M,L,XL]|engineering_initial_assessment
+    acceptance_criteria:ARR|market_ready_definition_criteria
+    regulatory_flag:ENUM:[none,required,optional]|if_subject_to_compliance
+  }
+  regulatory_constraints:ARR|OPT|structure:{
+    regulation:ENUM:[GDPR,HIPAA,PCI_DSS,CCPA,sector_specific]
+    requirement_impact:STR|how_regulation_shapes_feature_scope_or_design
+    compliance_deadline:DATE
+    evidence_needed:STR|documentation_or_testing_for_legal_review
+  }
+  prioritization_framework{
+    methodology:ENUM:[wsjf,kano,mose,custom_matrix]|with_scoring_formula
+    scoring_weights:OBJECT|market_value:NUM,cost_to_develop:NUM,regulatory_mandate:NUM,competitive_urgency:NUM
+    final_ranking:ARR|ordered_list_of_MKT_ids_with_justification
+  }
+  go_to_market_readiness{
+    launch_dependencies:ARR|structure:{dependency:STR,owner:STR,target_date:DATE,risk_if_delayed:STR}
+    pricing_implications:STR|how_requirements_affect_tiering_or_packaging
+    sales_enablement_needs:ARR|training,demo_assets,battle_cards_needed_for_requirements
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_mrd_management{
+    requirement_quality_metrics{
+      market_validation_rate:percentage_of_MKT_items_with_customer_or_analyst_backing|target:≥85%
+      regulatory_mapping_accuracy:percentage_of_constraints_correctly_translated_to_feature_scope|target:100%
+      prioritization_consensus_score:agreement_level_from_cross_functional_review|target:≥4.2/5.0
+    }
+    process_performance_objectives{
+      mrd_approval_cycle_time:target:≤10_business_days|UCL:15|LCL:5|Cpk:≥1.0
+      mrd_to_prd_conversion_rate:percentage_of_MKT_requirements_successfully_translated_to_PRD_specs|target:≥95%
+      regulatory_compliance_gap_closure:mean_days_from_constraint_identification_to_evidence_submission|control_limits:[5,30]|Cpk_target:≥1.0
+    }
+    statistical_process_control{
+      requirement_volatility_index:c_chart_tracking_changes_to_MKT_priorities_per_sprint|target_stability
+      market_demand_forecast_accuracy:p_chart_comparing_projected_vs_actual_feature_adoption|target:≤15%_variance
+      audit_finding_resolution_rate:percentage_of_legal_or_compliance_findings_closed_before_GTM|target:100%
+    }
+  }
+  causal_analysis_and_resolution{
+    trigger:major_priority_shift_without_data,regulatory_compliance_miss,or_prd_conversion_failure_rate>5%
+    analysis_method:5_whys + market_data_triangulation + regulatory_impact_audit
+    preventive_action:auto_enhance_mrd_template_with_mandatory_validation_gates_and_compliance_checklist
+  }
+  innovation_deployment{
+    ai_assisted_market_gap_analysis:nlp_scraping_of_reviews_and_support_tickets_to_auto_suggest_requirements|measure_quality
+    dynamic_prioritization_engine:real_time_weight adjustment based on competitive or regulatory shifts|measure_accuracy
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{title:"MRD Identification & Control", content:[id,product_line,version,owner,target_date], pdf_formatting:header_table_with_signatures}
+  section_2{title:"Market Analysis & Sizing", content:target_segments,tam_calculation,buyer_personas, visualizations:market_growth_chart,persona_decision_matrix}
+  section_3{title:"Market Requirement Catalog", content:iterate_over_catalog, format:table_with_req_id,description,source,priority,complexity,acceptance_criteria,regulatory_flag, prioritization_matrix_visualization}
+  section_4{title:"Regulatory Constraint Mapping", content:iterate_over_constraints, format:regulation,impact,deadline,evidence_needed, compliance_evidence_locations, legal_review_checklist}
+  section_5{title:"Prioritization Framework & Final Ranking", content:methodology,scoring_weights,final_ranking_table,justification_for_top_and_bottom_quartile}
+  section_6{title:"GTM Readiness & Dependencies", content:launch_dependencies,pricing_implications,sales_enablement_needs, risk_mitigation_for_delays}
+  section_7{title:"Quantitative Management & Statistical Control", content:cmmi_l5_baselines,spc_implementation,conversion_tracking,compliance_closure_metrics}
+  section_8{title:"Review, Approval & Legal Sign-Off", content:review_checklist,legal_and_compliance_gate,signatures,version_control}
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  requirement_quality:[validation_rate,priority_stability,conversion_rate_to_prd,clarity_score]
+  compliance_and_gtm:[regulatory_mapping_accuracy,evidence_submission_timeliness,sales_readiness_coverage]
+  infrastructure:automated_via_crm,analytics,legal_review_tools|dashboards_with_spc|alerts_on_compliance_deadlines_or_priority_swings
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:mrd_enterprise_template_with_market_research_branding_and_legal_footers
+  dynamic_content:[requirement_prioritization_matrix,regulatory_compliance_tracker,gantt_of_launch_dependencies]
+  archival:PDF/A-3_for_legal_audit,accessibility:PDF/UA,distribution_control:role_based_access_with_immutable_download_logging
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring:[populate_catalog,map_regulations,apply_scoring,attach_validation_evidence]
+  stage_2_market_engineering_review:[requirement_clarity,feasibility_alignment,prioritization_consensus,statistical_control]
+  stage_3_legal_compliance_review:[regulatory_accuracy,evidence_completeness,deadline_risk_assessment,100%_gate]
+  stage_4_final_approval:[product_lead,engineering_lead,legal_counsel,compliance_officer,PAdES_LTVA_signatures]
+  continuous_improvement:[post_gtm_requirement_accuracy_retrospective,auto_template_updates_from_legal_feedback,ai_gap_analysis_pilots]
+}
+
+OUTPUT_GENERATION{
+  primary:[PDF/A-3_report,Jira_Epic_CSV_export,Machine_readable_JSON]
+  supplementary:[legal_review_package,sales_enablement_brief,prioritization_scoring_workbook]
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_jira_epics:"Convert top-priority MKT requirements to Jira epics with acceptance criteria and labels"
+  create_legal_review_package:"Extract Section 4 into compliance evidence bundle with deadline tracking and owner assignments"
+  setup_priority_monitoring:"Configure dashboard to track MKT priority volatility and PRD conversion rate per CMMI QPM"
+  schedule_compliance_check:"Set milestone reminders for regulatory evidence submission deadlines per Section 4"
+  initiate_causal_analysis:"If conversion rate drops or compliance deadline missed, trigger CAR process with traceability audit"
+  export_to_prd_generator:"Format validated MKT requirements as input stub for automated PRD generation workflow"
+  generate_pricing_impact_model:"Convert Section 6 pricing implications into tiering simulation spreadsheet"
+}

@@ -1,0 +1,163 @@
+ROLE:senior_product_discovery_specialist|business_analysis_expert
+TASK:generate_50+_detailed_business_use_case_stories
+SCOPE:[primary_personas,operational_scenarios,edge_cases,failure_modes]
+
+INPUT{
+  product{
+    name:STR
+    core_value:STR
+  }
+  personas:ARR|MIN_ITEMS:5|EXAMPLE:[EndUser,Admin,Auditor,IntegrationPartner,SupportAgent]
+  features{
+    mvp:ARR
+    phase2:ARR
+  }
+  target{
+    industries:ARR|OPT
+    regions:ARR|OPT
+  }
+  constraints{
+    compliance:ARR|OPT:[GDPR,HIPAA,FINRA,CCPA]
+    technical:ARR|OPT:[offline_first,low_bandwidth,active_active_multi_region]
+    known_risks:ARR|OPT:[data_sync_conflicts,auth_token_expiry,api_rate_limits]
+  }
+}
+
+OUTPUT{
+  count:INT|MIN:50|EXACT:true
+  structure:use_case_story_template|REPEAT:50+
+  priority:breadth_AND_depth|edge_case_coverage:true
+}
+
+USE_CASE_STORY_TEMPLATE{
+  id_format:"UC-###"
+  fields{
+    title:STR|concise:true
+    persona:STR|ref:input.personas
+    goal:STR|user_outcome_focused:true
+    preconditions:ARR|state_before_action:true
+    main_success_scenario{
+      format:step_by_step_array
+      min_steps:3|max_steps:8
+      style:happy_path_only
+    }
+    extensions{
+      format:keyed_variations
+      pattern:"[A#]:[description]"
+      min_items:2|EXAMPLE:[
+        "A1:user_limited_permissions",
+        "A2:network_latency_gt_2s"
+      ]
+    }
+    edge_cases{
+      format:keyed_failures
+      pattern:"[E#]:[description]"
+      min_items:3|REQUIRED_CATEGORIES:[
+        duplicate_submission,
+        unvalidated_external_data,
+        region_failover_during_transaction,
+        token_expiry_mid_flow,
+        third_party_api_timeout
+      ]
+    }
+    compliance_impact:STR|OPT|EXAMPLE:"GDPR_Article17|audit_log_required"
+    success_metrics:ARR|EXAMPLE:["<3s_completion","99.9%_success_rate"]
+    linked_requirements:STR|OPT|EXAMPLE:"Jira:PROJ-123|Spec:§4.2"
+    priority:ENUM:[P0,P1,P2]|DEFAULT:P1
+    complexity:ENUM:[Low,Med,High]|DEFAULT:Med
+    tags:ARR|OPT:[RISK-HIGH,COMPLIANCE,CHAOS-TEST,COLLABORATIVE]
+  }
+  word_limit:150|per_story:true
+  format:Markdown|confluence_jira_ready:true
+}
+
+COVERAGE_REQUIREMENTS{
+  persona_coverage{
+    min_personas:5
+    min_stories_per_persona:8
+    total_persona_stories:MIN:40
+  }
+  feature_coverage{
+    mvp:min_3_stories_per_feature
+    phase2:min_2_stories_per_feature
+  }
+  scenario_types{
+    required:[
+      happy_path,
+      permission_variations,
+      network_degradation_offline,
+      data_validation_errors,
+      third_party_integration_failures,
+      multi_region_conflict_scenarios,
+      compliance_triggered_workflows,
+      security_threat_simulations,
+      scale_load_edge_cases,
+      recovery_workflows
+    ]
+    min_per_type:2
+  }
+  edge_case_depth{
+    min_edge_focused_stories:15
+    failure_mode_categories:[data_consistency,authz_errors,replication_lag,quota_exhaustion]
+  }
+  compliance_mapping{
+    min_compliance_explicit_stories:10
+    regulatory_refs:[GDPR_Art17,HIPAA_164.312,SOX_404,PCI_DSS_3.2]
+  }
+  collaborative_workflows{
+    min_multi_persona_stories:5
+    pattern:"[PersonaA]+[PersonaB]:[shared_goal]"
+  }
+}
+
+FORMATTING_RULES{
+  syntax:Markdown
+  compatibility:[Confluence,Jira,Notion,GitHub_Wiki]
+  numbering:sequential|format:"UC-001_to_UC-050+"
+  tagging{
+    high_risk:"[RISK-HIGH]"
+    compliance_critical:"[COMPLIANCE]"
+    chaos_testable:"[CHAOS-TEST]"
+  }
+  output_end{
+    coverage_matrix_table:true
+    table_columns:[Persona,HappyPath,EdgeCases,Compliance,Total]
+    auto_calculate_totals:true
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  export_jira:{
+    cmd:"Export to Jira: Reformat all 50+ stories as Jira CSV import template"
+    fields:[Summary,Description,Persona,Priority,Labels,EpicLink]
+    labels_auto:[edge_case,compliance,risk_high]
+  }
+  gherkin_conversion:{
+    cmd:"Gherkin Conversion: Convert top 20 P0 stories into Given-When-Then format"
+    output:automated_acceptance_test_ready
+    include_background:true
+  }
+  threat_model_integration:{
+    cmd:"Threat-Model Integration: Cross-reference UC stories with STRIDE threats"
+    output:flag_stories_validating_mitigation_controls
+    format:traceability_matrix
+  }
+  stakeholder_view:{
+    cmd:"Stakeholder View: Group stories by business outcome"
+    categories:[Revenue,RiskReduction,Compliance,UX]
+    output:roadmap_prioritization_ready
+  }
+  traceability_matrix:{
+    cmd:"Add traceability matrix linking UC stories to architecture components and data entities"
+    link_to:[Section3_architecture,Section4_data_entities]
+    output:bidirectional_traceability_report
+  }
+}
+
+PRO_TIPS{
+  seed_incidents:"Add 'Include stories based on historical production incidents: [list]' to uncover similar failure modes"
+  regulatory_depth:"For GDPR/HIPAA: Add 'Ensure 10+ stories explicitly model data subject rights workflows'"
+  multi_region_complexity:"Add 'Include 5+ stories where user actions span regions simultaneously'"
+  chaos_ready:"Tag stories for chaos validation with [CHAOS-TEST] and include recovery assertions"
+  version_control:"Save output as use-cases-v1.0.md and track assumption evolution in version log"
+}

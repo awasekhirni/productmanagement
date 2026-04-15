@@ -1,0 +1,258 @@
+# DOC_PROBLEM_STATEMENT_v1.0.toon
+# CMMI Level 5 Compliant Problem Statement Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:product_manager|ux_researcher|business_analyst|stakeholder_facilitator
+TASK:generate_cmmi_l5_compliant_problem_statement_with_quantified_impact_validation_criteria_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + machine_readable_JSON
+
+INPUT_CONTEXT{
+  problem{
+    id:STR|format:PS-###|auto_increment_from_repository
+    title:STR|required|concise_problem_description
+    version:SEMVER|required
+    owner:STR|required|product_manager_or_researcher
+    domain:ENUM:[user_experience,operational_inefficiency,compliance_gap,market_opportunity,technical_debt]
+  }
+  problem_definition{
+    user_pain_points:ARR|min_items:3|structure:{persona:STR,pain_description:STR,frequency:ENUM,severity:ENUM[1-5]}
+    current_state_analysis:STR|required|detailed_description_of_existing_situation
+    root_causes:ARR|OPT|structure:{cause:STR,evidence:STR,contributing_factors:ARR}
+    scope_boundaries:STR|what_is_in_scope_vs_out_of_scope_for_this_problem
+  }
+  impact_quantification{
+    user_impact{
+      affected_users:NUM|estimated_count_or_percentage
+      frequency_of_occurrence:ENUM:[constant,daily,weekly,monthly,ad_hoc]
+      severity_rating:ENUM[1-5]|user_reported_or_researcher_assessed
+      qualitative_feedback:ARR|OPT|direct_quotes_or_survey_responses
+    }
+    business_impact{
+      revenue_impact:NUM|OPT|currency:USD|estimated_loss_or_opportunity_cost
+      cost_impact:NUM|OPT|currency:USD|operational_inefficiency_or_waste
+      productivity_impact:STR|OPT|time_lost_per_user_per_occurrence
+      risk_exposure:STR|OPT|compliance_reputational_or_operational_risk_description
+    }
+    measurement_methodology:STR|how_impact_metrics_were_collected_and_validated
+    confidence_level:ENUM:[low,medium,high]|based_on_data_quality_and_sample_size
+  }
+  success_criteria{
+    problem_resolution_indicators:ARR|min_items:3|structure:{indicator:STR,target_state:STR,measurement_method:STR}
+    user_experience_targets:ARR|OPT|structure:{metric:STR,baseline:NUM,target:NUM,measurement_frequency:ENUM}
+    business_outcome_targets:ARR|OPT|structure:{outcome:STR,baseline:NUM,target:NUM,timeframe:STR}
+    validation_approach:STR|how_success_will_be_verified_post_solution
+  }
+  stakeholder_alignment{
+    affected_roles:ARR|min_items:3|structure:{role:STR,impact_description:STR,priority:ENUM[high,med,low]}
+    conflicting_perspectives:ARR|OPT|structure:{perspective:STR,rationale:STR,resolution_approach:STR}
+    consensus_status:ENUM:[aligned,partially_aligned,needs_facilitation]|current_state_of_agreement
+  }
+  research_evidence{
+    data_sources:ARR|structure:{source_type:ENUM[survey,interview,analytics,support_tickets,market_research],sample_size:NUM,key_findings:STR}
+    triangulation_method:STR|how_multiple_sources_were_used_to_validate_findings
+    limitations:ARR|OPT|known_constraints_or_biases_in_the_research
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_problem_validation{
+    problem_clarity_metrics{
+      specificity_score:peer_review_rating_for_problem_definition_precision_1_to_5|target:≥4.2
+      measurability_index:percentage_of_impact_claims_with_quantified_data|target:≥90%
+      stakeholder_consensus_score:agreement_level_from_reviewers_measured_via_survey|target:≥4.0/5.0
+    }
+    impact_validation_metrics{
+      data_quality_score:completeness_accuracy_and_timeliness_rating_for_impact_data|target:≥4.3/5.0
+      triangulation_strength:number_of_independent_data_sources_confirming_key_findings|target:≥3
+      confidence_interval_documentation:whether_statistical_uncertainty_is_explicitly_stated|target:100%_for_quantitative_claims
+    }
+    statistical_process_control{
+      problem_definition_cycle_time:days_from_research_completion_to_approved_statement|control_limits:[2,7]|Cpk_target:≥1.33
+      revision_rate:number_of_major_revisions_before_approval|c_chart_monitoring|target_stability
+      stakeholder_alignment_trend:change_in_consensus_score_over_time|I_MR_chart_monitoring
+    }
+  }
+  process_performance_objectives{
+    problem_statement_approval_cycle_time:target:≤5_business_days|UCL:8|LCL:2|Cpk:≥1.33
+    impact_quantification_completeness:target:≥90%_of_claims_with_supporting_data|measured_per_statement
+    stakeholder_consensus_achievement:target:≥4.0/5.0_consensus_score_before_proceeding_to_solutioning
+  }
+  causal_analysis_integration{
+    trigger:problem_statement_rejected_or_major_revision_required_due_to_inadequate_validation
+    analysis_method:5_whys + evidence_triangulation_audit + stakeholder_feedback_analysis
+    preventive_action:auto_enhance_problem_statement_template_or_research_checklist_based_on_root_cause
+    knowledge_capture:lessons_learned_added_to_organizational_research_asset_library
+  }
+  innovation_deployment{
+    ai_assisted_pain_point_clustering:pilot_nlp_model_to_group_user_feedback_into_themes|measure_quality_improvement
+    automated_impact_estimation:integrate_with_analytics_platforms_to_auto_calulate_user_business_impact
+    real_time_consensus_tracking:collaborative_tooling_to_measure_stakeholder_alignment_during_review
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Problem Identification & Control"
+    content:[problem_id,title,version,owner,domain,classification,last_review_date,next_review_date]
+    pdf_formatting:header_table_with_digital_signature_fields_for_product_owner_research_lead_and_stakeholder_rep
+    cmmi_traceability:link_to_problem_validation_process_definition_and_metrics_baseline
+    mermaid_diagram:problem_context_showing_user_business_and_technical_dimensions
+  }
+  section_2{
+    title:"Problem Definition & Root Cause Analysis"
+    content:[user_pain_points,current_state_analysis,root_causes,scope_boundaries]
+    format_per_pain_point{
+      header:"{persona}: {pain_description}"
+      detailed_description:context_triggers_and_user_impact
+      frequency_and_severity:quantified_with_data_source_reference
+      supporting_evidence:quotes_analytics_or_research_findings
+    }
+    root_cause_visualization:fishbone_diagram_mermaid_or_embedded_image_with_validated_causes_highlighted
+    scope_clarification:explicit_in_scope_out_of_scope_table_to_prevent_solution_creep
+  }
+  section_3{
+    title:"Impact Quantification & Validation"
+    content:iterate_over_input.impact_quantification
+    format_per_impact_dimension{
+      user_impact:table_with_affected_users_frequency_severity_and_qualitative_feedback
+      business_impact:table_with_revenue_cost_productivity_and_risk_estimates_with_confidence_levels
+      measurement_methodology:detailed_description_of_data_collection_analysis_and_validation_approach
+    }
+    data_quality_assessment:table_with_source_type_sample_size_limitations_and_triangulation_strength
+    confidence_statement:explicit_declaration_of_overall_confidence_level_with_justification
+  }
+  section_4{
+    title:"Success Criteria & Validation Approach"
+    content:iterate_over_input.success_criteria
+    format_per_criteria_type{
+      problem_resolution_indicators:table_with_indicator_target_state_and_measurement_method
+      user_experience_targets:table_with_metric_baseline_target_and_measurement_frequency
+      business_outcome_targets:table_with_outcome_baseline_target_timeframe_and_owner
+    }
+    validation_plan:detailed_approach_for_verifying_success_post_solution_including_tools_and_timeline
+    baseline_documentation:how_current_state_metrics_will_be_preserved_for_comparison
+  }
+  section_5{
+    title:"Stakeholder Alignment & Consensus"
+    content:iterate_over_input.stakeholder_alignment
+    format_per_alignment_element{
+      affected_roles:table_with_role_impact_description_and_priority_with_rationale
+      conflicting_perspectives:table_with_perspective_rationale_and_proposed_resolution_approach
+      consensus_status:current_state_with_evidence_of_alignment_or_gaps
+    }
+    facilitation_plan:if_needed_approach_for_achieving_consensus_with_timeline_and_responsibilities
+    communication_strategy:how_problem_statement_will_be_socialized_to_broader_organization
+  }
+  section_6{
+    title:"Research Evidence & Methodology"
+    content:iterate_over_input.research_evidence
+    format_per_evidence_component{
+      data_sources:table_with_source_type_sample_size_key_findings_and_limitations
+      triangulation_method:description_of_how_sources_were_cross_validated
+      ethical_considerations:if_applicable_privacy_consent_and_bias_mitigation_approaches
+    }
+    research_artifacts:links_to_raw_data_analysis_scripts_or_interview_guides_in_repository
+    reproducibility_statement:how_another_researcher_could_replicate_the_findings
+  }
+  section_7{
+    title:"Quantitative Management & Statistical Control"
+    content:cmmi_l5_specific_quantitative_management_section
+    problem_validation_baselines{
+      historical_data_summary:time_period_sample_size_and_stability_for_problem_quality_metrics
+      baseline_values:table_with_metric_name,baseline_value,control_limits,capability_index
+      baseline_usage:how_baselines_guide_review_approval_and_improvement_prioritization
+    }
+    spc_implementation_for_problem_statements{
+      control_charts:which_metrics_use_which_chart_type_with_interpretation_guidelines
+      out_of_control_protocols:response_when_problem_quality_metrics_breach_control_limits
+      recalibration_criteria:when_and_how_to_update_baselines_after_methodology_changes
+    }
+  }
+  section_8{
+    title:"Review, Approval & Change Management"
+    content:[review_schedule,approval_criteria,change_control_process,version_history]
+    problem_statement_review_workflow{
+      review_checklist:required_validations_impact_quantification_stakeholder_consensus_research_rigor
+      stakeholder_signoff:who_must_approve_what_aspects_with_escalation_path
+      continuous_validation:how_problem_statement_will_be_revisited_as_new_data_emerges
+    }
+    digital_signature_specification{
+      signature_fields:product_owner,research_lead,key_stakeholder_rep,compliance_if_applicable
+      signature_standard:PAdES_BES_or_LTVA_with_rfc3161_timestamp
+      audit_trail:immutable_log_of_all_signature_events_with_user_context_and_document_version
+    }
+  }
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  problem_quality_metrics{
+    definition_clarity_score:peer_review_rating_for_problem_specificity_and_actionability
+    impact_quantification_rate:percentage_of_claims_with_supporting_quantitative_data
+    stakeholder_consensus_index:agreement_level_from_reviewers_measured_via_structured_survey
+    research_rigor_score:composite_of_sample_size_triangulation_and_limitation_documentation
+  }
+  process_performance_metrics{
+    problem_definition_cycle_time:business_days_from_research_completion_to_approval
+    revision_count:number_of_major_iterations_before_approval_with_c_chart_monitoring
+    stakeholder_alignment_trend:change_in_consensus_score_over_time_with_I_MR_chart
+    post_solution_validation_rate:percentage_of_success_criteria_actually_measured_post_implementation
+  }
+  metric_infrastructure{
+    collection_automation:percentage_of_metrics_with_automated_collection_via_research_tools_and_surveys
+    data_quality_score:completeness_accuracy_and_timeliness_rating_for_problem_statement_metrics
+    dashboard_adoption:percentage_of_product_teams_regularly_viewing_problem_validation_dashboards
+    alert_effectiveness:percentage_of_problem_quality_alerts_that_triggered_appropriate_review_response
+  }
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:problem_statement_enterprise_template_with_research_branding_cmmi_headers_and_stakeholder_footers
+  dynamic_content{
+    pain_point_summary:auto_formatted_table_with_severity_frequency_and_persona_filtering
+    impact_visualization:bar_charts_or_heat_maps_showing_user_and_business_impact_with_confidence_intervals
+    root_cause_diagram:mermaid_fishbone_rendered_to_high_resolution_vector
+    consensus_status_indicator:visual_gauge_showing_alignment_level_with_breakdown_by_role
+  }
+  navigation_and_interactivity{
+    pdf_bookmarks:hierarchical_structure_matching_problem_statement_sections_with_quick_jump
+    hyperlinks:cross_references_to_research_artifacts_stakeholder_lists_and_success_metrics
+    form_fields:approval_signature_blocks_with_validation_timestamp_role_and_digital_certificate
+    collapsible_evidence:optional_expansion_for_detailed_research_findings_to_keep_main_body_concise
+  }
+  archival_and_compliance{
+    pdf_a3:true_with_embedded_fonts_color_profiles_and_long_term_validation_metadata
+    metaxmp_with_cmmi_process_tags_problem_id_research_metadata_consensus_snapshot_approval_hash
+    accessibility:pdf_ua_compliant_with_tagged_structure_alt_text_for_diagrams_and_screen_reader_navigation
+    digital_preservation:pdf_a3_conformance_verified_with_verapdf_or_similar_tool_pre_distribution
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_outputs{
+    pdf_report{
+      format:PDF/A-3_with_embedded_source_markdown_metadata_and_long_term_validation_support
+      filename:"{product_name}_ProblemStmt-{problem_id}_v{version}_{YYYYMMDD}_CMMI_L5.pdf"
+      delivery:secure_download_link + confluence_attachment + email_notification_to_stakeholders
+    }
+    machine_readable_export{
+      format:JSON_schema_validated_against_problem_statement_schema_with_cmmi_extensions
+      content:all_problem_definitions_impact_data_success_criteria_and_research_evidence_in_structured_format
+      use_case:automated_solution_requirements_generation_stakeholder_dashboards_research_repository
+    }
+  }
+  supplementary_outputs{
+    stakeholder_one_pager:PDF_single_page_summary_for_alignment_sessions_with_key_pains_and_impact
+    research_appendix:ZIP_with_interview_guides_survey_instruments_and_raw_data_samples
+    success_criteria_checklist:CSV_export_of_validation_metrics_for_import_to_project_tracking_tool
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_solution_requirements_stub:"Convert problem statement to initial solution requirements template with traceability"
+  create_stakeholder_alignment_deck:"Generate presentation slides from Sections 2,3,5 for consensus-building workshops"
+  schedule_validation_review:"Set post-solution validation review per CMMI QPM to measure success criteria achievement"
+  export_to_research_repository:"Format research evidence for import to Dovetail, EnjoyHQ, or similar research platform"
+  initiate_causal_analysis:"If problem statement was rejected, trigger CAR process with validation gap analysis"
+  setup_impact_monitoring:"Configure automated tracking of business impact metrics defined in Section 3"
+}

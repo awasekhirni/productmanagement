@@ -1,0 +1,96 @@
+# DOC_DATA_MODEL_ERD_v1.0.toon
+# CMMI Level 5 Compliant Data Architecture & Governance Spec
+
+IMPORT:DATA_MODEL_BASE.toon|CMMI_L5_DATA_GOVERNANCE.toon
+
+ROLE:database_architect|data_engineer|privacy_officer|compliance_auditor
+TASK:design_quantitatively_validated_data_model_with_lineage_and_retention_controls
+OUTPUT_FORMAT:Mermaid_ERD + CSV_Data_Dictionary + /docs/data-model/ + PDF
+
+INPUT_CONTEXT{
+  model_scope{
+    system_name:STR|required
+    domain:ENUM:[transactional,analytical,operational,mixed]
+    database_engine:ENUM:[postgresql,mysql,mongodb,snowflake,dynamodb]
+  }
+  entities_relationships{
+    entities:ARR|min_items:1|format:[entity_name,primary_key,attributes_list,classification]
+    relationships:ARR|format:[from_entity,to_entity,type,cascade_rules]
+    erd_visualization:STR|required|format:mermaid_syntax_or_ref
+  }
+  governance_compliance{
+    pii_classification:ARR|format:[field_name,data_type,pii_level,masking_rule]
+    retention_rules:ARR|format:[entity,policy_description,retention_period,deletion_trigger]
+    residency_constraints:ENUM:[us_only,eu_only,global,hybrid]
+    audit_controls:BOOL|required|default:true
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_data_quality{
+    normalization_index{
+      metric:percentage_of_entities_in_3nf_or_higher
+      target:≥95%
+      control_limits:UCL:100%|LCL:90%|Cpk_target:≥1.5
+    }
+    pii_classification_accuracy{
+      metric:auto_scan_vs_manual_classification_variance
+      target:≤1%
+      measurement_method:dlp_policy_engine + audit_sample_validation
+    }
+    data_lineage_completeness{
+      metric:percentage_of_fields_with_documented_source_and_consumer
+      target:100%
+    }
+  }
+  process_performance_baselines{
+    ppb:[schema_migration_success_rate,audit_log_completeness_pct,data_breach_near_miss_count]
+    predictive_model:schema_change_impact_forecasting_via_dependency_graph_analysis
+  }
+  causal_analysis_triggers{
+    trigger:audit_control_gap > 0 OR pii_misclassification detected
+    car_method:data_flow_traceback + control_matrix_gap_analysis + pareto_of_retention_violations
+    preventive_action:automate_retention_policies_in_orm|mandate_lineage_tagging_in_ci_cd
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Data Model Overview & Scope"
+    content:[architecture_pattern,engine_choice,design_principles,compliance_alignment]
+  }
+  section_2{
+    title:"Entity Relationship Diagram & Relationships"
+    content:[mermaid_erd,relationship_table,cascade_rules,performance_indexes]
+    mermaid_diagrams:true
+  }
+  section_3{
+    title:"Data Dictionary & Field Specifications"
+    content:[csv_data_dictionary,validation_rules,default_values,nullability]
+    tables:full_attribute_matrix
+  }
+  section_4{
+    title:"PII Classification, Retention & Residency"
+    content:[classification_table,retention_policy_matrix,residency_controls,deletion_procedures]
+    compliance_mapping:gdpr_art_30|hipaa_164_312b_audit_controls
+  }
+  section_5{
+    title:"Audit, Lineage & Governance Controls"
+    content:[audit_log_schema,lineage_mapping,governance_roles,monitoring_alerts]
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:architect_authors|automated_normalization_check|exit_criteria:all_pii_tagged|lineage_defined
+  stage_2_data_review:dba+privacy_officer_review|retention_policy_validation|control_chart_for_classification_defects
+  stage_3_compliance_audit:gdpr_hipaa_mapping_verification|data_residency_check|mandatory_signoff
+  stage_4_baseline:db_migration_script_generation|schema_registry_sync|immutable_pdf_hash
+  continuous_improvement:quarterly_schema_health_review|update_linting_rules_from_migration_failures
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Mermaid + CSV_Dict + PDF
+  filename_pattern:{system}_data_model_v{version}_{YYYYMMDD}.pdf
+  supplementary_outputs:schema_migration_scripts|pii_audit_report|compliance_evidence_package
+  metadata_injection:cmmi_tags:CM-1.2,TS-2.4,RSKM-2.2|process_version:l5.0
+}

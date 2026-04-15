@@ -1,0 +1,94 @@
+# DOC_POSTMORTEM_v1.0.toon
+# CMMI Level 5 Compliant Incident Learning & Systemic Improvement Blueprint
+
+IMPORT:POSTMORTEM_BASE.toon|CMMI_L5_ORGANIZATIONAL_LEARNING.toon
+
+ROLE:incident_commander|sre_lead|compliance_auditor|product_owner
+TASK:generate_quantitatively_validated_blameless_retrospective_with_predictive_recurrence_prevention
+OUTPUT_FORMAT:Markdown_in_/postmortems/ + Jira_Action_Sync + PDF/A-3
+
+INPUT_CONTEXT{
+  incident_meta{
+    incident_id:STR|required|format:INC-YYYYMMDD-NNN
+    severity:ENUM:[sev1,sev2,sev3,sev4]
+    start_end_duration:STR|required|format:ISO8601_range
+    systems_affected:ARR|min_items:1
+  }
+  timeline_rca{
+    chronological_events:ARR|format:[timestamp,actor,action,system_state]
+    root_cause_analysis:STR|required|min_length:50|format:technical_organizational_process_factors
+    contributing_factors:ARR|format:[category,evidence,severity_weight]
+    detection_method:ENUM:[monitoring,user_report,automated_check,manual]
+  }
+  impact_compliance{
+    user_business_impact:STR|required|format:affected_users,downtime_minutes,data_loss_bool,revenue_impact
+    regulatory_exposure:ARR|OPT:[gdpr_art_33,hipaa_164.316,notification_required_bool]
+    action_items:ARR|min_items:3|format:[id,description,owner,target_date,jira_link,prevention_type]
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_learning_effectiveness{
+    action_item_closure_rate{
+      metric:percentage_of_remediation_actions_completed_on_time
+      target:≥95%
+      control_limits:UCL:100%|LCL:90%|Cpk_target:≥1.5
+    }
+    recurrence_reduction_index{
+      metric:percentage_decrease_in_similar_incidents_over_12_months
+      target:≥80%
+      measurement_method:historical_incident_clustering + taxonomy_mapping
+    }
+    stakeholder_comprehension_score{
+      metric:average_post-mortem_survey_rating_for_clarity_and_actionability
+      target:≥4.6/5.0
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[mean_action_closure_days,recurrence_rate_by_severity,detection_latency_trend,blameless_culture_index]
+    predictive_model:systemic_risk_scoring_based_on_contribution_factor_weights + architectural_complexity
+  }
+  causal_analysis_triggers{
+    trigger:action_closure_rate < LCL OR recurrence > 2_similar_incidents_per_quarter OR comprehension < 4.2
+    car_method:blameless_5_whys + fishbone_diagram + pareto_of_contributing_categories
+    preventive_action:auto_generate_jira_epics_from_actions|mandate_architecture_review_for_recurring_factors|update_monitoring_alerts_from_detection_gaps
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Executive Summary & Incident Context"
+    content:[severity,duration,impact_scope,executive_highlights,compliance_exposure]
+    pdf_formatting:executive_brief_with_severity_and_timeline_badges
+  }
+  section_2{
+    title:"Chronological Timeline & Root Cause Analysis"
+    content:[event_sequence,detection_latency,rca_findings,contributing_factor_matrix]
+    mermaid_diagrams:true|incident_cascade_and_detection_flow
+  }
+  section_3{
+    title:"Impact Assessment & Regulatory Compliance"
+    content:[user_business_impact,data_integrity_status,gdpr_hipaa_notification_checklist,evidence_packaging]
+    tables:impact_quantification_matrix|regulatory_mapping_table
+  }
+  section_4{
+    title:"Action Plan & Systemic Prevention"
+    content:[remedation_items_table,ownership,target_dates,prevention_type,tracking_links]
+    compliance_mapping:hipaa_164.316_policy_update_refs|audit_trail_requirements
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:commander_authors|automated_timeline_validation+action_link_check|exit_criteria:rca_complete|actions_logged
+  stage_2_cross_functional:sre+product+security_review+recurrence_modeling|control_chart_for_closure_rate_variance
+  stage_3_compliance_legal:gdpr_hipaa_notification_verification|policy_update_signoff|mandatory_signoff
+  stage_4_baseline:publish_to_postmortems+jira_sync+immutable_pdf_hash+executive_brief_distribution
+  continuous_improvement:quarterly_retro_analysis|update_ppm_from_recurrence_data|refine_rca_taxonomy_from_closure_patterns
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Jira_Sync + PDF
+  filename_pattern:postmortem_{incident_id}_v{version}_{YYYYMMDD}.md
+  supplementary_outputs:action_item_export_csv|regulatory_evidence_pack|stakeholder_comprehension_survey
+  metadata_injection:cmmi_tags:RSKM-3.2,OPM-2,VER-1.5|process_version:l5.0
+}

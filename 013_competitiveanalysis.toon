@@ -1,0 +1,125 @@
+# DOC_COMPETITIVE_ANALYSIS_v1.0.toon
+# CMMI Level 5 Compliant Competitive Analysis Matrix Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:product_marketing_manager|competitive_intelligence_analyst|sales_strategist|data_scientist
+TASK:generate_cmmi_l5_compliant_competitive_analysis_matrix_with_feature_pricing_swot_gap_analysis_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + Spreadsheet_CSV_export + machine_readable_JSON
+
+INPUT_CONTEXT{
+  analysis{
+    id:STR|format:CA-###|auto_increment
+    product_category:STR|required
+    version:SEMVER|required
+    owner:STR|required
+    intelligence_cycle:ENUM:[quarterly,semi_annual,annual,trigger_based]
+  }
+  competitor_universe:ARR|min_items:3|structure:{
+    competitor_name:STR
+    market_position:ENUM:[leader,challenger,follower,niche]
+    target_segments:ARR|segments_competitor_focuses_on
+    pricing_model:ENUM:[subscription,usage_based,freemium,enterprise,custom]
+    estimated_revenue_share:NUM|percentage_or_range
+  }
+  feature_comparison_matrix:ARR|min_items:5|structure:{
+    feature_category:STR
+    specific_capability:STR
+    our_product:ENUM:[native,planned,partial,not_supported]
+    competitors:OBJECT|competitor_name:ENUM[same_values]
+    differentiation_impact:ENUM:[high,medium,low,parity]
+    customer_perception:STR|from_reviews,sales_feedback,or_surveys
+  }
+  pricing_analysis{
+    pricing_tiers:ARR|structure:{tier_name:STR,price:NUM,currency:STR,included_features:ARR,target_persona:STR}
+    competitor_pricing:OBJECT|competitor_name:pricing_summary
+    price_to_value_ratio:NUM|our_ratio_vs_market_average
+    discounting_and_negotiation_leverage:STR|enterprise_contract_patterns_and_win_loss_data
+  }
+  swot_analysis{
+    strengths:ARR|our_durable_advantages_with_evidence
+    weaknesses:ARR|our_gaps_with_mitigation_plans
+    opportunities:ARR|market_or_competitor_vulnerabilities_to_exploit
+    threats:ARR|competitive_moves_or_disruptions_to_prepare_for
+  }
+  gap_and_positioning_strategy{
+    identified_gaps:ARR|structure:{gap:STR,impact_on_win_rate:NUM,strategic_response:ENUM[build,partner,bundle,ignore],timeline:STR}
+    positioning_statements:ARR|structure:{audience:STR,message:STR,differentiator:STR,proof_point:STR}
+    sales_battle_card_inputs:STR|objection_handling,counter_messaging,proof_sources
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_competitive_management{
+    analysis_quality_metrics{
+      data_freshness_score:percentage_of_competitor_data_updated_within_intelligence_cycle|target:≥95%
+      feature_accuracy_rate:validated_vs_actual_competitor_capabilities|target:≥90%
+      win_loss_correlation:statistical_relationship_between_gap_closure_and_deal_win_rate|target:≥0.65
+    }
+    process_performance_objectives{
+      analysis_completion_cycle_time:days_from_kickoff_to_approved_matrix|UCL:20|LCL:7|Cpk:≥1.0
+      sales_enablement_adoption:percentage_of_deal_teams_referencing_latest_matrix|target:≥85%
+      gap_closure_rate:percentage_of_identified_gaps_addressed_within_target_timeline|target:≥80%
+    }
+    statistical_process_control{
+      intelligence_update_frequency:c_chart_tracking_cycle_adherence|target:0_misses
+      pricing_accuracy_variance:p_chart_comparing_estimated_vs_actual_contract_pricing|target:≤10%
+      win_rate_trend:I_MR_chart_post_positioning_change|control_limits_and_capability_analysis
+    }
+  }
+  causal_analysis_and_resolution{
+    trigger:win_rate_decline_linked_to_gap,or pricing intelligence variance exceeds threshold
+    analysis_method:5_whys + win_loss_interview_synthesis + feature_gap_traceability_audit
+    preventive_action:auto_enhance_matrix_template_with_mandatory_validation_gates_and_sales_feedback_integration
+  }
+  innovation_deployment{
+    ai_competitor_monitoring:automated_web_scraping_and_nlp_of_release_notes,pricing_pages,review_sites|measure_time_to_insight
+    dynamic_battle_card_generator:real_time objection routing based on live matrix and deal context|measure_win_rate_impact
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{title:"Analysis Identification & Control", content:[id,category,version,owner,cycle], pdf_formatting:header_table_with_signatures}
+  section_2{title:"Competitor Universe & Market Positioning", content:iterate_over_universe, format:table_with_name,position,segments,pricing_model,share, visualizations:market_share_pie,positioning_quadrant_mermaid}
+  section_3{title:"Feature Comparison Matrix", content:iterate_over_matrix, format:category,capability,our_vs_competitor_grid,differentiation_impact,customer_perception, visualizations:radar_chart_of_feature_coverage}
+  section_4{title:"Pricing Analysis & Value Positioning", content:pricing_tiers,competitor_pricing_summary,price_to_value_ratio,discounting_patterns, visualizations:pricing_scatter_plot,TCO_comparison_table}
+  section_5{title:"SWOT Analysis & Strategic Implications", content:strengths,weaknesses,opportunities,threats, strategic_response_matrix_linking_swot_to_action_items}
+  section_6{title:"Gap Identification & Positioning Strategy", content:identified_gaps_table,positioning_statements,sales_battle_card_inputs, roadmap_alignment_for_gap_closure}
+  section_7{title:"Quantitative Management & Statistical Control", content:cmmi_l5_baselines,spc_implementation,win_loss_tracking,intelligence_freshness_metrics}
+  section_8{title:"Review, Approval & Distribution", content:review_checklist,sales_and_product_signoff,digital_signature_spec,version_control}
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  intelligence_quality:[data_freshness,feature_accuracy,pricing_variance,intelligence_cycle_adherence]
+  business_impact:[win_loss_correlation,gap_closure_rate,sales_enablement_adoption,positioning_message_recall]
+  infrastructure:automated_via_web_monitoring,crm_win_loss_data,surveys|dashboards_with_spc|alerts_on_stale_data_or_win_rate_drops
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:competitive_analysis_enterprise_template_with_sales_branding_and_intelligence_footers
+  dynamic_content:[feature_comparison_heat_map,pricing_scatter_chart,swot_quadrant_visual,gap_closure_gantt]
+  archival:PDF/A-3,accessibility:PDF/UA,distribution_control:role_based_sales_and_executive_access_with_access_audit
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring:[populate_matrix,validate_pricing,complete_swot,attach_win_loss_data]
+  stage_2_product_marketing_review:[accuracy_check,differentiation_clarity,positioning_alignment,statistical_control]
+  stage_3_sales_engineering_validation:[objaction_handling_test,deal_relevance_assessment,enablement_readiness]
+  stage_4_final_approval:[head_of_product,cmo,sales_lead,PAdES_LTVA_signatures]
+  continuous_improvement:[post_quarter_win_loss_retrospective,auto_monitoring_integration,ai_battle_card_pilots]
+}
+
+OUTPUT_GENERATION{
+  primary:[PDF/A-3_report,Spreadsheet_CSV_export,Machine_readable_JSON]
+  supplementary:[sales_battle_card_template,pricing_negotiation_guide,competitor_release_tracker_config]
+}
+
+FOLLOW_UP_COMMANDS{
+  export_to_spreadsheet:"Generate CSV with feature grid, pricing tiers, and SWOT for Excel/Sheets import"
+  create_sales_battle_cards:"Convert Section 6 into objection handling cards with proof points and counter-messaging"
+  setup_win_loss_monitoring:"Configure CRM dashboard to track gap closure correlation with deal outcomes per CMMI QPM"
+  schedule_intelligence_refresh:"Set quarterly update cycle reminder with data freshness validation gate"
+  initiate_causal_analysis:"If win rate drops or pricing variance breaches threshold, trigger CAR process with deal data audit"
+  generate_competitor_release_tracker:"Output RSS/webhook config for automated competitor announcement monitoring"
+  export_to_enablement_platform:"Format matrix and positioning statements for import to Highspot or Seismic"
+}

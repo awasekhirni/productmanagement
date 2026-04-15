@@ -1,0 +1,525 @@
+# DOC_DATA_MODEL_v1.0.toon
+# CMMI Level 5 Compliant Data Model & Entity Relationship Document Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:data_architect|database_engineer|privacy_engineer|compliance_analyst|security_specialist
+TASK:generate_cmmi_l5_compliant_data_model_document_with_quantitative_quality_metrics_governance_controls_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + SQL_DDL_export + JSON_schema_export + machine_readable_JSON
+
+INPUT_CONTEXT{
+  data_model{
+    id:STR|format:DM-###|auto_increment_from_repository
+    name:STR|required|concise_model_name
+    version:SEMVER|required
+    model_owner:STR|required|role_or_individual
+    domain:ENUM:[customer_data,transaction_data,analytics_data,reference_data,pii_repository,audit_log_store]
+    storage_technology:ENUM:[postgresql,mysql,mongodb,cassandra,snowflake,redshift,aurora_global,dynamodb]
+  }
+  model_scope{
+    business_context:STR|required|what_business_capabilities_this_model_supports
+    bounded_context:STR|domain_driven_design_context_boundaries
+    data_classification:ENUM:[public,internal,confidential,restricted,pii,phi,pci]
+    residency_requirements:ARR|OPT|EXAMPLE:[eu_data_must_stay_in_eu-central-1,us_phi_encrypted_at_rest]
+    retention_policies:ARR|structure:{data_category:STR,retention_period:STR,deletion_trigger:STR,legal_hold_support:BOOL}
+  }
+  entities:ARR|min_items:3|structure:{
+    entity_name:STR|EXAMPLE:"User","Order","PaymentTransaction"
+    description:STR|business_purpose_and_usage_context
+    entity_type:ENUM:[transactional,reference,aggregate,event,view,materialized_view]
+    primary_key:OBJECT|field_name:STR,data_type:STR,generation_strategy:ENUM:[uuid,sequence,identity,natural]
+    fields:ARR|min_items:1|structure:{
+      field_name:STR
+      data_type:ENUM:[string,integer,bigint,decimal,boolean,timestamp,uuid,json,jsonb,array]
+      constraints:ARR|OPT:[not_null,unique,foreign_key,check_constraint]
+      default_value:ANY|OPT
+      pii_classification:ENUM:[none,pseudonymized,encrypted,tokenized,masked]|if_applicable
+      encryption_spec:OBJECT|OPT|algorithm:STR,key_management:STR,field_level:BOOL
+      masking_rule:STR|OPT|how_field_is_masked_in_non_production_environments
+      residency_constraint:STR|OPT|geographic_restrictions_on_storage_or_processing
+      retention_override:STR|OPT|if_different_from_entity_level_policy
+      business_rules:ARR|OPT|validation_logic_or_derivation_formulas
+      example_values:ARR|OPT|representative_samples_for_documentation
+    }
+    relationships:ARR|OPT|structure:{
+      related_entity:STR
+      relationship_type:ENUM:[one_to_one,one_to_many,many_to_many]
+      cardinality:STR|EXAMPLE:"1..*","0..1"
+      foreign_key_field:STR|if_applicable
+      cascade_behavior:ENUM:[cascade,restrict,set_null,set_default]|for_deletes_and_updates
+      business_justification:STR|why_this_relationship_exists
+    }
+    indexes:ARR|OPT|structure:{
+      index_name:STR
+      fields:ARR|fields_included_in_index
+      index_type:ENUM:[btree,hash,gin,gist,brin,fulltext,spatial]
+      uniqueness:BOOL
+      purpose:STR|query_pattern_or_performance_goal
+      estimated_size:STR|OPT|for_capacity_planning
+    }
+    partitioning_strategy:OBJECT|OPT|{
+      method:ENUM:[range,list,hash,key]
+      key_field:STR
+      partition_count:INT|OPT
+      rotation_policy:STR|OPT|for_time_based_partitions
+    }
+    access_patterns:ARR|structure:{
+      pattern_name:STR
+      query_description:STR
+      expected_frequency:ENUM:[real_time,batch_hourly,batch_daily,ad_hoc]
+      latency_requirement:STR|OPT|EXAMPLE:"<100ms_p95"
+      fields_accessed:ARR|subset_of_entity_fields
+    }
+  }
+  data_flows{
+    ingestion_sources:ARR|OPT|structure:{
+      source_name:STR
+      source_type:ENUM:[api,stream,batch_file,manual_entry,third_party]
+      data_format:ENUM:[json,avro,parquet,csv,protobuf]
+      frequency:ENUM:[real_time,near_real_time,hourly,daily,ad_hoc]
+      validation_rules:ARR|OPT|schema_validation_business_rule_checks
+      pii_handling:STR|how_personal_data_is_identified_and_protected_at_ingestion
+    }
+    transformation_logic:ARR|OPT|structure:{
+      transformation_name:STR
+      source_entities:ARR
+      target_entity:STR
+      logic_description:STR|business_rules_or_calculation_formulas
+      data_quality_checks:ARR|OPT|completeness_accuracy_consistency_validations
+      error_handling:STR|how_failed_transformations_are_logged_and_retried
+    }
+    consumption_patterns:ARR|structure:{
+      consumer_name:STR
+      consumer_type:ENUM:[api_service,analytics_dashboard,ml_model,reporting_system,external_partner]
+      access_method:ENUM:[direct_query,api_endpoint,export_file,stream_subscription]
+      data_subset:STR|which_fields_or_filters_are_applied
+      sla_requirements:OBJECT|OPT|latency:STR,availability:NUM,freshness:STR
+    }
+    data_lineage:STR|optional|link_to_data_catalog_or_lineage_tool
+  }
+  governance_and_compliance{
+    data_stewardship{
+      primary_steward:STR|role_responsible_for_data_quality_and_definitions
+      stewardship_committee:ARR|OPT|cross_functional_group_for_governance_decisions
+      change_control_process:STR|how_schema_changes_are_proposed_reviewed_and_approved
+    }
+    privacy_and_protection{
+      lawful_basis_mapping:ARR|OPT|structure:{data_category:STR,lawful_basis:ENUM:[consent,contract,legal_obligation,vital_interests,public_task,legitimate_interests],documentation_ref:STR}
+      data_subject_rights_workflow:STR|how_access_rectification_erasure_portability_requests_are_processed
+      cross_border_transfer_mechanisms:ARR|OPT|EXAMPLE:[SCCs,BCRs,adequacy_decisions]
+      privacy_impact_assessment_ref:STR|optional|link_to_dpiadocumentation
+    }
+    security_controls{
+      encryption_at_rest:OBJECT|algorithm:STR,key_rotation_frequency:STR,key_management_system:STR
+      encryption_in_transit:ENUM:[TLS_1.2,TLS_1.3,mandatory]|default:TLS_1.3
+      access_control_model:ENUM:[rbac,abac,cell_level_security,row_level_security]
+      audit_logging_spec:OBJECT|events_logged:ARR,log_format:STR,retention:STR,immutability:BOOL
+      masking_and_tokenization:ARR|OPT|structure:{field:STR,technique:ENUM:[dynamic_masking,static_masking,tokenization],environment_scope:ARR}
+    }
+    compliance_frameworks:ARR|OPT|structure:{
+      framework:ENUM:[GDPR,HIPAA,PCI_DSS,SOC2,CCPA,ISO_27001]
+      applicable_requirements:ARR|specific_articles_or_controls
+      control_mapping:STR|how_model_design_implements_requirements
+      evidence_location:STR|where_audit_artifacts_are_stored
+    }
+  }
+  quality_and_reliability{
+    data_quality_dimensions:ARR|structure:{
+      dimension:ENUM:[completeness,accuracy,consistency,timeliness,validity,uniqueness]
+      metric_name:STR
+      measurement_query:STR|sql_or_programmatic_check
+      target_threshold:NUM|acceptable_minimum_score
+      monitoring_frequency:ENUM:[real_time,hourly,daily,weekly]
+      alert_threshold:NUM|value_that_triggers_notification
+      remediation_workflow:STR|steps_to_address_quality_issues
+    }
+    referential_integrity{
+      enforcement_method:ENUM:[database_constraints,application_logic,periodic_validation]
+      orphan_handling:STR|policy_for_dealing_with_broken_references
+      validation_schedule:STR|if_periodic_checks_are_used
+    }
+    performance_considerations{
+      expected_data_volume:OBJECT|initial:STR,growth_rate:STR,peak_estimate:STR
+      query_performance_targets:ARR|structure:{query_pattern:STR,latency_p95:NUM,throughput:NUM}
+      indexing_strategy_summary:STR|approach_to_balancing_read_write_performance
+      archiving_strategy:STR|how_old_data_is_moved_to_cold_storage
+    }
+    backup_and_recovery{
+      backup_frequency:ENUM:[continuous,hourly,daily,weekly]
+      retention_period:STR|how_long_backups_are_kept
+      recovery_time_objective:STR|target_rto
+      recovery_point_objective:STR|target_rpo
+      testing_schedule:STR|how_often_recovery_procedures_are_validated
+    }
+  }
+  operational_considerations{
+    migration_strategy:STR|optional|how_existing_data_is_migrated_to_new_model
+    versioning_approach:ENUM:[schema_versioning_table_versioning,feature_flags,blue_green_migration]
+    deprecation_policy:STR|how_old_fields_or_tables_are_retired_gracefully
+    monitoring_and_alerting{
+      key_metrics:ARR|EXAMPLE:[table_size_growth,index_usage,query_latency,constraint_violations]
+      dashboard_links:ARR|OPT|grafana_cloudwatch_or_other_dashboard_urls
+      alert_conditions:ARR|structure:{metric:STR,threshold:NUM,severity:ENUM,notification_channel:STR}
+    }
+    cost_optimization{
+      storage_tiering:STR|policy_for_moving_data_between_hot_warm_cold_storage
+      query_optimization_guidance:STR|best_practices_for_efficient_data_access
+      resource_scaling:STR|how_compute_and_storage_scale_with_demand
+    }
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_data_model_management{
+    model_quality_metrics{
+      completeness_score:percentage_of_required_model_attributes_documented|target:≥98%
+      consistency_index:terminology_uniformity_and_pattern_adherence_via_automated_linting|target:≥4.5/5.0
+      pii_annotation_rate:percentage_of_pii_fields_with_explicit_classification_and_protection_specs|target:100%
+      relationship_documentation:percentage_of_foreign_keys_with_business_justification|target:≥95%
+    }
+    governance_effectiveness_metrics{
+      change_approval_cycle_time:days_from_schema_change_proposal_to_production_deployment|target:≤3_business_days
+      compliance_mapping_accuracy:percentage_of_regulatory_requirements_with_verified_model_controls|target:100%
+      data_quality_incident_rate:number_of_quality_issues_per_1000_records_processed|target:<0.1%
+      schema_drift_detection:automated_monitoring_of_production_vs_spec_divergence|target:0_unapproved_drifts
+    }
+    statistical_process_control{
+      model_review_cycle_time:days_from_draft_to_approved|control_limits:[2,7]|Cpk_target:≥1.33
+      data_quality_trend:control_chart_for_key_quality_dimensions_with_western_electric_rules
+      schema_change_frequency:number_of_schema_modifications_per_quarter|monitored_via_c_chart|target_stability
+    }
+  }
+  process_performance_objectives{
+    data_model_approval_cycle_time:target:≤5_business_days|UCL:8|LCL:2|Cpk:≥1.33
+    model_stability_post_approval:target:≤5%_changes_without_consumer_impact|measured_monthly
+    pii_protection_coverage:target:100%_verified_by_privacy_and_security_reviewers
+    data_quality_target_achievement:target:≥95%_of_quality_metrics_meeting_thresholds
+  }
+  causal_analysis_integration{
+    trigger:data_quality_incident_or_compliance_finding_traced_to_model_design_flaw
+    analysis_method:5_whys + data_lineage_audit + impact_analysis_on_consumers
+    preventive_action:auto_enhance_modeling_standards_or_review_checklist_based_on_root_cause
+    knowledge_capture:lessons_learned_added_to_data_architecture_guidelines_and_pattern_library
+  }
+  innovation_deployment{
+    ai_assisted_model_generation:pilot_nlp_model_to_convert_business_requirements_to_entity_definitions|measure_quality
+    automated_pii_detection:nlp_model_to_identify_and_classify_pii_fields_in_new_schemas|track_accuracy
+    data_quality_auto_remediation:ml_based_anomaly_detection_with_suggested_fixes|measure_reduction_in_manual_effort
+  }
+  quantitative_requirements_for_data_models{
+    machine_readability_standards{
+      schema_validation:100%_of_entities_must_validate_against_json_schema_or_equivalent
+      ddl_generation:all_models_must_produce_valid_executable_ddl_for_target_database
+      linting_rules:organization_specific_data_modeling_rules_enforced_with_zero_violations_required
+    }
+    documentation_quality_metrics{
+      field_description_coverage:percentage_of_fields_with_business_meaning_documented|target:≥95%
+      example_data_coverage:percentage_of_entities_with_valid_example_records|target:≥90%
+      relationship_clarity:peer_review_rating_for_relationship_understandability|target:≥4.0/5.0
+    }
+    traceability_completeness{
+      requirement_to_entity:100%_of_data_requirements_mapped_to_specific_entities_and_fields
+      field_to_compliance:all_pii_and_sensitive_fields_linked_to_regulatory_controls_and_protection_specs
+      entity_to_consumer:all_entities_mapped_to_consuming_systems_with_access_patterns_documented
+    }
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Data Model Identification & Control"
+    content:[model_id,name,version,owner,domain,storage_technology,classification,last_review_date,next_review_date]
+    pdf_formatting:header_table_with_digital_signature_fields_for_data_architect_privacy_engineer_and_compliance_officer
+    cmmi_traceability:link_to_organizational_data_governance_process_and_metrics_baseline
+    mermaid_diagram:model_hierarchy_showing_relationships_to_other_data_models_in_repository
+  }
+  section_2{
+    title:"Model Purpose & Business Context"
+    content:[business_context,bounded_context,data_classification,residency_requirements,retention_policies]
+    stakeholder_matrix:table_with_consumer_roles,data_access_needs,sla_requirements,support_contacts
+    value_proposition:how_this_model_enables_business_outcomes_and_compliance_obligations
+    quantitative_context:baseline_metrics_that_motivate_model_design_decisions
+  }
+  section_3{
+    title:"Entity Definitions & Specifications"
+    content:iterate_over_input.entities
+    format_per_entity{
+      header:"Entity: {entity_name} | Type: {entity_type}"
+      business_description:detailed_purpose_usage_context_and_lifecycle
+      primary_key_spec:field_name,data_type,generation_strategy,rationale
+      fields_table:name,data_type,constraints,default,pii_classification,encryption,masking,residency,business_rules,example
+      relationships_subsection:for_each_relationship_related_entity,type,cardinality,foreign_key,cascade_behavior,justification
+      indexes_subsection:for_each_index,name,fields,type,uniqueness,purpose,estimated_size
+      partitioning_subsection:if_applicable,method,key_field,rotation_policy
+      access_patterns_subsection:for_each_pattern,name,query_description,frequency,latency_requirement,fields_accessed
+    }
+    erd_visualization{
+      primary_diagram:mermaid_er_diagram_or_embedded_svg_rendered_to_high_resolution_vector
+      notation:crow_s_foot_or_uml_style_with_clear_cardinality_labels
+      grouping:entities_grouped_by_bounded_context_or_domain_for_readability
+      pii_highlighting:visual_indicator_color_or_icon_for_fields_with_pii_classification
+    }
+  }
+  section_4{
+    title:"Data Flow & Lineage Specification"
+    content:iterate_over_input.data_flows
+    format_per_flow_component{
+      ingestion_sources:table_with_source_name,type,format,frequency,validation_rules,pii_handling
+      transformation_logic:table_with_transformation_name,sources,target,logic,quality_checks,error_handling
+      consumption_patterns:table_with_consumer_name,type,access_method,data_subset,sla_requirements
+    }
+    data_lineage_visualization:mermaid_flowchart_or_embedded_lineage_tool_screenshot_showing_end_to_end_flow
+    lineage_metadata:link_to_data_catalog_with_field_level_lineage_and_impact_analysis_capabilities
+    cross_border_flow_mapping:if_applicable,diagram_showing_where_data_crosses_jurisdictional_boundaries_with_controls
+  }
+  section_5{
+    title:"Governance, Privacy & Security Controls"
+    content:iterate_over_input.governance_and_compliance
+    format_per_governance_area{
+      data_stewardship:table_with_steward_roles,responsibilities,change_control_process,escalation_path
+      privacy_protection:table_with_data_category,lawful_basis,rights_workflow,cross_border_mechanism,dpiad_ref
+      security_controls:table_with_control_type,specification,implementation_method,validation_approach,owner
+      compliance_mapping:table_with_framework,requirement,model_control,evidence_location,review_frequency
+    }
+    pii_inventory_summary:consolidated_table_of_all_pii_fields_with_classification,protection_method,residency,retention
+    encryption_key_management:overview_of_key_lifecycle,rotation_policy,access_controls,audit_requirements
+    audit_logging_specification:detailed_spec_of_what_data_access_events_are_logged,format,retention,analysis_approach
+  }
+  section_6{
+    title:"Data Quality & Reliability Specifications"
+    content:iterate_over_input.quality_and_reliability
+    format_per_quality_dimension{
+      data_quality_metrics:table_with_dimension,metric_name,measurement_query,target,monitoring_frequency,alert_threshold,remediation
+      referential_integrity:enforcement_method,orphan_policy,validation_schedule,monitoring_approach
+      performance_targets:table_with_query_pattern,latency_p95,throughput,optimization_techniques,monitoring_method
+      backup_and_recovery:backup_frequency,retention,rto,rpo,testing_schedule,documentation_location
+    }
+    data_quality_dashboard_mockup:description_of_how_quality_metrics_will_be_visualized_for_stewards_and_engineers
+    anomaly_detection_approach:statistical_or_ml_based_methods_for_identifying_unexpected_data_patterns
+    continuous_validation_strategy:how_quality_checks_are_automated_and_integrated_into_data_pipelines
+  }
+  section_7{
+    title:"Operational Excellence & Lifecycle Management"
+    content:iterate_over_input.operational_considerations
+    format_per_operational_area{
+      migration_and_versioning:migration_strategy,versioning_approach,deprecation_policy,rollback_procedures
+      monitoring_and_alerting:table_with_metric,threshold,severity,notification_channel,runbook_link
+      cost_optimization:storage_tiering_policy,query_optimization_guidance,resource_scaling_strategy
+      capacity_planning:growth_projections,scaling_triggers,procurement_lead_times,contingency_plans
+    }
+    runbook_integration:links_to_deployment_sop,incident_playbook,and_troubleshooting_guides_specific_to_this_model
+    change_management_workflow:how_schema_changes_are_proposed,tested,approved,and_deployed_with_minimal_disruption
+  }
+  section_8{
+    title:"Quantitative Management & Statistical Control"
+    content:cmmi_l5_specific_quantitative_management_section
+    model_quality_baselines{
+      historical_data_summary:time_period,sample_size,and_stability_assessment_for_quality_metrics
+      baseline_values:table_with_metric_name,baseline_value,control_limits,capability_index
+      baseline_usage:how_baselines_guide_review,approval,and_improvement_prioritization
+    }
+    spc_implementation_for_data_models{
+      control_charts:which_metrics_use_which_chart_type_with_interpretation_guidelines
+      out_of_control_protocols:response_when_model_quality_metrics_breach_control_limits
+      recalibration_criteria:when_and_how_to_update_baselines_after_significant_model_changes
+    }
+    quantitative_objectives_tracking{
+      target_vs_actual_dashboard:mockup_of_how_model_quality_metrics_are_monitored
+      variance_analysis:process_for_investigating_and_resolving_metric_deviations
+      forecasting:how_historical_model_performance_informs_future_design_and_governance_decisions
+    }
+  }
+  section_9{
+    title:"Review, Approval & Change Management"
+    content:[review_schedule,approval_criteria,change_control_process,version_history]
+    data_model_review_workflow{
+      review_checklist:required_validations,pii_coverage,security_controls,compliance_mapping,consumer_impact
+      stakeholder_signoff:who_must_approve_what_aspects_with_escalation_path_for_disagreements
+      consumer_consultation:process_for_gathering_feedback_from_data_consumers_before_approval
+    }
+    change_control_for_data_models{
+      change_classification:breaking,non_breaking,documentation_only_with_different_approval_paths
+      impact_assessment:how_changes_are_evaluated_for_consumers,compliance,performance,and_cost
+      communication_protocol:how_approved_changes_are_announced,documented,and_deprecated_gracefully
+      rollback_strategy:procedures_for_reverting_schema_changes_if_issues_are_detected_post_deployment
+    }
+    digital_signature_specification{
+      signature_fields:data_architect,privacy_engineer,compliance_officer,security_architect,database_admin
+      signature_standard:PAdES_BES_or_LTVA_with_rfc3161_timestamp_for_long_term_validation
+      audit_trail:immutable_log_of_all_signature_events_with_user_context_and_model_version
+    }
+  }
+  section_10{
+    title:"Compliance Evidence & Audit Readiness"
+    content:compliance_specific_documentation_for_audit_preparation
+    evidence_inventory{
+      model_artifacts:erd_diagrams,ddl_scripts,schema_validation_reports,linting_results
+      governance_artifacts:stewardship_records,change_logs,approval_workflows,training_completions
+      protection_artifacts:encryption_configs,access_policies,masking_rules,audit_log_samples
+      quality_artifacts:quality_metric_reports,anomaly_detection_logs,remediation_records
+    }
+    audit_coordination{
+      point_of_contact:role_and_individual_responsible_for_data_model_compliance_audits
+      evidence_collection_automation:which_artifacts_are_auto_collected_vs_manually_assembled
+      pre_audit_checklist:activities_to_complete_before_compliance_audit_with_owners_and_deadlines
+    }
+    continuous_compliance_monitoring{
+      automated_controls:how_compliance_requirements_are_enforced_via_database_policies_and_application_logic
+      drift_detection:monitoring_for_schema_or_configuration_changes_that_impact_compliance
+      remediation_workflow:process_for_addressing_compliance_gaps_with_tracking,validation,and_reporting
+    }
+  }
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  model_quality_metrics{
+    documentation_completeness:percentage_of_required_model_attributes_with_business_meaning_documented
+    pii_annotation_accuracy:percentage_of_pii_fields_correctly_classified_with_appropriate_protection_specs
+    relationship_clarity_score:peer_review_rating_for_relationship_understandability_and_justification
+    example_data_coverage:percentage_of_entities_with_valid_machine_readable_example_records
+  }
+  governance_effectiveness_metrics{
+    change_approval_cycle_time:business_days_from_proposal_to_production_deployment_with_control_chart_monitoring
+    compliance_mapping_verification:percentage_of_regulatory_controls_with_tested_and_documented_model_implementations
+    data_quality_incident_rate:number_of_quality_issues_per_1000_records_with_pareto_analysis_of_root_causes
+    schema_drift_incidents:number_of_unapproved_production_vs_spec_divergences_per_quarter
+  }
+  privacy_and_security_metrics{
+    pii_protection_coverage:percentage_of_pii_fields_with_encryption_masking_or_tokenization_implemented
+    access_control_effectiveness:percentage_of_unauthorized_access_attempts_blocked_by_rbac_abac_controls
+    audit_log_completeness:percentage_of_required_data_access_events_captured_with_full_context
+    encryption_key_rotation_compliance:percentage_of_keys_rotated_per_policy_with_documented_procedures
+  }
+  operational_performance_metrics{
+    query_latency_achievement:percentage_of_queries_meeting_p95_latency_targets_over_measurement_period
+    data_freshness_actual_vs_target:time_from_source_update_to_consumer_availability_compared_to_sla
+    storage_efficiency:ratio_of_logical_data_size_to_physical_storage_with_tiering_optimization_tracking
+    backup_success_rate:percentage_of_scheduled_backups_completed_successfully_with_verification
+  }
+  metric_infrastructure{
+    collection_automation:percentage_of_metrics_with_automated_collection_via_database_monitoring_and_data_catalog
+    data_quality_score:completeness,accuracy,and_timeliness_rating_for_model_metric_data_sources
+    dashboard_adoption:percentage_of_target_users_regularly_viewing_data_model_performance_dashboards
+    alert_effectiveness:percentage_of_quality_or_compliance_alerts_that_triggered_appropriate_response
+  }
+  storage_and_analysis{
+    repository:time_series_database_with_data_model_metrics_schema_and_api_for_querying_and_export
+    dashboards:real_time_model_quality_views_with_drill_down_to_entity_field_and_consumer_level
+    statistical_engine:automated_control_chart_generation,capability_analysis,and_forecasting_for_model_metrics
+    alerting:integration_with_pagerduty,slack,or_email_for_quality_breaches_and_control_limit_violations
+  }
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:data_model_enterprise_template_with_technical_branding_cmmi_headers_and_compliance_footers
+  dynamic_content{
+    erd_diagram:mermaid_or_embedded_svg_rendered_to_high_resolution_vector_with_zoom_and_pan_capability
+    pii_inventory_table:interactive_table_with_filtering_by_classification,residency,and_protection_method
+    compliance_matrices:hyperlinked_tables_mapping_model_controls_to_regulatory_requirements_with_evidence_refs
+    quality_charts:control_charts_for_key_quality_dimensions_embedded_as_images_with_interpretation_guidance
+    data_flow_visualization:mermaid_flowchart_showing_ingestion_transformation_and_consumption_with_controls
+  }
+  navigation_and_interactivity{
+    pdf_bookmarks:hierarchical_structure_matching_model_sections_with_quick_jump_to_entities_and_fields
+    hyperlinks:cross_references_to_compliance_frameworks,security_controls,quality_checks,and_operational_runbooks
+    form_fields:approval_signature_blocks_with_validation,timestamp,role,and_digital_certificate
+    collapsible_sections:optional_expansion_for_detailed_field_specs_to_keep_main_body_concise
+    code_snippets:collapsible_ddl_or_json_schema_blocks_with_syntax_highlighting_and_copy_button
+  }
+  archival_and_compliance{
+    pdf_a3:true_with_embedded_fonts,color_profiles,and_long_term_validation_metadata
+    metaxmp_with_cmmi_process_tags,model_id,compliance_mappings,metrics_snapshot,model_version
+    accessibility:pdf_ua_compliant_with_tagged_structure,alt_text_for_diagrams,and_screen_reader_navigation
+    digital_preservation:pdf_a3_conformance_verified_with_verapdf_or_similar_tool_pre_distribution
+  }
+  distribution_control{
+    access_permissions:role_based_viewing_for_data_engineers,analysts,privacy_officers,auditors,and_management
+    watermarking:dynamic_injection_of_confidential,draft,or_final_approved_based_on_approval_status
+    expiration:optional_time_limited_access_for_external_consultants_or_audit_firms
+    audit_logging:immutable_log_of_pdf_access,download,printing_with_user_and_system_context
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring{
+    author_actions:populate_model_template_with_quantitative_metrics,pii_specs,security_controls,and_compliance_mappings
+    automated_validation:json_schema_validation|sql_ddl_syntax_check|pii_annotation_completeness|linting_with_zero_violations
+    quality_gates:documentation_completeness_threshold|pii_coverage_verified|compliance_mapping_validated
+    exit_criteria:complete_model_ready_for_data_governance_review_board_with_metrics_baseline_attached
+  }
+  stage_2_data_governance_review{
+    reviewers:[data_architect,privacy_engineer,security_architect,compliance_officer,lead_data_consumer]
+    review_method:structured_rubric_with_quantitative_scoring_for_model_clarity,privacy_adequacy,security_robustness,consumer_usability
+    defect_classification:model_gaps,privacy_weaknesses,security_vulnerabilities,compliance_misses,consumer_friction_points
+    statistical_control:review_defect_density_and_consensus_score_monitored_via_spc_chart
+    exit_criteria:consensus_score_threshold_met|all_critical_defects_resolved|metrics_baseline_validated
+  }
+  stage_3_compliance_and_privacy_validation{
+    reviewer:privacy_engineer_and_compliance_officer_joint_review
+    focus_areas:gdpr_hipaa_mapping_accuracy|pii_protection_adequacy|audit_evidence_completeness|data_subject_rights_support
+    approval_gate:joint_signoff_required_before_final_approval_for_models_containing_regulated_data
+    quantitative_check:100%_of_applicable_privacy_regulations_assessed_with_evidence_plan_and_100%_of_pii_fields_with_enforceable_protection_specs
+  }
+  stage_4_final_approval{
+    approvers:[data_model_owner,chief_data_officer,compliance_officer,cto_if_strategic_model]
+    digital_signature:PAdES_LTVA_compliant_for_long_term_archival_with_rfc3161_timestamp_authority
+    audit_trail:immutable_log_of_approval_events_with_model_context,metrics_snapshot,and_model_version
+    version_control:pdf_filename_includes_model_id,version_hash,approval_timestamp,and_classification
+  }
+  continuous_improvement_loop{
+    post_approval_analysis:quantitative_review_of_model_quality_metrics,consumer_feedback,operational_performance
+    process_adjustments:auto_update_model_template_or_review_checklist_based_on_data_driven_insights
+    knowledge_base_update:store_approved_model_patterns,privacy_controls,and_compliance_mappings_for_reuse
+    innovation_deployment:pilot_ai_assisted_model_generation_or_automated_pii_detection_if_quality_metrics_improve
+    car_integration:if_model_quality_or_compliance_misses_targets,trigger_causal_analysis_with_quantitative_data
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_outputs{
+    pdf_report{
+      format:PDF/A-3_with_embedded_source_markdown,metadata,and_long_term_validation_support
+      filename:"{product_name}_DataModel-{model_id}_v{version}_{YYYYMMDD}_CMMI_L5.pdf"
+      delivery:secure_download_link + data_repository_index + email_notification_to_stakeholders_and_consumers
+    }
+    machine_readable_schema_export{
+      format:JSON_Schema_or_Avro_Schema_validated_against_schema_registry
+      content:full_entity_definitions_with_extensions_for_metrics,compliance,and_operational_metadata
+      use_case:import_to_data_catalog,schema_registry,automated_ddl_generation,contract_testing
+    }
+    executable_ddl_export{
+      format:SQL_DDL_for_target_database_postgresql_mysql_snowflake_etc_with_comments_and_annotations
+      content:create_table_statements,indexes,constraints,comments_with_pii_and_compliance_annotations
+      use_case:direct_deployment_to_database,infrastructure_as_code_integration,environment_provisioning
+    }
+    metrics_and_compliance_export{
+      format:JSON_schema_validated_against_data_model_metrics_schema_with_cmmi_and_compliance_extensions
+      content:all_quality_metrics,baselines,control_limits,compliance_mappings,and_evidence_references
+      use_case:automated_dashboard_generation,compliance_auditing,data_governance_integration
+    }
+  }
+  supplementary_outputs{
+    data_dictionary_quick_ref:one_page_pdf_with_entity_field_and_pii_summary_for_analysts_and_developers
+    migration_scripts:auto_generated_ddl_for_schema_evolution_with_rollback_statements
+    access_policy_templates:rbac_or_abac_policy_snippets_for_common_consumer_roles
+    compliance_evidence_snippet:section_of_pdf_with_regulatory_mappings_and_evidence_plan_for_audit_packages
+    data_quality_test_suite:auto_generated_sql_or_programmatic_checks_for_key_quality_dimensions
+  }
+  metadata_and_audit{
+    pdf_properties:title,author,subject,keywords_with_cmmi,data_model,privacy,security,and_compliance_tags
+    custom_xmp_properties:model_version,metrics_baseline_snapshot,approval_hash,git_commit,model_owner
+    audit_trail:immutable_log_of_pdf_generation,approval,access,and_export_events_with_full_context
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  validate_schema_syntax:"Run JSON Schema or Avro validation on generated schema export"
+  generate_executable_ddl:"Convert model definitions to target-database-specific DDL with deployment instructions"
+  create_data_quality_tests:"Generate SQL or programmatic checks for key quality dimensions from metric specs"
+  export_to_data_catalog:"Format model metadata for import to Alation/Collibra/DataHub with lineage and glossary terms"
+  schedule_quality_review:"Set quarterly data model quality metrics review per CMMI QPM with control chart analysis"
+  initiate_causal_analysis:"If model quality or compliance breaches control limits, trigger CAR process with quantitative data"
+  generate_compliance_audit_package:"Bundle model sections with mapped regulatory requirements and evidence plan"
+  setup_monitoring_integration:"Generate Prometheus/Grafana or CloudWatch configuration for model performance monitoring"
+  create_access_policies:"Generate RBAC/ABAC policy snippets for common consumer roles from access pattern specs"
+}

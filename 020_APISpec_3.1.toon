@@ -1,0 +1,95 @@
+# DOC_API_SPEC_v1.0.toon
+# CMMI Level 5 Compliant API Contract Definition
+
+IMPORT:OAS_ASYNCAPI_BASE.toon|CMMI_L5_CONTRACT_VALIDATION.toon
+
+ROLE:api_tech_lead|security_engineer|compliance_architect|integration_manager
+TASK:generate_machine_readable_api_spec_with_automated_security_and_compliance_validation
+OUTPUT_FORMAT:YAML/JSON_in_/api-specs/ + Swagger_UI/Redocly_Render + PDF/A-3
+
+INPUT_CONTEXT{
+  api_meta{
+    title:STR|required
+    version:STR|required|format:semver
+    type:ENUM:[rest_openapi_3.1,async_asyncapi_3.0]
+    base_path:STR|required|format:URL_path
+    contact_owner:STR|required
+  }
+  endpoints_messages{
+    definitions:ARR|min_items:1|format:[operation_id,method_or_channel,summary,request_schema,response_schema,rate_limit]
+    authentication:ENUM:[oauth2,api_key,jwt,mtls,none]
+    error_codes:ARR|min_items:3|format:[code,description,retry_strategy]
+    examples:ARR|optional|format:[scenario,payload_link]
+  }
+  security_compliance{
+    data_classification:ENUM:[public,internal,confidential,restricted]
+    gdpr_art_32_controls:BOOL|required
+    pci_dss_6.5_controls:BOOL|optional
+    encryption_requirements:OBJECT|transit:STR|at_rest:STR|key_management:STR
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_contract_quality{
+    schema_coverage_completeness{
+      metric:percentage_of_fields_with_validation_rules_constraints
+      target:100%
+      control_limits:UCL:100%|LCL:95%|Cpk_target:≥2.0
+    }
+    breaking_change_probability{
+      metric:statistical_likelihood_of_consumer_impact_per_version_bump
+      target:≤2%
+      measurement_method:semantic_versioning_analyzer + consumer_contract_test_coverage
+    }
+    automated_security_scan_pass_rate{
+      metric:owasp_api_top_10_compliance_score
+      target:100%
+    }
+  }
+  process_performance_baselines{
+    ppb:[spec_validation_time,contract_test_failure_rate,consumer_adoption_lag_days]
+    predictive_model:regression_on_schema_complexity_to_forecast_integration_effort
+  }
+  causal_analysis_triggers{
+    trigger:consumer_contract_test_failure_rate > 5% OR security_scan_findings > 0
+    car_method:pipeline_failure_analysis + attack_tree_validation + spec_diff_audit
+    preventive_action:enforce_breaking_change_gates|auto_generate_consumer_sdks_with_tests
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"API Overview & Authentication"
+    content:[description,base_url,auth_flows,rate_limits,security_classification]
+    pdf_formatting:technical_reference_style_with_badges
+  }
+  section_2{
+    title:"Endpoints & Message Contracts"
+    content:[operation_tables,request_response_schemas,error_codes,examples]
+    mermaid_diagrams:true|sequence_diagrams_for_key_flows
+  }
+  section_3{
+    title:"Security, Privacy & Compliance Controls"
+    content:[data_masking_rules,encryption_standards,audit_logging,pci_gdpr_mappings]
+    tables:compliance_control_matrix|data_field_classification
+  }
+  section_4{
+    title:"Versioning, Deprecation & Consumer Guidelines"
+    content:[versioning_strategy,deprecation_policy,sdk_generation,testing_hooks]
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:api_lead_authors|openapi/asyncapi_lint_validation|exit_criteria:lint_pass|all_required_fields
+  stage_2_peer_security:automated_zap_sast_dast_scan|schema_coverage_check|defect_density_controlled
+  stage_3_compliance:data_classification_audit|gdpr_art_32_verification|signoff_required
+  stage_4_publish:api_gateway_sync+swagger_ui_deployment|immutable_spec_hash|consumer_notification
+  continuous_improvement:monitor_consumer_adoption_metrics|update_linting_rules_based_on_integration_defects
+}
+
+OUTPUT_GENERATION{
+  primary_output:YAML/JSON + Swagger/Redocly + PDF
+  filename_pattern:{api_title}_spec_v{version}_{YYYYMMDD}.yaml
+  supplementary_outputs:consumer_sdk_package|contract_test_suite|compliance_evidence_bundle
+  metadata_injection:cmmi_tags:TS-2.3,PPQA-1.2,RSKM-2.1|process_version:l5.0
+}

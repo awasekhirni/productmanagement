@@ -1,0 +1,120 @@
+# DOC_PRODUCT_STRATEGY_v1.0.toon
+# CMMI Level 5 Compliant Product Strategy Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:head_of_product|portfolio_manager|strategic_planner|risk_analyst
+TASK:generate_cmmi_l5_compliant_product_strategy_document_with_capability_roadmap_resource_allocation_soc2_cc3_2_risk_mapping_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + Strategy_Planning_JSON + machine_readable_JSON
+
+INPUT_CONTEXT{
+  strategy{
+    id:STR|format:PS-###|auto_increment
+    product_portfolio:STR|required
+    version:SEMVER|required
+    strategy_owner:STR|required|head_of_product
+    planning_horizon:ENUM:[12_months,24_months,36_months]
+  }
+  strategic_context{
+    market_positioning:STR|required|desired_place_in_market_relative_to_competitors
+    competitive_moats:ARR|min_items:2|structure:{moat_type:ENUM:[network_effect,data_advantage,brand,switching_cost,tech_superiority],strength:ENUM,defensibility_timeline:STR}
+    regulatory_landscape:ARR|structure:{framework:STR,impact:ENUM[enabler,constraint,neutral],compliance_timeline:STR}
+  }
+  capability_themes:ARR|min_items:3|structure:{
+    theme_name:STR
+    strategic_objective:STR
+    capability_components:ARR|structure:{component:STR,description:STR,dependency:STR,priority:ENUM}
+    success_indicators:ARR|structure:{indicator:STR,baseline:NUM,target:NUM,timeframe:STR}
+    resource_estimate:OBJECT|engineering:NUM,design:NUM,ops:NUM,budget:NUM
+  }
+  roadmap_alignment{
+    phased_delivery:ARR|structure:{phase:STR,timeframe:STR,themes_included:STR,exit_criteria:ARR}
+    prioritization_framework:ENUM:[rws,wsjf,value_vs_effort,kano]|with_scoring_methodology
+    dependency_management:ARR|OPT|structure:{dependency:STR,type:ENUM[internal,external],risk_level:ENUM,mitigation:STR}
+  }
+  resource_and_governance{
+    allocation_model:STR|how_budget_and_headcount_are_distributed_across_themes
+    decision_rights_matrix:ARR|structure:{decision:STR,authority:ENUM[team,lead,exec_committee,board],escalation_path:STR}
+    risk_management:ARR|structure:{risk:STR,probability:NUM_0_1,impact:ENUM,mitigation:STR,owner:STR}
+    soc2_cc3_2_mapping:STR|explicit_alignment_of_strategic_risk_documentation_to_control_objective
+  }
+  performance_tracking{
+    kpi_framework:ARR|structure:{category:ENUM[growth,retention,efficiency,compliance],metric:STR,target:NUM,review_cadence:ENUM}
+    feedback_loops:ARR|structure:{source:STR,frequency:ENUM,how_it_informs_strategy:STR}
+    pivot_triggers:ARR|structure:{condition:STR,threshold:STR,response_protocol:STR}
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_strategy_management{
+    strategy_quality_metrics{
+      objective_measurability:percentage_of_themes_with_quantified_success_indicators|target:100%
+      resource_allocation_variance:actual_vs_planned_budget_headcount_distribution|target:≤10%
+      soc2_cc3_2_risk_coverage:percentage_of_strategic_risks_documented_with_mitigation_and_ownership|target:100%
+    }
+    process_performance_objectives{
+      strategy_approval_cycle_time:target:≤15_business_days|UCL:25|LCL:7|Cpk:≥1.0
+      theme_achievement_rate:percentage_of_capability_themes_meeting_exit_criteria_on_schedule|target:≥85%
+      pivot_response_time:days_from_trigger_condition_to_strategy_adjustment|control_limits:[7,30]|Cpk_target:≥1.0
+    }
+    statistical_process_control{
+      resource_utilization_trend:I_MR_chart_monitoring_actual_vs_planned_capacity
+      strategic_kpi_achievement:p_chart_tracking_percentage_of_kpis_meeting_targets_quarterly
+      risk_mitigation_effectiveness:c_chart_for_unmitigated_strategic_risks|target:0_critical_exposures
+    }
+  }
+  causal_analysis_and_resolution{
+    trigger:theme_failure,pivot_trigger_activated,or_soc2_audit_finding_linked_to_strategy_gaps
+    analysis_method:5_whys + resource_traceability_audit + market_condition_reassessment
+    preventive_action:auto_enhance_strategy_template_with_quantitative_exit_criteria_and_compliance_gates
+  }
+  innovation_deployment{
+    ai_assisted_market_scenario_modeling:predictive_simulations_of_competitive_or_regulatory_shifts|measure_forecast_accuracy
+    dynamic_portfolio_optimizer:algorithmic_resource_allocation balancing ROI,risk,and_compliance|measure_efficiency_gain
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{title:"Strategy Identification & Control", content:[id,portfolio,version,owner,horizon], pdf_formatting:header_table_with_executive_signatures}
+  section_2{title:"Strategic Context & Positioning", content:market_positioning,competitive_moats,regulatory_landscape, visualizations:positioning_map_mermaid,moat_defensibility_timeline}
+  section_3{title:"Capability Themes & Roadmap Alignment", content:iterate_over_themes, format:theme_table,component_breakdown,success_indicators,resource_estimates, phased_delivery_table, prioritization_framework_application}
+  section_4{title:"Resource Allocation & Governance", content:allocation_model,decision_rights_matrix,risk_register,soc2_cc3_2_mapping, compliance_artifact_locations}
+  section_5{title:"Performance Tracking & Adaptation", content:kpi_framework_table,feedback_loops,pivot_triggers, adaptation_protocol_with_quantitative_thresholds}
+  section_6{title:"Quantitative Management & Statistical Control", content:cmmi_l5_baselines,spc_implementation,outcome_tracking,scenario_planning_integration}
+  section_7{title:"Review, Approval & Evolution", content:review_checklist,approval_gates,digital_signature_spec,version_control}
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  strategy_execution:[theme_achievement_rate,resource_variance,kpi_attainment,pivot_response_time]
+  compliance_and_risk:[soc2_cc3_2_coverage,risk_mitigation_effectiveness,audit_readiness_score]
+  infrastructure:automated_via_portfolio_tools,financial_systems,compliance_platforms|dashboards_with_spc|alerts_on_resource_or_kpi_breaches
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:product_strategy_enterprise_template_with_executive_branding_and_soc2_footers
+  dynamic_content:[capability_roadmap_gantt,resource_allocation_sankey,soc2_risk_mapping_matrix,kpi_dashboard_mockup]
+  archival:PDF/A-3,accessibility:PDF/UA,distribution_control:role_based_executive_access_with_audit_logging
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_authoring:[populate_themes,attach_resource_models,map_soc2_risks,define_kpis]
+  stage_2_portfolio_review:[theme_feasibility,resource_balance,kpi_clarity,statistical_control]
+  stage_3_risk_compliance_review:[soc2_cc3_2_validation,risk_mitigation_adequacy,100%_compliance_gate]
+  stage_4_final_approval:[cpo,cfo,ciso,board_rep,PAdES_LTVA_signatures]
+  continuous_improvement:[post_quarter_strategy_retrospective,auto_template_updates_from_market_shifts,ai_modeling_pilots]
+}
+
+OUTPUT_GENERATION{
+  primary:[PDF/A-3_report,Strategy_Planning_JSON,Machine_readable_JSON]
+  supplementary:[executive_one_pager,soc2_evidence_bundle_csv,resource_allocation_excel_model]
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_soc2_evidence_bundle:"Extract risk mappings and mitigation docs for CC3.2 audit submission"
+  create_resource_optimization_model:"Export theme resource estimates to financial planning tool with scenario toggles"
+  setup_kpi_monitoring:"Configure dashboards to track strategic KPIs with pivot trigger alerts per Section 5"
+  schedule_strategy_review:"Set quarterly execution review per CMMI QPM with SPC analysis and theme status check"
+  initiate_causal_analysis:"If theme fails or pivot triggers, trigger CAR process with resource and market gap analysis"
+  export_to_portfolio_platform:"Format strategy data for import to Aha!, Planview, or similar portfolio management tools"
+  generate_board_presentation:"Condense Sections 1-3 into board-ready slide deck with executive summary and risk posture"
+}

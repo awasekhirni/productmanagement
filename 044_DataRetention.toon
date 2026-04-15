@@ -1,0 +1,93 @@
+# DOC_DATA_RETENTION_DELETION_v1.0.toon
+# CMMI Level 5 Compliant Data Lifecycle & Right-to-Erasure Governance Blueprint
+
+IMPORT:RETENTION_BASE.toon|CMMI_L5_DATA_LIFECYCLE_GOVERNANCE.toon
+
+ROLE:data_protection_officer|legal_counsel|data_engineer|compliance_architect
+TASK:generate_quantitatively_validated_retention_policy_with_automated_deletion_verification_and_erasure_predictability
+OUTPUT_FORMAT:Markdown_in_/policies/data-retention.md + Deletion_Scripts_Config + PDF_A-3
+
+INPUT_CONTEXT{
+  policy_meta{
+    jurisdiction_scope:ARR|min_items:1|format:[gdpr_eu,ccpa_us,hipaa_us,other]
+    policy_version:STR|required|format:semver
+    effective_date:DATE|required
+    review_cadence:ENUM:[quarterly,bi_annual,annual,on_regulatory_change]
+  }
+  retention_rules{
+    data_categories:ARR|min_items:1|format:[category,data_types,retention_period_days,legal_basis,storage_location]
+    archival_strategy:OBJECT|format:encrypted_cold_storage|access_method|metadata_tagging
+    exceptions_override:ARR|format:[exception_type,approval_process,max_extension_days,audit_log_ref]
+  }
+  deletion_erasure{
+    procedures:ARR|format:[step,system,target,verification_method,failure_handler]
+    user_erasure_workflow:ARR|format:[request_channel,validation_step,execution_script,confirmation_timeline,appeal_process]
+    automated_script_refs:ARR|format:[script_name,repo_path,execution_schedule,dry_run_capability]
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_lifecycle_quality{
+    deletion_accuracy_rate{
+      metric:percentage_of_records_permanently_removed_across_all_systems_without_residual_copies
+      target:100%
+      control_limits:UCL:100%|LCL:98%|Cpk_target:≥2.0
+    }
+    erasure_sla_adherence{
+      metric:percentage_of_right_to erasure requests completed within regulatory deadline
+      target:100%
+      measurement_method:timestamp_tracking_from_request_to_confirmation
+    }
+    retention_compliance_drift{
+      metric:percentage_of_data_exceeding_retention_threshold_pre_deletion_trigger
+      target:≤0.5%
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[deletion_success_latency,erasure_request_volume_trend,archival_restore_success_rate,residual_data_discovery_count]
+    predictive_model:deletion_queue_forecasting_using_request_seasonality + system_dependency_graph_analysis
+  }
+  causal_analysis_triggers{
+    trigger:accuracy < 100% OR erasure_sla_breach > 0 OR retention_drift > UCL
+    car_method:data_lineage_traceback + deletion_script_failure_audit + pareto_of_system_orphan_data
+    preventive_action:enforce_dry_run_validation_in_ci|mandate_cross_system_confirmation_checks|update_retention_triggers_from_drift_analysis
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Policy Framework & Jurisdictional Alignment"
+    content:[scope,legal_basis,review_cadence,compliance_mapping,effective_dates]
+    pdf_formatting:legal_policy_layout_with_regulatory_badges
+  }
+  section_2{
+    title:"Retention Matrix & Archival Strategy"
+    content:[data_category_table,retention_periods,legal_basis_mapping,archival_procedures,metadata_tagging]
+    mermaid_diagrams:true|data_lifecycle_flow_from_creation_to_archival
+  }
+  section_3{
+    title:"Deletion Procedures & Automated Scripts"
+    content:[step_sequences,system_targets,verification_commands,script_refs,failure_handling]
+    tables:deletion_validation_checklist|script_execution_schedule
+  }
+  section_4{
+    title:"Right-to-Erasure Workflow & Continuous Monitoring"
+    content:[request_routing,validation_steps,execution_timeline,confirmation_protocol,compliance_auditing]
+    compliance_mapping:gdpr_art_5_1_e|gdpr_art_17|ccpa|hipaa_164.316
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:dpo_authors|automated_rule_validation+script_lint|exit_criteria:all_categories_defined|erasure_workflow_mapped
+  stage_2_legal_engineering:legal+data_eng_review+deletion_modeling|control_chart_for_accuracy_variance
+  stage_3_compliance_executive:dpo+cfo_signoff|regulatory_alignment_verification|mandatory_signoff
+  stage_4_baseline:publish_to_policies+script_deployment+immutable_pdf_hash+monitoring_activation
+  continuous_improvement:bi_annual_policy_retro|update_ppm_from_erasure_data|refine_deletion_scripts_from_residual_discovery
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Deletion_Scripts + PDF
+  filename_pattern:data_retention_deletion_policy_v{version}_{YYYYMMDD}.md
+  supplementary_outputs:erasure_request_tracker|automated_dry_run_config|compliance_audit_evidence_pack
+  metadata_injection:cmmi_tags:CM-2.1,RSKM-2.3,VER-1.3|process_version:l5.0
+}

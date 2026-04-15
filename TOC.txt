@@ -1,0 +1,526 @@
+1. DISCOVERY & STRATEGY PHASE
+
+## 1. Business Case / Product Proposal
+- **Purpose**: Justify investment, define ROI, secure stakeholder buy-in
+- **Audience**: C-Suite, Board, Finance
+- **Key Contents**: Problem statement, market size, solution overview, cost/benefit analysis, risk assessment, success metrics
+- **Compliance**: GDPR Art. 25 (Data Protection Impact Assessment trigger), SOC2 CC3.2 (risk management)
+- **Format**: Confluence page + PDF export; version-controlled in Git
+- **Owner**: Product Manager
+
+## 2. Problem Statement
+- **Purpose**: Align team on the core problem before solutioning
+- **Audience**: Product, Engineering, Design
+- **Key Contents**: User pain points, current state analysis, impact quantification, success criteria
+- **Format**: Markdown in repo `/docs/discovery/problem-statement.md`
+- **Owner**: Product Manager
+
+## 3. Product Vision
+- **Purpose**: Long-term north star for product direction
+- **Audience**: All teams, investors
+- **Key Contents**: 3-5 year vision, target outcomes, guiding principles, non-goals
+- **Format**: Single-page Markdown; linked in repo README
+- **Owner**: Head of Product / CPO
+
+## 4. Value Proposition Canvas
+- **Purpose**: Articulate unique value and differentiation
+- **Audience**: Product, Marketing, Sales
+- **Key Contents**: Customer jobs/pains/gains, value map, fit analysis
+- **Compliance**: CCPA transparency requirements for data usage claims
+- **Format**: Strategyzer canvas + Markdown summary
+- **Owner**: Product Manager
+
+## 5. User Personas & JTBD Profiles
+- **Purpose**: Ground decisions in user needs and outcomes
+- **Audience**: Product, Design, Engineering
+- **Key Contents**: Demographics, behaviors, goals, frustrations, JTBD statements, accessibility needs
+- **Format**: Figma persona templates + Markdown specs
+- **Owner**: UX Researcher
+
+## 6. Product Strategy Document
+- **Purpose**: Strategic guardrails for prioritization and execution
+- **Audience**: Product, Engineering, Executives
+- **Key Contents**: Market positioning, competitive moats, capability roadmap, resource allocation
+- **Compliance**: SOC2 CC3.2 (strategic risk documentation)
+- **Format**: ProdPad Strategy Canvas or Confluence
+- **Owner**: Head of Product
+
+## 7. Market Requirements Document (MRD)
+- **Purpose**: Translate market needs into product requirements
+- **Audience**: Product, Engineering, Marketing
+- **Key Contents**: Market sizing, competitor analysis, feature priorities, regulatory constraints
+- **Format**: Markdown with embedded tables; exported to PDF for legal review
+- **Owner**: Product Manager
+
+## 8. Competitive Analysis Matrix
+- **Purpose**: Inform positioning and differentiation strategy
+- **Audience**: Product, Marketing, Sales
+- **Key Contents**: Feature comparison, pricing analysis, SWOT, gap analysis
+- **Format**: Interactive spreadsheet + Markdown summary
+- **Owner**: Product Marketing Manager
+
+
+2.  IDEATION & VALIDATION PHASE
+
+## 9. User Journey Maps
+- **Purpose**: Visualize end-to-end user experience and identify friction points
+- **Audience**: Design, Product, Engineering
+- **Key Contents**: Touchpoints, emotions, pain points, opportunities, accessibility checkpoints
+- **Format**: Miro/Figma board + exported PNG/PDF + Markdown annotation
+- **Owner**: UX Designer
+
+## 10. Experiment Plan / Validation Record
+- **Purpose**: Document hypotheses, methods, and results for feature validation
+- **Audience**: Product, Data Science, Engineering
+- **Key Contents**: Hypothesis, success metrics, test design, sample size, results, decision log
+- **Format**: Markdown in `/docs/experiments/` with links to analytics dashboards
+- **Owner**: Product Manager
+
+## 11. Decision Log (Architecture & Product)
+- **Purpose**: Capture rationale for key decisions to prevent re-litigation
+- **Audience**: All technical teams
+- **Key Contents**: Decision context, options considered, rationale, consequences, review date
+- **Format**: ADR template (Markdown) in `/docs/adr/`; indexed in repo
+- **Owner**: Tech Lead / Product Manager
+
+## 12. Product Roadmap (Now-Next-Later)
+- **Purpose**: Communicate priorities and timeline to stakeholders
+- **Audience**: Executives, Product, Engineering, Sales
+- **Key Contents**: Themes, outcomes (not outputs), time horizons, dependencies, confidence levels
+- **Compliance**: GDPR Art. 30 (processing activity timeline for audit)
+- **Format**: ProdPad interactive roadmap or Confluence with Jira sync
+- **Owner**: Product Manager
+
+3.PLANNING & DEFINITION PHASE
+
+## 13. Product Requirements Document (PRD) ★ CRITICAL
+- **Purpose**: Master blueprint for feature development
+- **Audience**: Engineering, Design, QA, Product
+- **Key Contents**:
+  - Context & problem statement
+  - Objectives & success metrics (OKRs/KPIs)
+  - Functional requirements (user stories + acceptance criteria)
+  - Non-functional requirements (performance, security, scalability)
+  - Accessibility requirements (WCAG 2.2 AA)
+  - Data model & API contracts
+  - Dependencies & risks
+  - Release criteria & rollback plan
+- **Compliance**: GDPR Art. 25 (privacy by design), HIPAA §164.312 (security rules)
+- **Format**: Markdown in `/docs/prd/` with Mermaid diagrams; linked to Jira epics
+- **Owner**: Product Manager
+
+## 14. Architecture Decision Records (ADRs)
+- **Purpose**: Document significant technical decisions and rationale
+- **Audience**: Engineering, Architecture Review Board
+- **Key Contents**: Context, decision, consequences, alternatives considered, compliance impact
+- **Format**: Standard ADR template (Markdown) in `/docs/adr/`; numbered sequentially
+- **Owner**: Software Architect
+
+## 15. API Specification (OpenAPI 3.1 / AsyncAPI 3.0)
+- **Purpose**: Machine-readable contract for API consumers and generators
+- **Audience**: Developers, Integration Partners, API Gateways
+- **Key Contents**: Endpoints, schemas, authentication, error codes, examples, rate limits
+- **Compliance**: GDPR Art. 32 (security of processing), PCI-DSS 6.5 (secure coding)
+- **Format**: YAML/JSON in `/api-specs/`; published via Swagger UI/Redocly [[41]]
+- **Owner**: API Tech Lead
+
+## 16. Data Model & ERD
+- **Purpose**: Define entities, relationships, and data governance rules
+- **Audience**: Database Designers, Backend Engineers, Compliance
+- **Key Contents**: Entity definitions, relationships, PII classification, retention rules, residency constraints
+- **Compliance**: GDPR Art. 30 (records of processing), HIPAA §164.312(b) (audit controls)
+- **Format**: Mermaid ERD + CSV data dictionary; stored in `/docs/data-model/`
+- **Owner**: Database Architect
+
+## 17. UX Specification & Accessibility Matrix
+- **Purpose**: Translate user needs into implementable design specs
+- **Audience**: Frontend Engineers, QA, Accessibility Specialists
+- **Key Contents**: Component specs, interaction states, WCAG 2.2 AA compliance matrix, localization requirements
+- **Format**: Figma design file + Markdown spec with axe-core test results
+- **Owner**: UX Designer / Accessibility Lead
+
+## 18. Threat Model (STRIDE / LINDDUN)
+- **Purpose**: Identify and mitigate security & privacy risks early
+- **Audience**: Security Engineers, CTO, Compliance
+- **Key Contents**: Data flow diagrams, threat scenarios, mitigations, residual risk, Jira ticket links
+- **Compliance**: GDPR Art. 32 (security of processing), HIPAA §164.308 (risk analysis)
+- **Format**: Markdown STRIDE table + OWASP Threat Dragon diagrams
+- **Owner**: Security Engineer
+
+
+4. DEVELOPMENT PHASE
+
+## 19. Code Documentation (JSDoc / Python docstrings / Go comments)
+- **Purpose**: Enable maintainability and onboarding
+- **Audience**: Developers, Technical Writers
+- **Key Contents**: Function signatures, parameter descriptions, return values, examples, complexity notes
+- **Format**: Inline comments parsed by TypeDoc/Sphinx; published to internal docs site
+- **Owner**: Development Team
+
+## 20. Infrastructure as Code (IaC) Documentation
+- **Purpose**: Reproducible, auditable infrastructure provisioning
+- **Audience**: DevOps, SRE, Security
+- **Key Contents**: Terraform/Pulumi modules, variable descriptions, output references, compliance tags
+- **Compliance**: SOC2 CC6.1 (logical access), ISO 27001 A.12.4 (logging)
+- **Format**: Terraform docs in `/infra/` + Confluence architecture overview
+- **Owner**: DevOps Engineer
+
+## 21. CI/CD Pipeline Specification
+- **Purpose**: Define build, test, and deployment automation
+- **Audience**: DevOps, Engineering, Security
+- **Key Contents**: Pipeline stages, quality gates, approval workflows, rollback triggers, audit logging
+- **Compliance**: SOC2 CC7.2 (change management), HIPAA §164.312(c) (integrity controls)
+- **Format**: YAML pipeline files + Markdown runbook in `/docs/cicd/`
+- **Owner**: DevOps Lead
+
+## 22. Test Strategy & Plan
+- **Purpose**: Ensure comprehensive quality coverage
+- **Audience**: QA, Engineering, Product
+- **Key Contents**: Test pyramid distribution, automation scope, performance benchmarks, security testing, accessibility validation
+- **Format**: Markdown in `/docs/testing/` with links to test suites
+- **Owner**: QA Lead
+
+## 23. Runbooks (Deployment, Incident, Recovery)
+- **Purpose**: Standardize operational procedures for reliability
+- **Audience**: SRE, On-Call Engineers, Support
+- **Key Contents**: Step-by-step procedures, prerequisites, rollback steps, escalation contacts, monitoring checks
+- **Compliance**: ISO 22301 (business continuity), SOC2 CC7.2 (incident response)
+- **Format**: Markdown runbooks in `/runbooks/` with PagerDuty integration [[31]][[37]]
+- **Owner**: SRE Lead
+
+
+5. TESTING & QA PHASE
+
+## 24. QA Test Cases & Automation Scripts
+- **Purpose**: Validate functional and non-functional requirements
+- **Audience**: QA, Engineering, Product
+- **Key Contents**: Test scenarios, preconditions, steps, expected results, automation scripts (Selenium/Cypress)
+- **Format**: Gherkin feature files + Markdown test plan in `/tests/`
+- **Owner**: QA Engineer
+
+## 25. Performance Benchmark Report
+- **Purpose**: Establish and track performance baselines
+- **Audience**: Engineering, SRE, Product
+- **Key Contents**: Load test results, latency percentiles, throughput metrics, bottleneck analysis
+- **Format**: Markdown report + Grafana dashboard links in `/docs/performance/`
+- **Owner**: Performance Engineer
+
+## 26. Security Penetration Test Report
+- **Purpose**: Identify and remediate security vulnerabilities
+- **Audience**: Security, CTO, Compliance
+- **Key Contents**: Executive summary, methodology, findings (CVSS scores), remediation plan, retest results
+- **Compliance**: PCI-DSS 11.3, HIPAA §164.308(a)(8), SOC2 CC6.1
+- **Format**: PDF report from third-party auditor + internal remediation tracker
+- **Owner**: Security Engineer
+
+## 27. Accessibility Audit Report
+- **Purpose**: Ensure inclusive design compliance
+- **Audience**: UX, Engineering, Legal
+- **Key Contents**: WCAG 2.2 AA compliance matrix, axe-core results, manual testing notes, remediation plan
+- **Compliance**: ADA Title III, Section 508, EN 301 549
+- **Format**: Markdown report + Lighthouse CI results in `/docs/accessibility/`
+- **Owner**: Accessibility Specialist
+
+
+6. DEPLOYMENT & OPERATIONS PHASE
+
+## 28. Deployment SOP (Standard Operating Procedure)
+- **Purpose**: Ensure consistent, safe production releases
+- **Audience**: DevOps, Release Manager, On-Call
+- **Key Contents**: Pre-deployment checklist, deployment steps, health checks, rollback triggers, post-deployment validation
+- **Compliance**: SOC2 CC7.2 (change management), ISO 20000 (service delivery)
+- **Format**: Markdown runbook in `/runbooks/deployment.md` with version control [[31]]
+- **Owner**: Release Manager
+
+## 29. Incident Response Playbook
+- **Purpose**: Enable rapid, coordinated incident resolution
+- **Audience**: SRE, On-Call, Security, Executives
+- **Key Contents**: Severity definitions, detection methods, triage steps, communication templates, escalation matrix, post-mortem process
+- **Compliance**: GDPR Art. 33 (breach notification), HIPAA §164.410 (breach response)
+- **Format**: Markdown playbook in `/runbooks/incident-response.md` + PagerDuty integration
+- **Owner**: SRE Lead
+
+## 30. Monitoring & Alerting Specification
+- **Purpose**: Define observability standards and alert thresholds
+- **Audience**: SRE, Engineering, Product
+- **Key Contents**: SLOs/SLIs, metric definitions, alert rules, dashboard links, noise reduction strategies
+- **Format**: Prometheus/YAML alert rules + Grafana dashboard JSON in `/monitoring/`
+- **Owner**: SRE Engineer
+
+## 31. Chaos Engineering Test Scenarios
+- **Purpose**: Validate system resilience under failure conditions
+- **Audience**: SRE, Engineering, Architecture
+- **Key Contents**: Hypothesis, failure injection method, expected behavior, success criteria, rollback plan
+- **Format**: Gherkin scenarios + Chaos Mesh/YAML configs in `/chaos-tests/`
+- **Owner**: Reliability Engineer
+
+## 32. Disaster Recovery & Business Continuity Plan
+- **Purpose**: Ensure service continuity during major outages
+- **Audience**: Executives, SRE, Compliance
+- **Key Contents**: RTO/RPO definitions, failover procedures, data recovery steps, communication plan, testing schedule
+- **Compliance**: ISO 22301, SOC2 CC7.4, HIPAA §164.308(a)(7)
+- **Format**: PDF plan + Markdown runbook in `/docs/dr-bcp/`
+- **Owner**: CTO / Head of Infrastructure
+
+
+7.LAUNCH & GO-TO-MARKET PHASE
+
+## 33. Release Notes (Internal & External)
+- **Purpose**: Communicate changes to stakeholders and users
+- **Audience**: Customers, Support, Sales, Engineering
+- **Key Contents**: New features, improvements, bug fixes, breaking changes, migration guides, known issues
+- **Compliance**: GDPR Art. 13 (transparency about data processing changes)
+- **Format**: Markdown in `/releases/` + published to customer portal; auto-generated from Git tags
+- **Owner**: Product Manager / Technical Writer
+
+## 34. Launch Plan / GTM Checklist
+- **Purpose**: Coordinate cross-functional launch activities
+- **Audience**: Product, Marketing, Sales, Support, Engineering
+- **Key Contents**: Launch timeline, messaging, training materials, support readiness, success metrics, rollback criteria
+- **Format**: Confluence page with Jira/Asana task sync
+- **Owner**: Product Marketing Manager
+
+## 35. Sales Enablement Deck & Battle Cards
+- **Purpose**: Equip sales teams with product knowledge and competitive intelligence
+- **Audience**: Sales, Solutions Engineering
+- **Key Contents**: Value proposition, use cases, competitive differentiators, objection handling, pricing, compliance certifications
+- **Format**: Google Slides/PowerPoint + PDF export in `/sales-enablement/`
+- **Owner**: Product Marketing Manager
+
+## 36. Customer Training Materials & Onboarding Guides
+- **Purpose**: Accelerate user adoption and reduce support load
+- **Audience**: Customers, Customer Success
+- **Key Contents**: Getting started guide, video tutorials, FAQs, best practices, troubleshooting tips
+- **Format**: Markdown guides + Loom videos in `/customer-docs/`; published to help center
+- **Owner**: Technical Writer / Customer Success
+
+## 37. Support Knowledge Base Articles
+- **Purpose**: Enable self-service support and reduce ticket volume
+- **Audience**: Customers, Support Agents
+- **Key Contents**: Step-by-step troubleshooting, error code explanations, configuration guides, integration tutorials
+- **Format**: Markdown in `/support-kb/` synced to Zendesk/Guide
+- **Owner**: Support Engineer / Technical Writer
+
+
+8.POST-LAUNCH & SCALE PHASE
+
+## 38. Post-Mortem / Blameless Retrospective Report
+- **Purpose**: Learn from incidents and improve systems/processes
+- **Audience**: Engineering, SRE, Product, Executives
+- **Key Contents**: Timeline, root cause analysis, impact assessment, action items, preventive measures
+- **Compliance**: GDPR Art. 33 (breach documentation), HIPAA §164.316 (policy documentation)
+- **Format**: Markdown template in `/postmortems/` with Jira action item links
+- **Owner**: Incident Commander
+
+## 39. Usage Analytics & Feature Adoption Report
+- **Purpose**: Measure product success and inform roadmap decisions
+- **Audience**: Product, Executives, Data Science
+- **Key Contents**: DAU/MAU, feature usage funnels, retention cohorts, user feedback synthesis, ROI analysis
+- **Format**: Tableau/Looker dashboard links + Markdown executive summary in `/analytics/`
+- **Owner**: Product Analyst
+
+## 40. Compliance Audit Log & Evidence Repository
+- **Purpose**: Demonstrate ongoing compliance with regulations
+- **Audience**: Legal, Compliance, Auditors, CTO
+- **Key Contents**: Access logs, change records, training completion, risk assessments, DPIA reports, breach notifications
+- **Compliance**: GDPR Art. 30, HIPAA §164.316, SOC2, ISO 27001
+- **Format**: Immutable S3 bucket + Confluence index; automated evidence collection via Drata/Vanta
+- **Owner**: Compliance Officer
+
+## 41. Data Retention & Deletion Policy
+- **Purpose**: Define lawful data handling throughout lifecycle
+- **Audience**: Engineering, Legal, Compliance, Support
+- **Key Contents**: Retention periods per data type, deletion procedures, archival strategy, user right-to-erasure workflow
+- **Compliance**: GDPR Art. 5(1)(e), Art. 17; CCPA; HIPAA §164.316
+- **Format**: Markdown policy in `/policies/data-retention.md` + automated deletion scripts
+- **Owner**: Data Protection Officer / Legal
+
+## 42. Technical Debt Register & Refactoring Roadmap
+- **Purpose**: Track and prioritize system improvements
+- **Audience**: Engineering, CTO, Product
+- **Key Contents**: Debt items, business impact, effort estimates, priority ranking, scheduled refactoring windows
+- **Format**: Markdown in `/docs/tech-debt/` synced to Jira epics
+- **Owner**: Engineering Manager
+
+
+Toon template for document inventory manager
+
+ROLE:enterprise_documentation_architect|compliance_specialist
+TASK:generate_maintain_audit_world_class_product_documentation
+SCOPE:[discovery,planning,development,testing,deployment,launch,post_launch]
+
+INPUT{
+  product{
+    name:STR
+    domain:ENUM:[fintech,healthtech,saas,iot,geospatial]
+    compliance_frameworks:ARR|OPT:[GDPR,HIPAA,SOC2,PCI_DSS,ISO27001]
+    regions:ARR|OPT:[EU,US,APAC]
+  }
+  team{
+    size:ENUM:[startup,small,medium,enterprise]
+    roles:ARR|MIN_ITEMS:5
+  }
+  constraints{
+    tech_stack:STR|OPT
+    legacy_systems:ARR|OPT
+    budget_timeline:STR|OPT
+  }
+}
+
+OUTPUT{
+  format:Markdown|TOON|JSON
+  audience_optimization:true
+  compliance_mapping:true
+  version_tracking:true
+}
+
+DOCUMENTATION_CATEGORIES{
+  discovery_strategy{
+    docs:[
+      business_case,
+      problem_statement,
+      product_vision,
+      value_proposition,
+      personas_jtbd,
+      product_strategy,
+      mrd,
+      competitive_analysis
+    ]
+    compliance_triggers:[GDPR_Art25_DPIA,SOC2_CC3_2]
+    format_defaults:Markdown|Confluence|ProdPad
+  }
+  ideation_validation{
+    docs:[
+      user_journey_maps,
+      experiment_plans,
+      decision_log,
+      product_roadmap
+    ]
+    compliance_triggers:[HIPAA_164_308_risk_analysis,CCPA_transparency]
+    format_defaults:Miro|ProdPad|Markdown
+  }
+  planning_definition{
+    docs:[
+      prd_critical,
+      architecture_decision_records,
+      openapi_asyncapi_specs,
+      data_model_erd,
+      ux_accessibility_specs,
+      threat_model_stride
+    ]
+    compliance_triggers:[GDPR_Art25_privacy_by_design,HIPAA_164_312_security]
+    format_defaults:Markdown|Mermaid|OpenAPI_YAML|Figma
+  }
+  development{
+    docs:[
+      code_documentation,
+      infrastructure_as_code_docs,
+      cicd_pipeline_spec,
+      test_strategy,
+      operational_runbooks
+    ]
+    compliance_triggers:[SOC2_CC6_1_access,ISO27001_A12_logging]
+    format_defaults:Inline_comments|Terraform_docs|YAML_pipelines|Markdown_runbooks
+  }
+  testing_qa{
+    docs:[
+      qa_test_cases,
+      performance_benchmarks,
+      security_pentest_report,
+      accessibility_audit
+    ]
+    compliance_triggers:[PCI_DSS_11_3,HIPAA_164_312_integrity,ADA_Section508]
+    format_defaults:Gherkin|Markdown|PDF_auditor_report|axe_core_results
+  }
+  deployment_ops{
+    docs:[
+      deployment_sop,
+      incident_response_playbook,
+      monitoring_alerting_spec,
+      chaos_engineering_scenarios,
+      disaster_recovery_bcp
+    ]
+    compliance_triggers:[SOC2_CC7_2_change_mgmt,ISO22301_business_continuity]
+    format_defaults:Markdown_runbooks|PagerDuty_integration|Prometheus_YAML
+  }
+  launch_gtm{
+    docs:[
+      release_notes,
+      launch_plan_gtm_checklist,
+      sales_enablement,
+      customer_training,
+      support_kb
+    ]
+    compliance_triggers:[GDPR_Art13_transparency]
+    format_defaults:Markdown|Confluence|Google_Slides|Zendesk_sync
+  }
+  post_launch_scale{
+    docs:[
+      post_mortem_reports,
+      usage_analytics_reports,
+      compliance_audit_repository,
+      data_retention_policy,
+      tech_debt_register
+    ]
+    compliance_triggers:[GDPR_Art30_records,HIPAA_164_316_policies]
+    format_defaults:Markdown|Tableau_links|S3_immutable_bucket|Jira_sync
+  }
+}
+
+COMPLIANCE_MAPPING{
+  gdpr{
+    articles:[5,13,17,25,30,32,33,35]
+    doc_requirements:[
+      "Art5: data_retention_policy",
+      "Art13: release_notes_transparency",
+      "Art17: data_deletion_workflow_in_prd",
+      "Art25: privacy_by_design_in_threat_model",
+      "Art30: compliance_audit_repository",
+      "Art32: security_controls_in_openapi_specs",
+      "Art33: incident_response_playbook_breach_notification",
+      "Art35: dpia_trigger_in_business_case"
+    ]
+  }
+  hipaa{
+    sections:[164_308,164_312,164_316,164_410]
+    doc_requirements:[
+      "164_308: risk_analysis_in_decision_log",
+      "164_312: security_rules_in_prd_and_threat_model",
+      "164_316: policy_documentation_in_compliance_repository",
+      "164_410: breach_response_in_incident_playbook"
+    ]
+  }
+  soc2{
+    criteria:[CC3_2,CC6_1,CC7_2,CC7_4]
+    doc_requirements:[
+      "CC3_2: risk_management_in_business_case_and_strategy",
+      "CC6_1: logical_access_in_iac_and_openapi_specs",
+      "CC7_2: change_management_in_deployment_sop_and_cicd_spec",
+      "CC7_4: system_operations_in_monitoring_spec_and_runbooks"
+    ]
+  }
+}
+
+VERSION_TRACKING{
+  format:"DOC-[CATEGORY]-[NAME]-vX.Y"
+  changelog_required:true
+  review_cycle:QUARTERLY|POST_INCIDENT|REGULATORY_CHANGE
+  approval_workflow:[Author,Reviewer,Compliance_Officer,CTO]
+  storage:"Git_repo:/docs/ + Confluence_index + Immutable_audit_bucket"
+}
+
+AUTOMATION_HOOKS{
+  openapi_lint:"redocly lint api-specs/*.yaml"
+  accessibility_scan:"axe-core --config .axerc /customer-docs/"
+  compliance_check:"vanta-agent scan --frameworks GDPR,HIPAA"
+  doc_freshness:"check-doc-ages --max-days 90 /docs/"
+  mermaid_validate:"mermaid-cli validate /docs/**/*.md"
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_compliance_matrix:"Output GDPR/HIPAA/SOC2 control mapping table for all docs"
+  create_onboarding_checklist:"Generate new-hire documentation checklist by role"
+  export_to_jira:"Convert doc maintenance tasks to Jira tickets with labels"
+  schedule_review_reminders:"Generate quarterly review calendar invites for doc owners"
+  generate_audit_package:"Compile evidence bundle for SOC2 Type II audit"
+}

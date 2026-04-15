@@ -1,0 +1,274 @@
+# DOC_PRODUCT_VISION_v1.0.toon
+# CMMI Level 5 Compliant Product Vision Generator
+
+IMPORT:CMMI_LEVEL5_BASE_TEMPLATE.toon
+
+ROLE:chief_product_officer|product_strategist|innovation_lead|executive_communications
+TASK:generate_cmmi_l5_compliant_product_vision_with_strategic_alignment_quantifiable_outcomes_and_pdf_report
+OUTPUT_FORMAT:Markdown_source + PDF/A-3_report + machine_readable_JSON + executive_slide_deck_export
+
+INPUT_CONTEXT{
+  vision{
+    id:STR|format:PV-###|auto_increment_from_repository
+    product_name:STR|required
+    version:SEMVER|required
+    vision_owner:STR|required|cpo_or_head_of_product
+    time_horizon:ENUM:[3_year,5_year,10_year]|default:5_year
+    classification:ENUM:[public,internal,confidential]|default:internal
+  }
+  strategic_context{
+    organizational_mission:STR|link_to_company_mission_statement
+    market_landscape:STR|key_trends_disruptors_and_opportunities
+    competitive_positioning:STR|desired_market_position_and_differentiation
+    regulatory_environment:ARR|OPT|structure:{framework:STR,impact:ENUM:[constraint,enabler,neutral],timeline:STR}
+  }
+  vision_statement{
+    aspirational_description:STR|required|inspirational_future_state_in_present_tense
+    target_users:ARR|min_items:2|structure:{persona:STR,core_need:STR,desired_outcome:STR}
+    value_proposition:STR|concise_statement_of_unique_value_delivered
+    guiding_principles:ARR|min_items:3|structure:{principle:STR,rationale:STR,decision_filter:STR}
+  }
+  target_outcomes{
+    business_outcomes:ARR|min_items:3|structure:{outcome:STR,baseline:NUM,target:NUM,timeframe:STR,measurement_method:STR}
+    user_outcomes:ARR|min_items:3|structure:{outcome:STR,baseline_metric:STR,target_metric:STR,measurement_approach:STR}
+    societal_impact:ARR|OPT|structure:{impact_area:STR,desired_change:STR,measurement_indicator:STR}
+    outcome_interdependencies:ARR|OPT|structure:{outcome_a:STR,outcome_b:STR,relationship:ENUM:[enables,constrains,neutral]}
+  }
+  strategic_guardrails{
+    non_goals:ARR|min_items:2|structure:{non_goal:STR,rationale:STR,boundary_enforcement:STR}
+    ethical_boundaries:ARR|OPT|structure:{boundary:STR,rationale:STR,violation_detection:STR}
+    resource_constraints:STR|budget_headcount_or_technical_limits_that_shape_vision_feasibility
+    risk_appetite:ENUM:[conservative,moderate,aggressive]|with_rationale_for_vision_pursuit
+  }
+  capability_roadmap{
+    capability_themes:ARR|min_items:3|structure:{theme:STR,description:STR,strategic_importance:ENUM[high,med,low]}
+    phased_approach:ARR|structure:{phase:STR,timeframe:STR,key_capabilities:ARR,success_indicators:ARR}
+    dependency_map:ARR|OPT|structure:{capability:STR,depends_on:STR,dependency_type:ENUM:[technical,market,regulatory]}
+    innovation_bet:STR|OPT|high_risk_high_reward_initiative_that_could_accelerate_vision
+  }
+  alignment_and_communication{
+    executive_sponsor:STR|required|c_level_champion
+    key_stakeholders:ARR|min_items:4|structure:{role:STR,alignment_status:ENUM[aligned,neutral,concerned],engagement_plan:STR}
+    communication_cadence:ENUM:[quarterly,biannual,annual]|for_vision_refresh_and_progress_reporting
+    feedback_mechanisms:ARR|OPT|structure:{mechanism:STR,frequency:ENUM,target_audience:STR}
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_vision_management{
+    vision_clarity_metrics{
+      specificity_score:peer_review_rating_for_vision_actionability_and_decision_guidance_1_to_5|target:≥4.4
+      outcome_measurability:percentage_of_target_outcomes_with_quantified_metrics_and_baselines|target:100%
+      stakeholder_comprehension:post_communication_survey_score_on_vision_understanding|target:≥4.2/5.0
+    }
+    strategic_alignment_metrics{
+      mission_alignment_score:expert_rating_of_vision_consistency_with_organizational_mission|target:≥4.5/5.0
+      market_relevance_index:analyst_or_customer_feedback_on_vision_resonance_with_market_needs|target:≥4.0
+      regulatory_proactivity:percentage_of_applicable_regulatory_frameworks_proactively_addressed_in_vision|target:≥90%
+    }
+    statistical_process_control{
+      vision_refresh_cycle_time:months_between_major_vision_updates|control_limits:[18,60]|Cpk_target:≥1.0
+      stakeholder_alignment_trend:change_in_alignment_scores_over_time|I_MR_chart_monitoring
+      outcome_achievement_rate:percentage_of_target_outcomes_met_on_schedule|p_chart_monitoring_with_capability_analysis
+    }
+  }
+  process_performance_objectives{
+    vision_approval_cycle_time:target:≤10_business_days|UCL:15|LCL:5|Cpk:≥1.0
+    outcome_definition_quality:target:≥95%_of_outcomes_with_baselines_targets_and_measurement_methods
+    stakeholder_consensus_achievement:target:≥4.0/5.0_alignment_score_before_public_communication
+  }
+  causal_analysis_integration{
+    trigger:vision_rejected_or_major_revision_required_due_to_misalignment_or_unmeasurable_outcomes
+    analysis_method:5_whys + strategic_alignment_audit + stakeholder_feedback_synthesis
+    preventive_action:auto_enhance_vision_template_or_alignment_process_based_on_root_cause
+    knowledge_capture:lessons_learned_added_to_organizational_strategy_asset_library
+  }
+  innovation_deployment{
+    ai_assisted_market_scanning:pilot_nlp_model_to_identify_emerging_trends_for_vision_updates|measure_relevance_improvement
+    outcome_forecasting:integrate_with_analytics_to_predict_likelihood_of_achieving_target_outcomes
+    real_time_alignment_tracking:collaborative_tooling_to_measure_stakeholder_consensus_during_vision_development
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Vision Identification & Control"
+    content:[vision_id,product_name,version,owner,time_horizon,classification,last_review_date,next_review_date]
+    pdf_formatting:header_table_with_digital_signature_fields_for_cpo_executive_sponsor_and_strategy_lead
+    cmmi_traceability:link_to_strategic_planning_process_definition_and_alignment_metrics_baseline
+    mermaid_diagram:vision_hierarchy_showing_connection_to_mission_strategy_and_roadmap
+  }
+  section_2{
+    title:"Strategic Context & Market Positioning"
+    content:[organizational_mission,market_landscape,competitive_positioning,regulatory_environment]
+    visualizations:market_trend_timeline|competitive_positioning_map|regulatory_impact_matrix
+    quantitative_context:market_size_growth_rates_and_disruption_probability_estimates_with_sources
+  }
+  section_3{
+    title:"Vision Statement & Guiding Principles"
+    content:[aspirational_description,target_users,value_proposition,guiding_principles]
+    format_per_principle{
+      header:"{principle}"
+      detailed_rationale:why_this_principle_matters_for_vision_achievement
+      decision_filter:how_this_principle_guides_prioritization_and_trade_off_decisions
+      example_application:concrete_scenario_where_principle_informs_action
+    }
+    vision_artwork:optional_embedded_visual_representation_of_future_state_for_emotional_resonance
+  }
+  section_4{
+    title:"Target Outcomes & Measurement Framework"
+    content:iterate_over_input.target_outcomes
+    format_per_outcome_type{
+      business_outcomes:table_with_outcome,baseline,target,timeframe,measurement_method,owner
+      user_outcomes:table_with_outcome,baseline_metric,target_metric,measurement_approach,validation_plan
+      societal_impact:table_with_impact_area,desired_change,measurement_indicator,data_source
+    }
+    outcome_interdependency_map:mermaid_graph_showing_how_outcomes_enable_or_constrain_each_other
+    measurement_infrastructure:description_of_tools_processes_and_owners_for_tracking_each_outcome
+  }
+  section_5{
+    title:"Strategic Guardrails & Boundaries"
+    content:iterate_over_input.strategic_guardrails
+    format_per_guardrail_type{
+      non_goals:table_with_non_goal,rationale,boundary_enforcement_with_example_decisions
+      ethical_boundaries:table_with_boundary,rationale,violation_detection,remediation_approach
+      resource_constraints:detailed_description_of_limits_and_implications_for_vision_pursuit
+      risk_appetite:explicit_statement_of_risk_tolerance_with_examples_of_acceptable_vs_unacceptable_bets
+    }
+    decision_framework:how_guardrails_will_be_applied_in_practice_during_prioritization_and_planning
+  }
+  section_6{
+    title:"Capability Roadmap & Phased Approach"
+    content:iterate_over_input.capability_roadmap
+    format_per_roadmap_element{
+      capability_themes:table_with_theme,description,strategic_importance,success_indicators
+      phased_approach:table_with_phase,timeframe,key_capabilities,dependencies,success_indicators
+      dependency_map:table_with_capability,depends_on,dependency_type,mitigation_if_blocked
+      innovation_bet:detailed_description_of_high_risk_initiative_with_hypothesis_and_validation_plan
+    }
+    roadmap_visualization:gantt_chart_or_timeline_mermaid_showing_phased_capability_delivery_with_milestones
+  }
+  section_7{
+    title:"Alignment, Communication & Feedback"
+    content:iterate_over_input.alignment_and_communication
+    format_per_alignment_element{
+      executive_sponsor:role_name_and_specific_commitments_to_vision_advancement
+      key_stakeholders:table_with_role,alignment_status,engagement_plan,feedback_channel
+      communication_cadence:detailed_plan_for_vision_refresh_and_progress_reporting_with_audiences
+      feedback_mechanisms:table_with_mechanism,frequency,target_audience,how_feedback_informs_vision_evolution
+    }
+    change_management_strategy:approach_for_socializing_vision_and_managing_resistance_or_misalignment
+  }
+  section_8{
+    title:"Quantitative Management & Statistical Control"
+    content:cmmi_l5_specific_quantitative_management_section
+    vision_quality_baselines{
+      historical_data_summary:time_period_sample_size_and_stability_for_vision_quality_metrics
+      baseline_values:table_with_metric_name,baseline_value,control_limits,capability_index
+      baseline_usage:how_baselines_guide_vision_development_review_and_refresh_cycles
+    }
+    spc_implementation_for_vision_management{
+      control_charts:which_metrics_use_which_chart_type_with_interpretation_guidelines
+      out_of_control_protocols:response_when_vision_quality_or_alignment_metrics_breach_control_limits
+      recalibration_criteria:when_and_how_to_update_baselines_after_market_or_organizational_changes
+    }
+  }
+  section_9{
+    title:"Review, Approval & Evolution Process"
+    content:[review_schedule,approval_criteria,change_control_process,version_history]
+    vision_review_workflow{
+      review_checklist:required_validations_outcome_measurability_strategic_alignment_stakeholder_consensus
+      approval_gates:who_must_approve_what_aspects_with_escalation_path_for_disagreements
+      evolution_protocol:how_vision_will_be_refreshed_based_on_outcome_achievement_market_changes_or_feedback
+    }
+    digital_signature_specification{
+      signature_fields:cpo,executive_sponsor,strategy_lead,compliance_if_regulated_vision_elements
+      signature_standard:PAdES_BES_or_LTVA_with_rfc3161_timestamp_for_long_term_archival
+      audit_trail:immutable_log_of_all_signature_events_with_user_context_and_vision_version
+    }
+  }
+}
+
+QUANTITATIVE_METRICS_COLLECTION{
+  vision_quality_metrics{
+    clarity_and_actionability:peer_review_rating_for_vision_decision_guidance_and_specificity
+    outcome_measurability_rate:percentage_of_target_outcomes_with_baselines_targets_and_measurement_methods
+    stakeholder_comprehension:post_communication_survey_score_on_vision_understanding_and_recall
+    strategic_alignment_index:expert_rating_of_consistency_with_mission_market_and_regulatory_context
+  }
+  process_performance_metrics{
+    vision_development_cycle_time:business_days_from_draft_to_approved_vision_statement
+    stakeholder_alignment_trend:change_in_consensus_scores_over_time_with_statistical_control_monitoring
+    outcome_achievement_rate:percentage_of_target_outcomes_met_on_schedule_with_capability_analysis
+    vision_refresh_adherence:actual_vs_planned_cycle_time_for_vision_updates_with_variance_analysis
+  }
+  metric_infrastructure{
+    collection_automation:percentage_of_metrics_with_automated_collection_via_survey_tools_and_analytics_platforms
+    data_quality_score:completeness_accuracy_and_timeliness_rating_for_vision_metric_data
+    dashboard_adoption:percentage_of_executives_and_product_leaders_regularly_viewing_vision_progress_dashboards
+    alert_effectiveness:percentage_of_vision_alignment_or_outcome_alerts_that_triggered_appropriate_strategic_response
+  }
+}
+
+PDF_REPORT_SPECIFICATIONS{
+  template:product_vision_enterprise_template_with_strategic_branding_cmmi_headers_and_executive_footers
+  dynamic_content{
+    vision_statement_display:typographically_enhanced_rendering_of_aspirational_description_for_emotional_impact
+    outcome_dashboard_mockup:visual_representation_of_how_target_outcomes_will_be_tracked_and_reported
+    roadmap_timeline:mermaid_gantt_rendered_to_high_resolution_vector_with_milestone_markers
+    alignment_gauge:visual_indicator_of_stakeholder_consensus_with_breakdown_by_role
+  }
+  navigation_and_interactivity{
+    pdf_bookmarks:hierarchical_structure_matching_vision_sections_with_quick_jump_to_outcomes_and_roadmap
+    hyperlinks:cross_references_to_strategy_docs_market_research_and_stakeholder_engagement_plans
+    form_fields:approval_signature_blocks_with_validation_timestamp_role_and_digital_certificate
+    executive_summary_toggle:optional_collapsible_detailed_sections_to_keep_front_pages_concise_for_leadership
+  }
+  archival_and_compliance{
+    pdf_a3:true_with_embedded_fonts_color_profiles_and_long_term_validation_metadata
+    metaxmp_with_cmmi_process_tags_vision_id_strategic_metadata_alignment_snapshot_approval_hash
+    accessibility:pdf_ua_compliant_with_tagged_structure_alt_text_for_diagrams_and_screen_reader_navigation
+    digital_preservation:pdf_a3_conformance_verified_with_verapdf_or_similar_tool_pre_distribution
+  }
+  distribution_control{
+    access_permissions:role_based_viewing_for_executives_product_leaders_strategy_team_and_board_members
+    watermarking:dynamic_injection_of_confidential_draft_or_final_approved_based_on_approval_status
+    expiration:optional_time_limited_access_for_external_advisors_or_board_members
+    audit_logging:immutable_log_of_pdf_access_download_printing_with_user_and_system_context
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_outputs{
+    pdf_report{
+      format:PDF/A-3_with_embedded_source_markdown_metadata_and_long_term_validation_support
+      filename:"{product_name}_ProductVision_v{version}_{YYYYMMDD}_CMMI_L5.pdf"
+      delivery:secure_download_link + confluence_attachment + email_notification_to_executives_and_board
+    }
+    machine_readable_export{
+      format:JSON_schema_validated_against_product_vision_schema_with_cmmi_and_strategy_extensions
+      content:all_vision_elements_outcomes_roadmap_and_alignment_data_in_structured_format
+      use_case:automated_strategy_dashboards_roadmap_planning_tools_executive_reporting_systems
+    }
+    executive_slide_deck{
+      format:Google_Slides_or_PowerPoint_with_speaker_notes_and_appendix_links
+      content:condensed_vision_statement_key_outcomes_roadmap_highlights_and_alignment_status
+      use_case:board_presentations_all_hands_communications_investor_updates
+    }
+  }
+  supplementary_outputs{
+    vision_one_pager:PDF_single_page_summary_for_broad_distribution_with_aspirational_statement_and_top_outcomes
+    stakeholder_engagement_kit:ZIP_with_communication_templates_FAQs_and_feedback_collection_tools
+    outcome_tracking_setup:configuration_snippets_for_analytics_or_bi_tools_to_begin_measuring_target_outcomes
+  }
+}
+
+FOLLOW_UP_COMMANDS{
+  generate_strategy_cascade:"Convert vision outcomes to strategic initiatives template with resource allocation framework"
+  create_board_presentation_deck:"Export executive slide deck with speaker notes for upcoming board meeting"
+  setup_outcome_monitoring:"Configure analytics dashboards to begin tracking target outcomes defined in Section 4"
+  schedule_vision_refresh:"Set calendar reminder for vision review per CMMI OPP with alignment reassessment"
+  initiate_stakeholder_alignment_workshop:"Generate facilitation guide from Section 7 for consensus-building session"
+  export_to_strategy_platform:"Format vision data for import to Aha!, Productboard, or similar strategy tool"
+  generate_communication_plan:"Create detailed rollout plan from Section 7 for internal vision socialization"
+}

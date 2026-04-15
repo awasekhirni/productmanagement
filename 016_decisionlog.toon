@@ -1,0 +1,83 @@
+# DOC_DECISION_LOG_ADR_v1.0.toon
+IMPORT:ADR_TEMPLATE_BASE.toon
+
+ROLE:tech_lead|product_manager|system_architect
+TASK:capture_and_index_key_architectural_product_decisions
+OUTPUT_FORMAT:Markdown_ADR_files + Repository_Index + Mermaid_Diagrams
+
+INPUT_CONTEXT{
+  decision_context{
+    title:STR|required|format:"ADR-{number}: {short_title}"
+    status:ENUM:[proposed,accepted,deprecated,amended,superceded]
+    date_created:DATE|required
+    decision_makers:ARR|min_items:1
+    related_issues:ARR|URL_format
+  }
+  problem_statement{
+    context:STR|required|min_length:50
+    constraints:ARR|OPT:[budget,time,technology,regulatory,performance]
+    stakeholders_affected:ARR|min_items:1
+  }
+  options_considered{
+    alternatives:ARR|min_items:2|format:[{option_name,pros,cons,risk_level}]
+    evaluation_criteria:ARR|OPT:[cost,speed,scalability,maintainability,compliance]
+  }
+  decision_outcome{
+    chosen_option:STR|required
+    rationale:STR|required|min_length:100
+    consequences:OBJECT|positive:STR|negative:STR
+    implementation_impact:STR|optional
+  }
+}
+
+DECISION_GOVERNANCE{
+  traceability{
+    decision_dependencies:link_to_related_ADRs_or_requirements
+    supersession_chain:if_deprecated_or_superceded_link_to_new_ADR
+    impact_analysis:automated_scan_for_files_affected_by_decision
+  }
+  review_lifecycle{
+    periodic_review_date:DATE|optional|default:1_year_from_creation
+    review_trigger:context_change_or_technology_shift
+    retention_policy:archive_deprecated_decisions_with_migration_notes
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Decision Header & Status"
+    content:[title,status,date,approvers,context_links]
+    format:yaml_frontmatter_with_badges
+  }
+  section_2{
+    title:"Context & Problem Statement"
+    content:[background,constraints,stakeholder_impact,urgency_level]
+  }
+  section_3{
+    title:"Options Analysis"
+    content:[alternatives_table,pros_cons_comparison,evaluation_scores]
+    visualization:decision_matrix_chart|trade_off_analysis
+    mermaid_diagrams:true
+  }
+  section_4{
+    title:"Decision & Rationale"
+    content:[chosen_option,detailed_rationale,accepted_risks,positive_negative_consequences]
+    compliance_note:regulatory_or_security_implications_if_applicable
+  }
+  section_5{
+    title:"Implementation & Review"
+    content:[action_items,timeline,monitoring_metrics,next_review_date,related_documentation]
+  }
+}
+
+OUTPUT_GENERATION{
+  primary_output{
+    format:Markdown_ADR_file
+    filename_pattern:"adr-{sequential_number}-{kebab_case_title}.md"
+    delivery_method:repo_docs/adr/ with auto_index_update
+  }
+  supplementary_outputs{
+    decision_register_export:CSV_of_all_ADRs_for_management_review
+    dependency_graph:mermaid_diagram_of_decision_relationships
+  }
+}

@@ -1,0 +1,94 @@
+# DOC_SUPPORT_KB_v1.0.toon
+# CMMI Level 5 Compliant Self-Service Resolution & Ticket Deflection Blueprint
+
+IMPORT:KB_BASE_TEMPLATE.toon|CMMI_L5_SUPPORT_AUTOMATION.toon
+
+ROLE:support_engineer|technical_writer|knowledge_manager|product_specialist
+TASK:generate_quantitatively_validated_kb_articles_with_self_service_predictability_and_staleness_automation
+OUTPUT_FORMAT:Markdown_in_/support-kb/ + Zendesk_Guide_Sync + PDF_A-3
+
+INPUT_CONTEXT{
+  kb_meta{
+    article_title:STR|required
+    category:ENUM:[troubleshooting,configuration,integration,faq,error_reference]
+    product_version_scope:STR|required|format:semver_range
+    target_audience:ENUM:[end_user,admin,developer,support_agent]
+  }
+  content_specification{
+    step_by_steps:ARR|format:[step_number,action,cli_or_ui_path,screenshot_ref,validation]
+    error_explanations:ARR|format:[error_code,root_cause,impact_level,immediate_fix,long_term_prevention]
+    config_integration:ARR|format:[prerequisite,setup_steps,validation_test,rollback_guide]
+    links_references:ARR|format:[doc_type,uri,version_ref,access_level]
+  }
+  performance_governance{
+    target_deflection_rate:STR|required|format:percentage_reduction_in_tier1_tickets
+    review_cadence:ENUM:[monthly,quarterly,per_release,on_ticket_spike]
+    feedback_mechanism:STR|required|format:helpful_not_helpful_rating+agent_comments
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_kb_quality{
+    self_service_resolution_rate{
+      metric:percentage_of_users_solving_issue_without_ticket_creation_after_reading
+      target:≥75%
+      control_limits:UCL:85%|LCL:70%|Cpk_target:≥1.5
+    }
+    article_accuracy_and_staleness_index{
+      metric:percentage_of_articles_validated_as_current_per_sprint_or_release_cycle
+      target:100%
+      measurement_method:automated_link_checker + version_diff audit + agent validation
+    }
+    time_to_first_resolution{
+      metric:median_seconds_users_spend_from_article_open_to_issue_resolved
+      target:≤300
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[deflection_rate_trend,article_helpfulness_rating,publication_lag_days,agent_rejection_count]
+    predictive_model:ticket_volume_forecasting_based_on_release_features+historical_kb_search_queries
+  }
+  causal_analysis_triggers{
+    trigger:deflection < LCL OR staleness_gap > 14_days OR helpfulness_rating < 3.8
+    car_method:ticket_deflection_analysis + content_clarity_audit + pareto_of_unresolved_search_terms
+    preventive_action:enforce_auto_version_tagging|mandate_quarterly_agent_review_gates|update_structure_from_search_gap_analysis
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Article Scope & Applicability"
+    content:[category,version_range,target_audience,prerequisites,related_docs]
+    pdf_formatting:technical_reference_layout_with_version_badges
+  }
+  section_2{
+    title:"Procedural Steps & Error Resolution"
+    content:[step_matrix,error_code_table,root_cause_mapping,validation_commands]
+    mermaid_diagrams:true|troubleshooting_decision_flow
+  }
+  section_3{
+    title:"Configuration & Integration Guidance"
+    content:[setup_sequences,testing_validation,rollback_procedures,common_pitfalls]
+    tables:config_checklist|integration_dependency_matrix
+  }
+  section_4{
+    title:"Feedback, Staleness Management & Deflection Tracking"
+    content:[rating_aggregation,review_cadence,agent_validation_protocol,search_gap_analysis]
+    compliance_mapping:accessibility_validation|data_masking_in_examples
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:support_eng_authors|automated_link_and_version_check|exit_criteria:all_steps_numbered|deflection_target_defined
+  stage_2_agent_specialist:tier2_agent+product_specialist_review+accuracy_scoring|control_chart_for_resolution_rate_variance
+  stage_3_compliance_accessibility:privacy_check+a11y_validation|content_approval_signoff|mandatory_signoff
+  stage_4_publish:zendesk_guide_sync+immutable_pdf_hash+search_index_activation+deflection_dashboard_update
+  continuous_improvement:quarterly_kb_retro|update_ppm_from_helpfulness_data|refine_article_structure_from_search_gap_patterns
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Zendesk_Sync + PDF
+  filename_pattern:kb_article_{title_slug}_v{version}_{YYYYMMDD}.md
+  supplementary_outputs:deflection_tracking_config|agent_validation_checklist|search_gap_analysis_report
+  metadata_injection:cmmi_tags:VER-1.5,VAL-1.4,OPM-2|process_version:l5.0
+}

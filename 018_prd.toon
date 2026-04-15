@@ -1,0 +1,116 @@
+# DOC_PRD_v1.0.toon
+# CMMI Level 5 Compliant Product Requirements Blueprint
+
+IMPORT:PRD_BASE_TEMPLATE.toon|CMMI_L5_REQUIREMENTS_ENGINE.toon
+
+ROLE:senior_product_manager|system_architect|compliance_engineer|qa_lead
+TASK:generate_quantitatively_validated_prd_with_traceability_and_compliance_mapping
+OUTPUT_FORMAT:Markdown_in_/docs/prd/ + Jira_Epic_Sync + PDF/A-3
+
+INPUT_CONTEXT{
+  product{
+    name:STR|required
+    version:STR|required|format:semver
+    domain:ENUM:[fintech,healthtech,saas,iot,geospatial,enterprise]
+    problem_statement:STR|required|min_length:50
+    target_outcome:STR|required|format:"Measurable business/user outcome with baseline & target"
+  }
+  objectives{
+    okr_alignment:ARR|min_items:1|format:[objective_key_result,baseline,target,owner]
+    success_metrics:ARR|min_items:3|format:[metric_name,calculation_formula,data_source,threshold]
+    non_goals:ARR|optional
+  }
+  requirements{
+    functional_user_stories:ARR|min_items:1|format:[story_id,as_a,i_want,so_that,acceptance_criteria]
+    non_functional_reqs:OBJECT|performance:STR|security:STR|scalability:STR|reliability:STR
+    accessibility:STR|required|default:"WCAG_2.2_AA_compliant|screen_reader_optimized|keyboard_navigable"
+    data_api_contracts:ARR|optional|format:[endpoint_or_schema_ref,version,status]
+  }
+  constraints_risks{
+    dependencies:ARR|format:[dependency_type,owner,deadline,risk_if_delayed]
+    known_risks:ARR|format:[risk_id,probability_pct,impact_score,mitigation]
+    release_criteria:ARR|min_items:3|format:[criterion,verification_method,pass_threshold]
+    rollback_plan:STR|required|min_length:50
+  }
+  compliance{
+    gdpr_privacy_by_design:BOOL|required|default:true
+    hipaa_security_rules:BOOL|optional
+    regulatory_mappings:ARR|format:[article_section,requirement_summary,prd_section_ref]
+  }
+}
+
+CMMI_L5_ENHANCEMENTS{
+  quantitative_requirements_quality{
+    requirement_stability_index{
+      metric:count_of_changes_after_baseline / total_requirements
+      target:≤5%
+      control_limits:UCL:8%|LCL:1%|Cpk_target:≥1.5
+    }
+    acceptance_criteria_testability_score{
+      metric:percentage_of_acs_with_boolean_verification_methods
+      target:100%
+      measurement_method:automated_ambiguity_parser + peer_review_rubric
+    }
+    traceability_coverage{
+      metric:bidirectional_linkage_rate_prd_to_jira_to_tests
+      target:≥98%
+      control_limits:UCL:100%|LCL:95%|Cpk_target:≥2.0
+    }
+  }
+  process_performance_baselines{
+    historical_ppb:[req_defect_density_per_ksloc,avg_ac_ambiguity_score,traceability_gap_rate]
+    predictive_model:linear_regression_on_complexity_metrics_to_forecast_sprint_throughput
+  }
+  causal_analysis_triggers{
+    defect_threshold:requirement_defect_density > UCL OR traceability < LCL
+    car_method:5_whys + fault_tree_analysis + pareto_of_ac_failures
+    preventive_action:auto_generate_refinement_checklist | update_do_definition_template
+  }
+}
+
+DOCUMENT_STRUCTURE{
+  section_1{
+    title:"Executive Summary & Strategic Alignment"
+    content:[problem_statement,okrs,success_metrics,scope_boundaries]
+    pdf_formatting:executive_dashboard_with_kpi_badges
+  }
+  section_2{
+    title:"Functional Requirements & User Stories"
+    content:[epic_mapping,user_story_table,acceptance_criteria_matrix,business_rules]
+    mermaid_diagrams:true|flowcharts_for_key_workflows
+  }
+  section_3{
+    title:"Non-Functional & Accessibility Requirements"
+    content:[performance_baselines,security_controls,scalability_targets,wcag_2.2_aa_matrix]
+    tables:nfr_verification_table|a11y_compliance_checklist
+  }
+  section_4{
+    title:"Data Model, API Contracts & Dependencies"
+    content:[entity_summary,contract_references,dependency_map,third_party_integrations]
+    compliance_mapping:privacy_by_design_controls|data_flow_alignment
+  }
+  section_5{
+    title:"Risks, Release Criteria & Rollback Strategy"
+    content:[risk_register_with_quantitative_scores,go_no_go_criteria,rollback_procedures,contingency_budgets]
+    visualization:risk_probability_impact_heat_map
+  }
+  section_6{
+    title:"Traceability Matrix & Approval"
+    content:[req_to_test_to_code_linkage,version_history,signature_block]
+  }
+}
+
+REVIEW_APPROVAL_WORKFLOW_CMMI_L5{
+  stage_1_draft:author_completes_template|automated_ac_testability_scan|exit_criteria:all_sections_populated
+  stage_2_peer_review:cross_functional_review_panel|structured_rubric|defect_density_controlled_via_shewhart_chart
+  stage_3_compliance_security:gdpr_hipaa_mapping_validation|automated_dlp_check|signoff_required
+  stage_4_baseline_approval:sponsor+architect+qa_lead_digital_signoff|immutable_pdf_hash|jira_epic_creation
+  continuous_improvement:post_sprint_retro_on_req_stability|update_ppm_if_variance_detected
+}
+
+OUTPUT_GENERATION{
+  primary_output:Markdown + Jira_sync + PDF/A-3
+  filename_pattern:{product}_PRD_v{version}_{YYYYMMDD}.pdf
+  supplementary_outputs:ac_test_suite_template|traceability_report_csv|compliance_evidence_package
+  metadata_injection:cmmi_tags:REQ-DEF-1.3,REQ-DEF-2.1,OPP-2|process_version:l5.0
+}
